@@ -7,10 +7,18 @@ lokal (votes_log.jsonl) sekaligus meng-update rekap jumlah vote per karakter
 (votes_count.json) agar bisa dihitung sebagai leaderboard / insight karakter
 paling disukai.
 
-Cara pakai singkat (lihat README.md untuk detail lengkap):
+Cara pakai lokal (development):
     1. pip install -r requirements.txt
-    2. python Web-Decor.py
+    2. python app.py
     3. Server jalan di http://127.0.0.1:5000
+
+Konfigurasi notifikasi email (opsional, lewat environment variable):
+    SMTP_USER            -> alamat Gmail pengirim
+    SMTP_PASSWORD        -> App Password Gmail (bukan password akun biasa)
+    VOTE_NOTIFICATION_TO -> alamat email tujuan notifikasi (default: SMTP_USER)
+
+    Kalau salah satu dari SMTP_USER / SMTP_PASSWORD tidak diisi, notifikasi
+    email otomatis dilewati (skip) tanpa membuat vote gagal.
 """
 
 import os
