@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>PSYCHORA GIRLS BADDIE — Character Archive</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Manrope:wght@200;300;400;500;600;700;800&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<canvas id="particles"></canvas>
+
+<div class="atmosphere">
+  <div class="smoke-blob purple-1"></div>
+  <div class="smoke-blob cyan-1"></div>
+  <div class="smoke-blob purple-2"></div>
+</div>
+<div class="grid-overlay"></div>
+
+<nav class="nav-bar">
+  <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center relative z-50">
+    <a href="#hero" class="nav-logo">
+      <span>PSYCHORA</span>
+      <span class="nav-logo-jp">サイコラ</span>
+    </a>
+    <div class="nav-links hidden lg:flex gap-10 items-center">
+      <a href="#hero" class="nav-link">HOME</a>
+      <a href="#characters" class="nav-link">CHARACTERS</a>
+      <a href="#lore" class="nav-link">LORE</a>
+      <a href="#gallery" class="nav-link">GALLERY</a>
+      <a href="#poll" class="nav-link">VOTE</a>
+      <a href="#commission" class="nav-link">FAQ</a>
+      <a href="#about" class="nav-link">ABOUT</a>
+    </div>
+    <div class="nav-status hidden lg:flex">SYSTEM ONLINE</div>
+    <div class="mobile-menu-btn" id="mobileMenuBtn" onclick="toggleMobileMenu()">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#hero" onclick="toggleMobileMenu()">HOME</a>
+  <a href="#characters" onclick="toggleMobileMenu()">CHARACTERS</a>
+  <a href="#lore" onclick="toggleMobileMenu()">LORE</a>
+  <a href="#gallery" onclick="toggleMobileMenu()">GALLERY</a>
+  <a href="#poll" onclick="toggleMobileMenu()">VOTE</a>
+  <a href="#commission" onclick="toggleMobileMenu()">REQUEST</a>
+  <a href="#about" onclick="toggleMobileMenu()">ABOUT</a>
+</div>
+
+<section class="hero" id="hero">
+  <div class="hero-grid">
+    <div class="hero-content reveal">
+      <div class="micro-label">PSYCHORA // CHARACTER ARCHIVE</div>
+      <h1 class="hero-title">PSYCHORA</h1>
+      <h2 class="hero-title-sub">GIRLS BADDIE</h2>
+      <p class="hero-desc">"Two faces. Two instincts. TOP Strongest Psychoras."</p>
+      <div class="hero-buttons">
+        <button class="btn-primary" onclick="document.getElementById('characters').scrollIntoView({behavior:'smooth'})">
+          EXPLORE CHARACTERS
+        </button>
+        <button class="btn-secondary" onclick="document.getElementById('lore').scrollIntoView({behavior:'smooth'})">
+          ENTER THE PSYCHORA
+        </button>
+      </div>
+    </div>
+    <div class="hero-image-wrap reveal reveal-delay-2 card-3d">
+      <div class="hero-image-glow"></div>
+      <span class="hero-image-deco deco-top-right">PSYCHORA // BIO-FILE</span>
+      <img class="hero-image" id="heroImage" src="assetbio/Sarako-vs-ShiroWallpaper.jpg" alt="Sarako and Shiro">
+      <div class="hero-image-frame"></div>
+      <span class="hero-image-deco deco-bottom-left">BEAUTY. POWER. INSTINCT.</span>
+    </div>
+  </div>
+  <div class="scroll-indicator">
+    <span>SCROLL</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<section class="section" id="characters">
+  <div class="watermark" style="top: 5%; right: -5%;">BADDIES</div>
+  <div class="section-inner">
+    <div class="reveal">
+      <div class="micro-label">PSYCHORA // 01 — CHARACTER FILE</div>
+      <h2 class="section-title">THE <span class="italic">BADDIES</span></h2>
+    </div>
+    <div class="char-grid">
+      <div class="char-card reveal reveal-delay-1 card-3d" onclick="openModal('sarako')">
+        <div class="char-card-image">
+          <img src="assetbio/Sarako-Cell_Sword.png" alt="Sarako Kyoga" loading="lazy" decoding="async">
+          <div class="char-aura-layer"></div>
+          <div class="char-card-overlay"></div>
+          <div class="char-card-glow"></div>
+        </div>
+        <button class="char-view-btn">VIEW PROFILE →</button>
+        <div class="char-card-content">
+          <div class="char-num">CHAR.001 // VIOLET/PURPLE</div>
+          <h3 class="char-name">SARAKO KYOGA</h3>
+          <span class="char-name-jp">サラコ・キョウガ</span>
+          <div class="char-alias">The Violet Blade</div>
+          <p class="char-desc">"Silent, composed, and dangerously precise. Sarako moves with the calm of someone who already knows how the battle ends."</p>
+          <div class="char-tags">
+            <span class="char-tag">VIOLET</span>
+            <span class="char-tag">SWORD</span>
+            <span class="char-tag">SHADOW</span>
+          </div>
+        </div>
+      </div>
+      <div class="char-card cyan reveal reveal-delay-2 card-3d" onclick="openModal('shiro')">
+        <div class="char-card-image">
+          <img src="assetbio/Shiro-Baddie.png" alt="Shiro Miazaki" loading="lazy" decoding="async">
+          <div class="char-aura-layer"></div>
+          <div class="char-card-overlay"></div>
+          <div class="char-card-glow"></div>
+        </div>
+        <button class="char-view-btn">VIEW PROFILE →</button>
+        <div class="char-card-content">
+          <div class="char-num">CHAR.002 // CYAN-WHITE</div>
+          <h3 class="char-name">SHIRO MIAZAKI</h3>
+          <span class="char-name-jp">宮崎 シロ</span>
+          <div class="char-alias">The Ice Fang Wolf</div>
+          <p class="char-desc">"A sharp smile hides an unpredictable instinct. Elegant, playful, and just dangerous enough to make you hesitate."</p>
+          <div class="char-tags">
+            <span class="char-tag">CYAN</span>
+            <span class="char-tag">WOLF</span>
+            <span class="char-tag">CHAOS</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="lore-section" id="lore">
+  <div class="watermark" style="top: 10%; left: -5%; opacity: 0.4;">PSYCHORA</div>
+  <div class="lore-content reveal">
+    <div class="micro-label center">PSYCHORA // SYSTEM ONLINE</div>
+    <h2 class="section-title" style="margin-bottom: 3rem;">WELCOME TO <span class="italic">PSYCHORA</span></h2>
+    <div class="lore-divider"></div>
+    <p class="lore-quote">"Behind every beautiful smile lies <span class="accent">an instinct</span> waiting to awaken."</p>
+    <p class="lore-text">Psychora is a world stitched from shadow and neon — where powerful girls confront dangerous enemies, hidden emotions, and the instincts that threaten to consume them. Every alley holds a secret. Every smile hides a blade.</p>
+
+    <div class="synopsis-wrap">
+      <div class="lore-divider"></div>
+      <div class="micro-label center">FULL SYNOPSIS // CLASSIFIED FILE</div>
+      <div class="synopsis-tabs" role="tablist">
+        <button class="synopsis-tab active" onclick="switchSynopsis('en', this)">ENGLISH</button>
+        <button class="synopsis-tab" onclick="switchSynopsis('jp', this)">日本語</button>
+      </div>
+
+      <div class="synopsis-body active" id="synopsis-en">
+        <p>In a world where shadows intertwine with neon, Psychora exists between two realities: the dark, mysterious realm of the Elexroids and the dazzling cybernetic metropolis known as Cyberia.</p>
+        <p>Here, powerful agents known as Psychoras operate in the shadows, confronting dangerous enemies, forbidden secrets, and the unstable emotions buried deep within themselves. They are trained to fight. They are taught to survive. But no one can prepare them for the instincts that awaken when their hearts begin to break.</p>
+        <div class="synopsis-flourish">
+          <p>Every alley hides a secret.</p>
+          <p>Every mission carries a price.</p>
+          <p>Every smile may conceal a blade.</p>
+        </div>
+        <p>Among the countless Psychoras, two extraordinary girls stand at the center of a growing conflict — each possessing overwhelming power, contrasting personalities, and instincts that threaten to consume them.</p>
+        <p>As the boundary between human emotion, Elexroid power, and Cyberia's technology begins to collapse, the girls are forced to confront an unsettling question:</p>
+        <p class="synopsis-question">Are they truly controlling their instincts… or are their instincts controlling them?</p>
+        <p>In a world of beauty, power, betrayal, and obsession, the Psychoras must discover the truth behind their existence before the darkness inside them becomes stronger than the world outside.</p>
+        <p class="synopsis-tagline">"Two faces. Two instincts. One destiny."</p>
+      </div>
+
+      <div class="synopsis-body" id="synopsis-jp">
+        <p>影とネオンが交差する世界――。<br>そこには、謎に包まれた異形の領域「エレクスロイド」と、眩いネオンに彩られた電脳都市「サイベリア」が存在していた。</p>
+        <p>その二つの世界の狭間で暗躍する者たち――彼女たちは、強大な力を持つエージェント、「サイコラ」。危険な敵、隠された真実、そして心の奥底に眠る感情。サイコラたちは戦うために鍛えられ、生き残るための術を叩き込まれてきた。だが――心が揺らぎ始めたとき、目覚めてしまう「本能」だけは、誰にも制御できない。</p>
+        <div class="synopsis-flourish">
+          <p>路地裏には、必ず秘密がある。</p>
+          <p>任務には、必ず代償がある。</p>
+          <p>そして――その笑顔の裏には、いつだって刃が隠されている。</p>
+        </div>
+        <p>数多く存在するサイコラの中でも、ひときわ異彩を放つ二人の少女。圧倒的な力。正反対の性格。そして、自らさえも呑み込もうとする危険な本能。</p>
+        <p>やがて、人間の感情、エレクスロイドの力、そしてサイベリアのテクノロジー――その境界が崩れ始める。彼女たちは、自らの存在に隠された真実と向き合うことになる。</p>
+        <p class="synopsis-question">――果たして、彼女たちは本能を支配しているのか。それとも――本能こそが、彼女たちを支配しているのか。</p>
+        <p>美しさ。力。裏切り。そして、抗えない衝動。闇の中で生きる少女たちは、世界の外側にある闇よりも先に、自分自身の中に潜む闇と戦わなければならない。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="gallery">
+  <div class="watermark" style="bottom: 5%; right: -5%;">ARCHIVE</div>
+  <div class="section-inner">
+    <div class="reveal">
+      <div class="micro-label">PSYCHORA // ARCHIVE ACCESS</div>
+      <h2 class="section-title">VISUAL <span class="italic">ARCHIVE</span></h2>
+    </div>
+    <div class="gallery-grid" id="galleryGrid"></div>
+  </div>
+</section>
+
+<section class="section" id="poll">
+  <div class="watermark" style="bottom: 5%; left: -5%;">VOTE</div>
+  <div class="section-inner">
+    <div class="reveal">
+      <div class="micro-label">PSYCHORA // CHARACTER POLL</div>
+      <h2 class="section-title">WHO'S YOUR <span class="italic">FAVORITE</span></h2>
+      <p class="commission-desc">Cast your vote for the Psychora you like most. Results update live below — one vote per visitor.</p>
+    </div>
+    <div class="poll-grid reveal reveal-delay-1" id="pollGrid">
+      <button class="poll-card" data-character="sarako" type="button">
+        <div class="poll-card-image">
+          <img src="assetbio/Sarako-Cell_Sword.png" alt="Sarako Kyoga" loading="lazy" decoding="async">
+          <div class="poll-card-overlay"></div>
+        </div>
+        <div class="poll-card-info">
+          <span class="poll-card-num">CHAR.001 // VIOLET</span>
+          <h3 class="poll-card-name">SARAKO KYOGA</h3>
+          <span class="poll-card-alias">The Violet Blade</span>
+        </div>
+        <div class="poll-bar-wrap">
+          <div class="poll-bar" style="width:0%"></div>
+        </div>
+        <span class="poll-percent">0%</span>
+        <span class="poll-vote-label">VOTE SARAKO</span>
+      </button>
+      <button class="poll-card cyan" data-character="shiro" type="button">
+        <div class="poll-card-image">
+          <img src="assetbio/Shiro-Baddie.png" alt="Shiro Miazaki" loading="lazy" decoding="async">
+          <div class="poll-card-overlay"></div>
+        </div>
+        <div class="poll-card-info">
+          <span class="poll-card-num">CHAR.002 // CYAN</span>
+          <h3 class="poll-card-name">SHIRO MIAZAKI</h3>
+          <span class="poll-card-alias">The Ice Fang Wolf</span>
+        </div>
+        <div class="poll-bar-wrap">
+          <div class="poll-bar" style="width:0%"></div>
+        </div>
+        <span class="poll-percent">0%</span>
+        <span class="poll-vote-label">VOTE SHIRO</span>
+      </button>
+    </div>
+    <p class="poll-status" id="pollStatus"></p>
+    <p class="poll-total" id="pollTotal"></p>
+  </div>
+</section>
+
+<section class="section" id="commission">
+  <div class="watermark" style="top: 10%; left: -5%;">ANSWERS</div>
+  <div class="section-inner">
+    <div class="reveal">
+      <div class="micro-label">PSYCHORA // ARCHIVE FAQ</div>
+      <h2 class="section-title">FREQUENTLY <span class="italic">ASKED</span></h2>
+      <p class="commission-desc">Got questions about PSYCHORA, the characters, or the project? Tap a question below to reveal the answer.</p>
+    </div>
+    <div class="faq-list reveal reveal-delay-1" id="faqList">
+      <div class="faq-item">
+        <button class="faq-question" aria-expanded="false">
+          <span>What exactly is PSYCHORA?</span>
+          <i class="fas fa-plus faq-icon"></i>
+        </button>
+        <div class="faq-answer">
+          <p>PSYCHORA is an original character project set in a world split between the shadowy Elexroid realm and the neon metropolis of Cyberia. It centers on two Psychoras, Sarako and Shiro, and the instincts they struggle to control.</p>
+        </div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question" aria-expanded="false">
+          <span>Is this a manga, webcomic, or animation?</span>
+          <i class="fas fa-plus faq-icon"></i>
+        </button>
+        <div class="faq-answer">
+          <p>Right now PSYCHORA lives as a character archive and lore project — artwork, bios, and worldbuilding. Future formats (comic, animation, or otherwise) will be announced through the socials linked in the footer.</p>
+        </div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question" aria-expanded="false">
+          <span>Can I make fan art of Sarako or Shiro?</span>
+          <i class="fas fa-plus faq-icon"></i>
+        </button>
+        <div class="faq-answer">
+          <p>Yes! Fan art is welcome and appreciated. Please credit PSYCHORA / the original creator, and avoid using the characters for anything commercial without permission.</p>
+        </div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question" aria-expanded="false">
+          <span>Are commissions open?</span>
+          <i class="fas fa-plus faq-icon"></i>
+        </button>
+        <div class="faq-answer">
+          <p>Commission status changes from time to time. The best way to check current availability and rates is to reach out directly through the socials in the footer below.</p>
+        </div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question" aria-expanded="false">
+          <span>Will there be more characters added to the archive?</span>
+          <i class="fas fa-plus faq-icon"></i>
+        </button>
+        <div class="faq-answer">
+          <p>Yes — Sarako and Shiro are just the first two files. More Psychoras are planned as the project and lore continue to expand.</p>
+        </div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question" aria-expanded="false">
+          <span>How can I get in touch or follow updates?</span>
+          <i class="fas fa-plus faq-icon"></i>
+        </button>
+        <div class="faq-answer">
+          <p>Follow along and reach out through YouTube (Zairavision) or Instagram (@zai_shadow) — both are linked in the footer at the bottom of this page.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer id="about">
+  <div class="footer-glow"></div>
+  <div class="footer-logo">PSYCHORA GIRLS BADDIE</div>
+  <div class="footer-divider"></div>
+  <p class="footer-tagline">"Beauty is only the beginning from the bloodsheds."</p>
+  <div class="footer-socials" aria-label="Social media contacts">
+    <a class="footer-social-link" href="https://www.youtube.com/@Zairavision" target="_blank" rel="noopener noreferrer" aria-label="YouTube Zairavision">
+      <i class="fab fa-youtube" aria-hidden="true"></i>
+      <span>Zairavision</span>
+    </a>
+    <a class="footer-social-link" href="https://www.instagram.com/zai_shadow" target="_blank" rel="noopener noreferrer" aria-label="Instagram zai_shadow">
+      <i class="fab fa-instagram" aria-hidden="true"></i>
+      <span>@zai_shadow</span>
+    </a>
+  </div>
+  <p class="footer-copy">PSYCHORA GIRLS BADDIE / 2026 — ALL RIGHTS RESERVED</p>
+</footer>
+
+<div class="modal-overlay" id="modal" role="dialog" aria-modal="true">
+  <div class="modal-content">
+    <div class="modal-image" id="modalImageWrap">
+      <div class="modal-image-deco" id="modalImageDeco">CHAR.001 // VIOLET/PURPLE</div>
+      <img id="modalImage" src="assetbio/SarakoRage1.png" alt="SarakoRage">
+    </div>
+    <div class="modal-info">
+      <button class="modal-close" onclick="closeModal()" aria-label="Close">
+        <i class="fas fa-times"></i>
+      </button>
+      <div class="modal-label" id="modalLabel">CHAR.001 // CHARACTER FILE</div>
+      <h2 class="modal-name" id="modalName">SARAKO KYOGA</h2>
+      <div class="modal-name-jp" id="modalNameJp">サラコ・キョウガ</div>
+      <div class="modal-alias" id="modalAlias">The Violet AbyssBlade</div>
+      <div class="modal-quote" id="modalQuote">"..."</div>
+      <div class="modal-section">
+        <div class="modal-section-label">BIOGRAPHY</div>
+        <div class="modal-section-text" id="modalBio"></div>
+      </div>
+      <div class="modal-section">
+        <div class="modal-section-label">PERSONALITY</div>
+        <div class="modal-section-text" id="modalPersonality"></div>
+      </div>
+      <div class="modal-section">
+        <div class="modal-section-label">WEAPON</div>
+        <div class="modal-section-text" id="modalWeapon"></div>
+      </div>
+      <div class="modal-section">
+        <div class="modal-section-label">COLOR THEME</div>
+        <div class="modal-section-text" id="modalColor"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
