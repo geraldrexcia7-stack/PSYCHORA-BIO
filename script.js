@@ -115,7 +115,7 @@ function toggleMobileMenu() {
 
 // Character Poll / Vote -> Flask backend
 // GANTI URL ini kalau backend-nya sudah online / dideploy (bukan lagi localhost).
-const POLL_API_BASE = 'http://127.0.0.1:5000/api/vote';
+const POLL_API_BASE = 'https://psychora-bio-production.up.railway.app/api/vote';
 const POLL_STORAGE_KEY = 'psychora_voted_character';
 
 const pollCards = document.querySelectorAll('.poll-card');
