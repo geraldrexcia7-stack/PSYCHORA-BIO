@@ -7,8 +7,8 @@ const images = {
 };
 
 const voices = {
-  sarako: 'assetbio/audio/Sarako_VoiceBio.mp3',
-  shiro: 'assetbio/audio/Shiro_Voice-profile.mp3'
+  sarako: 'assetbio/Audio/Sarako_VoiceBio.mp3',
+  shiro: 'assetbio/Audio/Shiro_Voice-profile.mp3'
 };
 
 const characterData = {
