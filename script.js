@@ -144,10 +144,16 @@ function toggleVoice(e) {
   if (!audio || !audio.src || btn.hasAttribute('disabled')) return;
 
   if (audio.paused) {
-    audio.play().catch(() => {});
-    icon.className = 'fas fa-pause';
-    btn.classList.add('playing');
-    btn.setAttribute('aria-pressed', 'true');
+    audio.play().then(() => {
+      icon.className = 'fas fa-pause';
+      btn.classList.add('playing');
+      btn.setAttribute('aria-pressed', 'true');
+    }).catch((err) => {
+      console.error('Voice audio failed to play:', audio.src, err);
+      icon.className = 'fas fa-play';
+      btn.classList.remove('playing');
+      btn.setAttribute('aria-pressed', 'false');
+    });
   } else {
     audio.pause();
     icon.className = 'fas fa-play';
