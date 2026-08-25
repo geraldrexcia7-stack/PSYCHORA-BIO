@@ -6,6 +6,11 @@ const images = {
   sarakoTrans: 'assetbio/sarako-trans.png'
 };
 
+const voices = {
+  sarako: 'assetbio/audio/Sarako_VoiceBio.mp3',
+  shiro: 'assetbio/audio/Shiro_Voice-profile.mp3'
+};
+
 const characterData = {
   sarako: {
     num: 'CHAR.001 // VIOLET/PURPLE',
@@ -21,7 +26,8 @@ const characterData = {
     personality: 'Composed · Observant · Quietly Merciless',
     weapon: 'Hush — A spirit-bound katana that absorbs sound around it, leaving only silence in its wake.',
     color: 'Neon Violet',
-    colorHex: '#b026ff'
+    colorHex: '#b026ff',
+    voice: voices.sarako
   },
   shiro: {
     num: 'CHAR.002 // CYAN-WHITE',
@@ -37,7 +43,8 @@ const characterData = {
     personality: 'Playful · Sharp · Dangerously Unpredictable',
     weapon: 'Chain Lightning — An electric whip-blade pulsing with storm energy, linked to her neural signature.',
     color: 'Electric Cyan/White',
-    colorHex: '#00d9ff'
+    colorHex: '#00d9ff',
+    voice: voices.shiro
   }
 };
 
@@ -86,11 +93,76 @@ function openModal(charId, overrides) {
   document.getElementById('modalColor').innerHTML = '<span class="color-swatch" style="background:' + data.colorHex + ';color:' + data.colorHex + '"></span>' + data.color;
   document.getElementById('modal').classList.add('active');
   document.body.style.overflow = 'hidden';
+
+  setupVoicePlayer(data.voice);
 }
+
+function setupVoicePlayer(voiceSrc) {
+  const audio = document.getElementById('voiceAudio');
+  const btn = document.getElementById('voicePlayBtn');
+  const icon = document.getElementById('voicePlayIcon');
+
+  stopVoice();
+
+  if (voiceSrc) {
+    audio.src = voiceSrc;
+    btn.classList.remove('disabled');
+    btn.removeAttribute('disabled');
+    btn.style.display = '';
+    btn.setAttribute('aria-label', 'Play character voice bio');
+  } else {
+    audio.removeAttribute('src');
+    btn.classList.add('disabled');
+    btn.setAttribute('disabled', 'true');
+    btn.style.display = 'none';
+    btn.setAttribute('aria-label', 'Voice bio not available');
+  }
+  icon.className = 'fas fa-play';
+  btn.classList.remove('playing');
+  btn.setAttribute('aria-pressed', 'false');
+}
+
+function stopVoice() {
+  const audio = document.getElementById('voiceAudio');
+  const btn = document.getElementById('voicePlayBtn');
+  const icon = document.getElementById('voicePlayIcon');
+  if (!audio) return;
+  audio.pause();
+  audio.currentTime = 0;
+  if (icon) icon.className = 'fas fa-play';
+  if (btn) {
+    btn.classList.remove('playing');
+    btn.setAttribute('aria-pressed', 'false');
+  }
+}
+
+function toggleVoice(e) {
+  if (e) e.stopPropagation();
+  const audio = document.getElementById('voiceAudio');
+  const btn = document.getElementById('voicePlayBtn');
+  const icon = document.getElementById('voicePlayIcon');
+  if (!audio || !audio.src || btn.hasAttribute('disabled')) return;
+
+  if (audio.paused) {
+    audio.play().catch(() => {});
+    icon.className = 'fas fa-pause';
+    btn.classList.add('playing');
+    btn.setAttribute('aria-pressed', 'true');
+  } else {
+    audio.pause();
+    icon.className = 'fas fa-play';
+    btn.classList.remove('playing');
+    btn.setAttribute('aria-pressed', 'false');
+  }
+}
+
+const voiceAudioEl = document.getElementById('voiceAudio');
+if (voiceAudioEl) voiceAudioEl.addEventListener('ended', stopVoice);
 
 function closeModal() {
   document.getElementById('modal').classList.remove('active');
   document.body.style.overflow = '';
+  stopVoice();
 }
 
 document.getElementById('modal').addEventListener('click', (e) => {
@@ -115,7 +187,7 @@ function toggleMobileMenu() {
 
 // Character Poll / Vote -> Flask backend
 // GANTI URL ini kalau backend-nya sudah online / dideploy (bukan lagi localhost).
-const POLL_API_BASE = 'http://127.0.0.1:5000/api/vote';
+const POLL_API_BASE = 'https://psychora-bio-production.up.railway.app/api/vote';
 const POLL_STORAGE_KEY = 'psychora_voted_character';
 
 const pollCards = document.querySelectorAll('.poll-card');
@@ -344,7 +416,8 @@ galleryItems.forEach((item, i) => {
     nameJp: item.nameJp || characterData[item.charId].nameJp,
     nameJpWhite: !!item.nameJpWhite,
     alias: item.tag,
-    pos: item.pos || 'center top'
+    pos: item.pos || 'center top',
+    voice: null
   }));
   galleryGrid.appendChild(div);
   observer.observe(div);

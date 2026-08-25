@@ -335,6 +335,11 @@
     <div class="modal-image" id="modalImageWrap">
       <div class="modal-image-deco" id="modalImageDeco">CHAR.001 // VIOLET/PURPLE</div>
       <img id="modalImage" src="assetbio/SarakoRage1.png" alt="SarakoRage">
+      <button class="voice-play-btn" id="voicePlayBtn" type="button" onclick="toggleVoice(event)" aria-label="Play character voice bio" aria-pressed="false">
+        <span class="voice-play-rings" aria-hidden="true"></span>
+        <i class="fas fa-play" id="voicePlayIcon" aria-hidden="true"></i>
+      </button>
+      <audio id="voiceAudio" preload="none"></audio>
     </div>
     <div class="modal-info">
       <button class="modal-close" onclick="closeModal()" aria-label="Close">
