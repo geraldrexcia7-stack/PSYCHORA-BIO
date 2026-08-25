@@ -6,11 +6,6 @@ const images = {
   sarakoTrans: 'assetbio/sarako-trans.png'
 };
 
-const voices = {
-  sarako: 'assetbio/audio/Sarako_VoiceBio.mp3',
-  shiro: 'assetbio/audio/Shiro_Voice-profile.mp3'
-};
-
 const characterData = {
   sarako: {
     num: 'CHAR.001 // VIOLET/PURPLE',
@@ -26,8 +21,7 @@ const characterData = {
     personality: 'Composed · Observant · Quietly Merciless',
     weapon: 'Hush — A spirit-bound katana that absorbs sound around it, leaving only silence in its wake.',
     color: 'Neon Violet',
-    colorHex: '#b026ff',
-    voice: voices.sarako
+    colorHex: '#b026ff'
   },
   shiro: {
     num: 'CHAR.002 // CYAN-WHITE',
@@ -43,8 +37,7 @@ const characterData = {
     personality: 'Playful · Sharp · Dangerously Unpredictable',
     weapon: 'Chain Lightning — An electric whip-blade pulsing with storm energy, linked to her neural signature.',
     color: 'Electric Cyan/White',
-    colorHex: '#00d9ff',
-    voice: voices.shiro
+    colorHex: '#00d9ff'
   }
 };
 
@@ -59,9 +52,20 @@ document.querySelectorAll('img').forEach(img => {
   img.addEventListener('error', () => handleImgError(img));
 });
 
-function openModal(charId, overrides) {
+function openModal(charId, elOrOverrides, maybeOverrides) {
   const base = characterData[charId];
-  const data = overrides ? Object.assign({}, base, overrides) : base;
+  let el = null;
+  let overrides = null;
+  if (elOrOverrides instanceof Element) {
+    el = elOrOverrides;
+    overrides = maybeOverrides || null;
+  } else {
+    overrides = elOrOverrides || null;
+  }
+  const data = overrides ? Object.assign({}, base, overrides) : Object.assign({}, base);
+  if (!overrides || !('voice' in overrides)) {
+    data.voice = el && el.dataset.voice ? el.dataset.voice : null;
+  }
   const modalImg = document.getElementById('modalImage');
   
   modalImg.classList.remove('img-broken');
