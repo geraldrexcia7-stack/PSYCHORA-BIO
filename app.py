@@ -34,7 +34,9 @@ from flask_cors import CORS
 app = Flask(__name__)
 
 # Izinkan website statis (dibuka lewat Live Server / domain lain) mengakses API ini.
-# Untuk produksi, ganti "*" dengan domain website kamu, misal:
+# CATATAN PRODUKSI: "*" berarti semua domain boleh akses endpoint ini.
+# Kalau website sudah live di domain tetap, ganti jadi domain spesifik, contoh:
+#   CORS(app, resources={r"/api/*": {"origins": "https://namadomainmu.com"}})
 CORS(app, resources={r"/api/*": {"origins": "*"}})
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))

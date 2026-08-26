@@ -1,9 +1,6 @@
 const images = {
   sarako: 'assetbio/Sarako-Cell_Sword.png',
-  shiro: 'assetbio/Shiro-Baddie.png',
-  shiroAlt: 'assetbio/shiro-alt.png',
-  shiroBaddie2: 'assetbio/shiro-baddie2.jpg',
-  sarakoTrans: 'assetbio/sarako-trans.png'
+  shiro: 'assetbio/Shiro-Baddie.png'
 };
 
 const characterData = {

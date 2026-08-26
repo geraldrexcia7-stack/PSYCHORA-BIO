@@ -1,0 +1,15 @@
+# Data vote yang di-generate otomatis oleh app.py saat runtime.
+# Jangan di-commit: isinya IP & user-agent pengunjung (privasi), dan akan
+# selalu berubah tiap ada vote baru -> bikin noise di git history.
+votes_count.json
+votes_log.jsonl
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Editor / OS
+.DS_Store
+.vscode/
