@@ -544,3 +544,149 @@ document.addEventListener('touchend', function (event) {
     });
   });
 })();
+/* ==========================================================================
+   Ambient BGM Toggle
+   - Pure front-end: remembers on/off via localStorage, no server involved.
+   - Respects browser autoplay rules (never forces sound before a gesture).
+   - Fades volume smoothly and automatically ducks under character voice bios.
+   ========================================================================== */
+(function initBgmToggle() {
+  const STORAGE_KEY = 'psychora-bgm-on';
+  const VOLUME_KEY = 'psychora-bgm-volume';
+  const DEFAULT_VOLUME = 0.45;
+  const FADE_MS = 700;
+
+  const btn = document.getElementById('bgmToggle');
+  const audio = document.getElementById('bgmAudio');
+  const label = document.getElementById('bgmToggleLabel');
+  const volumeSlider = document.getElementById('bgmVolumeSlider');
+  const volumeValue = document.getElementById('bgmVolumeValue');
+  if (!btn || !audio) return;
+
+  // The volume the user actually wants — separate from whatever the audio
+  // element is set to right now (which may be mid-fade or ducked).
+  let targetVolume = DEFAULT_VOLUME;
+  const savedVolume = parseFloat(window.localStorage.getItem(VOLUME_KEY));
+  if (!isNaN(savedVolume) && savedVolume >= 0 && savedVolume <= 1) {
+    targetVolume = savedVolume;
+  }
+
+  let fadeFrame = null;
+  let isPlaying = false;
+  let duckedByVoice = false;
+
+  function setVolumeUI(vol) {
+    const pct = Math.round(vol * 100);
+    if (volumeSlider) volumeSlider.value = String(pct);
+    if (volumeValue) volumeValue.textContent = `${pct}%`;
+    document.documentElement.style.setProperty('--bgm-vol', `${pct}%`);
+  }
+
+  setVolumeUI(targetVolume);
+
+  function fadeTo(target, onDone) {
+    if (fadeFrame) cancelAnimationFrame(fadeFrame);
+    const start = audio.volume;
+    const startTime = performance.now();
+
+    function step(now) {
+      const t = Math.min(1, (now - startTime) / FADE_MS);
+      audio.volume = start + (target - start) * t;
+      if (t < 1) {
+        fadeFrame = requestAnimationFrame(step);
+      } else {
+        fadeFrame = null;
+        if (onDone) onDone();
+      }
+    }
+    fadeFrame = requestAnimationFrame(step);
+  }
+
+  function updateUI(playing) {
+    btn.classList.toggle('playing', playing);
+    btn.setAttribute('aria-pressed', String(playing));
+    btn.setAttribute('aria-label', playing ? 'Pause background music' : 'Play background music');
+    if (label) label.textContent = playing ? 'PAUSE MUSIC' : 'PLAY MUSIC';
+  }
+
+  function start() {
+    audio.volume = 0;
+    audio.play()
+      .then(() => {
+        isPlaying = true;
+        fadeTo(targetVolume);
+        updateUI(true);
+        window.localStorage.setItem(STORAGE_KEY, 'true');
+      })
+      .catch(() => {
+        // Blocked by autoplay policy — will retry on next user gesture.
+      });
+  }
+
+  function stop() {
+    fadeTo(0, () => {
+      audio.pause();
+      isPlaying = false;
+    });
+    updateUI(false);
+    window.localStorage.setItem(STORAGE_KEY, 'false');
+  }
+
+  btn.addEventListener('click', () => {
+    if (isPlaying) {
+      stop();
+    } else {
+      start();
+    }
+  });
+
+  // Volume slider — direct, immediate control. Cancels any in-flight fade
+  // so a manual drag can never fight with the fade-in/fade-out animation.
+  if (volumeSlider) {
+    volumeSlider.addEventListener('input', () => {
+      const vol = Number(volumeSlider.value) / 100;
+      targetVolume = vol;
+      setVolumeUI(vol);
+      window.localStorage.setItem(VOLUME_KEY, String(vol));
+
+      if (fadeFrame) {
+        cancelAnimationFrame(fadeFrame);
+        fadeFrame = null;
+      }
+      // While ducked for a voice bio, leave the audible level alone —
+      // the new target is remembered and applied once the duck ends.
+      if (!duckedByVoice) {
+        audio.volume = vol;
+      }
+    });
+  }
+
+  // Resume a previously-enabled session as soon as the visitor interacts
+  // anywhere on the page (satisfies autoplay restrictions gracefully).
+  if (window.localStorage.getItem(STORAGE_KEY) === 'true') {
+    const resumeOnGesture = () => {
+      if (!isPlaying) start();
+      window.removeEventListener('pointerdown', resumeOnGesture);
+      window.removeEventListener('keydown', resumeOnGesture);
+    };
+    window.addEventListener('pointerdown', resumeOnGesture, { once: true });
+    window.addEventListener('keydown', resumeOnGesture, { once: true });
+  }
+
+  // Duck the ambient track under character voice bios instead of overlapping them.
+  const voiceAudio = document.getElementById('voiceAudio');
+  if (voiceAudio) {
+    voiceAudio.addEventListener('play', () => {
+      if (!isPlaying) return;
+      duckedByVoice = true;
+      fadeTo(Math.min(0.08, targetVolume));
+    });
+    const restoreFromDuck = () => {
+      if (!duckedByVoice || !isPlaying) return;
+      duckedByVoice = false;
+      fadeTo(targetVolume);
+    };
+    voiceAudio.addEventListener('pause', restoreFromDuck);
+    voiceAudio.addEventListener('ended', restoreFromDuck);
+  }
+})();

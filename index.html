@@ -370,6 +370,42 @@
   </div>
 </div>
 
+<!-- Ambient BGM Toggle -->
+<div class="bgm-toggle-wrap">
+  <button
+    type="button"
+    class="bgm-toggle"
+    id="bgmToggle"
+    aria-pressed="false"
+    aria-label="Play background music"
+  >
+    <span class="bgm-toggle-ring" aria-hidden="true"></span>
+    <span class="bgm-toggle-core" aria-hidden="true">
+      <span class="bgm-bar"></span>
+      <span class="bgm-bar"></span>
+      <span class="bgm-bar"></span>
+      <span class="bgm-bar"></span>
+    </span>
+  </button>
+  <span class="bgm-toggle-label" id="bgmToggleLabel" aria-hidden="true">PLAY MUSIC</span>
+  <div class="bgm-volume-popover">
+    <span class="bgm-volume-value" id="bgmVolumeValue">45%</span>
+    <div class="bgm-volume-track">
+      <input
+        type="range"
+        class="bgm-volume-slider"
+        id="bgmVolumeSlider"
+        min="0"
+        max="100"
+        step="1"
+        value="45"
+        aria-label="Music volume"
+      >
+    </div>
+  </div>
+</div>
+<audio id="bgmAudio" src="music-bgm/Strawberry_Venom.MP3" loop preload="none"></audio>
+
 <script src="script.js"></script>
 </body>
 </html>

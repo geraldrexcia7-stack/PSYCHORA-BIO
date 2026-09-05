@@ -1,5 +1,5 @@
 """
-PSYCHORA - Character Poll / Vote Backend
+GUIDE FOR PSYCHORA - Character Poll / Vote Backend
 --------------------------------------
 Server Python (Flask) sederhana yang menerima vote "karakter favorit kamu"
 dari pengunjung website (Sarako vs Shiro), menyimpan setiap vote ke file log
@@ -37,7 +37,7 @@ app = Flask(__name__)
 # CATATAN PRODUKSI: "*" berarti semua domain boleh akses endpoint ini.
 # Kalau website sudah live di domain tetap, ganti jadi domain spesifik, contoh:
 #   CORS(app, resources={r"/api/*": {"origins": "https://namadomainmu.com"}})
-CORS(app, resources={r"/api/*": {"origins": "*"}})
+CORS(app, resources={r"/api/*": {"origins": "https://psychora-bio.vercel.app"}})
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 VOTES_LOG_FILE = os.path.join(BASE_DIR, "votes_log.jsonl")
