@@ -1183,10 +1183,11 @@ footer {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 1.5rem;
+  gap: 2rem;
   margin-bottom: 2rem;
   position: relative;
   z-index: 2;
+  flex-wrap: wrap;
 }
 .footer-social-link {
   display: inline-flex;
@@ -1199,7 +1200,7 @@ footer {
   text-decoration: none;
   transition: color 0.3s ease, transform 0.3s ease;
 }
-.footer-social-link i { font-size: 0.95rem; }
+.footer-social-link i { font-size: 1.5rem; }
 .footer-social-link:hover {
   color: var(--white);
   transform: translateY(-2px);
@@ -1522,64 +1523,115 @@ footer {
 html, body { max-width: 100%; }
 
 /* Character Poll / Vote */
-.poll-grid {
-  max-width: 900px;
+/* Each .poll-card already clips itself (own overflow:hidden + its own
+   skewX transform) into a true parallelogram: both its left and right
+   edges slant the same way. Two such cards side by side form one bigger
+   parallelogram whose bottom edge sits shift = height*tan(angle) to the
+   left of its top edge — a fixed pixel offset independent of width.
+   .poll-frame reserves the normal centered 1000px design column;
+   .poll-grid is rendered "shift" narrower than that and nudged right by
+   "shift", so the combined shape's top-left/bottom-right insets land
+   exactly on the frame's edges with nothing left over to crop and
+   nothing needing to spill outside the frame (which matters because the
+   parent .section has overflow:hidden and offers no slack to rely on). */
+.poll-frame {
+  max-width: 1000px;
   margin: 3.5rem auto 0;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1.75rem;
+}
+.poll-grid {
+  width: calc(100% - 78px);
+  margin-left: 78px;
+  display: flex;
+  align-items: stretch;
+  height: 560px;
 }
 .poll-card {
   position: relative;
-  display: flex;
-  flex-direction: column;
-  background: rgba(20, 9, 36, 0.4);
+  flex: 1;
+  min-width: 0;
+  display: block;
+  background: #000;
   border: 1px solid var(--border);
-  border-radius: 4px;
+  border-radius: 0;
   overflow: hidden;
   cursor: pointer;
   padding: 0;
+  margin: 0;
   text-align: left;
   font-family: inherit;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+  transform: skewX(-8deg);
+  transition: flex 0.65s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.3s ease, border-color 0.3s ease;
+  z-index: 1;
 }
-.poll-card:hover {
+.poll-card + .poll-card { margin-left: -1px; }
+.poll-card:hover,
+.poll-card:focus-visible,
+.poll-card.is-active {
+  flex: 1.6;
+  z-index: 3;
   border-color: var(--border-bright);
-  transform: translateY(-4px);
-  box-shadow: 0 10px 30px rgba(176, 38, 255, 0.15);
+  box-shadow: 0 10px 40px rgba(176, 38, 255, 0.2);
 }
-.poll-card.cyan:hover {
-  box-shadow: 0 10px 30px rgba(0, 217, 255, 0.15);
+.poll-card.cyan:hover,
+.poll-card.cyan:focus-visible,
+.poll-card.cyan.is-active {
+  box-shadow: 0 10px 40px rgba(0, 217, 255, 0.2);
 }
 .poll-card:disabled {
   cursor: default;
 }
 .poll-card.voted {
+  flex: 1.3;
+  z-index: 2;
   border-color: var(--border-bright);
   box-shadow: 0 0 25px rgba(176, 38, 255, 0.25);
 }
 .poll-card.cyan.voted {
   box-shadow: 0 0 25px rgba(0, 217, 255, 0.25);
 }
+
+/* One counter-skewed, oversized wrapper holds image + overlay + text, so
+   everything inside reads perfectly upright while the outer button clips
+   it into the slanted parallelogram shape. */
 .poll-card-image {
-  position: relative;
-  height: 260px;
+  position: absolute;
+  inset: 0;
+  left: -84px;
+  right: -84px;
   overflow: hidden;
+  transform: skewX(8deg);
+  transition: transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.poll-card:hover .poll-card-image,
+.poll-card:focus-visible .poll-card-image,
+.poll-card.is-active .poll-card-image {
+  transform: skewX(8deg) scale(1.035);
 }
 .poll-card-image img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   object-position: top center;
-  transition: transform 0.5s ease;
+  filter: brightness(0.72) saturate(0.85);
+  transition: filter 0.5s ease, transform 0.5s ease;
 }
-.poll-card:hover .poll-card-image img {
-  transform: scale(1.05);
+.poll-card:hover .poll-card-image img,
+.poll-card:focus-visible .poll-card-image img,
+.poll-card.is-active .poll-card-image img,
+.poll-card.voted .poll-card-image img {
+  filter: brightness(1) saturate(1);
 }
 .poll-card-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(to top, rgba(5, 5, 8, 0.95), transparent 60%);
+  background: linear-gradient(to top, rgba(5, 5, 8, 0.95), transparent 55%);
+}
+.poll-card-content {
+  position: absolute;
+  left: 84px;
+  right: 84px;
+  bottom: 0;
+  padding-bottom: 0.4rem;
 }
 .poll-card-info {
   padding: 1.1rem 1.25rem 0.5rem;
@@ -1596,7 +1648,7 @@ html, body { max-width: 100%; }
 .poll-card.cyan .poll-card-num { color: var(--cyan); }
 .poll-card-name {
   font-family: 'Playfair Display', serif;
-  font-size: 1.3rem;
+  font-size: 1.5rem;
   color: var(--white);
 }
 .poll-card-alias {
@@ -1622,12 +1674,14 @@ html, body { max-width: 100%; }
   background: linear-gradient(90deg, var(--cyan), #7fe9ff);
 }
 .poll-percent {
+  display: block;
   margin: 0 1.25rem 1.1rem;
   font-family: 'DM Mono', monospace;
   font-size: 0.85rem;
   color: var(--silver);
 }
 .poll-vote-label {
+  display: block;
   margin: 0 1.25rem 1.25rem;
   font-family: 'DM Mono', monospace;
   font-size: 0.68rem;
@@ -1637,24 +1691,56 @@ html, body { max-width: 100%; }
   transform: translateY(4px);
   transition: opacity 0.3s ease, transform 0.3s ease;
 }
-.poll-card:hover .poll-vote-label { opacity: 1; transform: translateY(0); }
+.poll-card:hover .poll-vote-label,
+.poll-card:focus-visible .poll-vote-label,
+.poll-card.is-active .poll-vote-label {
+  opacity: 1;
+  transform: translateY(0);
+}
 .poll-card.voted .poll-vote-label { opacity: 0; }
-.poll-card.voted::after {
-  content: 'VOTED';
+
+/* VOTED badge: lives inside the same counter-skewed wrapper as the rest of
+   the card copy (.poll-card-image, skewX(8deg)) so it renders upright, and
+   uses the same left/right safe-insets as .poll-card-content so it can
+   never be sliced off by the outer frame — unlike the old ::after on the
+   skewed .poll-card itself, which could poke past the clip and get cut.
+   The chip itself is an angled tag (clip-path) echoing the parallelogram
+   theme instead of a plain rounded rectangle. */
+.poll-voted-badge {
   position: absolute;
-  top: 1rem;
-  right: 1rem;
+  top: 1.1rem;
+  left: 84px;
+  right: 84px;
+  z-index: 4;
+  display: flex;
+  justify-content: flex-end;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(-4px);
+  transition: opacity 0.35s ease, transform 0.35s ease;
+}
+.poll-card.voted .poll-voted-badge {
+  opacity: 1;
+  transform: translateY(0);
+}
+.poll-voted-chip {
+  display: inline-flex;
+  align-items: center;
   font-family: 'DM Mono', monospace;
-  font-size: 0.62rem;
+  font-size: 0.66rem;
   letter-spacing: 0.15em;
   color: var(--white);
-  background: rgba(176, 38, 255, 0.35);
+  background: rgba(10, 8, 14, 0.88);
   border: 1px solid var(--border-bright);
-  padding: 0.3rem 0.6rem;
-  border-radius: 999px;
+  padding: 0.4rem 0.85rem 0.4rem 0.95rem;
+  clip-path: polygon(10px 0, 100% 0, calc(100% - 10px) 100%, 0 100%);
+  box-shadow: 0 0 18px rgba(176, 38, 255, 0.4);
+  white-space: nowrap;
 }
-.poll-card.cyan.voted::after {
-  background: rgba(0, 217, 255, 0.25);
+.poll-voted-chip i { margin-right: 0.4rem; font-size: 0.6rem; }
+.poll-card.cyan .poll-voted-chip {
+  border-color: var(--cyan);
+  box-shadow: 0 0 18px rgba(0, 217, 255, 0.35);
 }
 .poll-status {
   text-align: center;
@@ -1674,9 +1760,55 @@ html, body { max-width: 100%; }
   color: var(--silver-dim);
 }
 
-@media (max-width: 640px) {
-  .poll-grid { grid-template-columns: 1fr; }
-  .poll-card-image { height: 220px; }
+@media (prefers-reduced-motion: reduce) {
+  .poll-card, .poll-card-image, .poll-card-image img { transition: none; }
+}
+
+@media (max-width: 768px) {
+  .poll-grid {
+    height: 480px;
+    width: calc(100% - 50px);
+    margin-left: 50px;
+  }
+  .poll-card { transform: skewX(-6deg); }
+  .poll-card-image { left: -60px; right: -60px; transform: skewX(6deg); }
+  .poll-card:hover .poll-card-image,
+  .poll-card:focus-visible .poll-card-image,
+  .poll-card.is-active .poll-card-image {
+    transform: skewX(6deg) scale(1.035);
+  }
+  .poll-card-content { left: 60px; right: 60px; }
+  .poll-card-name { font-size: 1.25rem; }
+  .poll-voted-badge { left: 60px; right: 60px; }
+}
+
+@media (max-width: 480px) {
+  .poll-grid {
+    height: 400px;
+    width: calc(100% - 28px);
+    margin-left: 28px;
+  }
+  .poll-card { transform: skewX(-4deg); }
+  .poll-card-image { left: -40px; right: -40px; transform: skewX(4deg); }
+  .poll-card:hover .poll-card-image,
+  .poll-card:focus-visible .poll-card-image,
+  .poll-card.is-active .poll-card-image {
+    transform: skewX(4deg) scale(1.035);
+  }
+  .poll-card-content { left: 40px; right: 40px; }
+  .poll-card-info { padding: 0.8rem 0.6rem 0.4rem; }
+  .poll-card-name { font-size: 1.05rem; }
+  .poll-card-alias { font-size: 0.7rem; }
+  .poll-bar-wrap { margin: 0.7rem 0.6rem 0.3rem; }
+  .poll-percent { margin: 0 0.6rem 0.7rem; font-size: 0.72rem; }
+  .poll-vote-label {
+    /* On touch there's no hover, so keep the CTA legible without relying on it */
+    opacity: 1;
+    transform: none;
+    margin: 0 0.6rem 0.8rem;
+  }
+  .poll-voted-badge { left: 40px; right: 40px; top: 0.7rem; }
+  .poll-voted-chip { font-size: 0.56rem; padding: 0.3rem 0.6rem 0.3rem 0.7rem; }
 }
 
 /* FAQ Accordion */

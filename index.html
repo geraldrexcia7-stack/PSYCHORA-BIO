@@ -8,7 +8,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Manrope:wght@200;300;400;500;600;700;800&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<!-- Versi Font Awesome diperbarui agar mendukung fa-x-twitter -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
 <link rel="stylesheet" href="style.css">
 <noscript><style>.preloader{display:none!important;}html{overflow:auto!important;}body{overflow:auto!important;}</style></noscript>
 </head>
@@ -241,39 +242,47 @@
       <h2 class="section-title">WHO'S YOUR <span class="italic">FAVORITE</span></h2>
       <p class="commission-desc">Cast your vote for the Psychora you like most. Results update live below — one vote per visitor.</p>
     </div>
-    <div class="poll-grid reveal reveal-delay-1" id="pollGrid">
+    <div class="poll-frame reveal reveal-delay-1">
+    <div class="poll-grid" id="pollGrid">
       <button class="poll-card" data-character="sarako" type="button">
         <div class="poll-card-image">
           <img src="assetbio/Sarako-Cell_Sword.png" alt="Sarako Kyoga" loading="lazy" decoding="async">
           <div class="poll-card-overlay"></div>
+          <span class="poll-voted-badge"><span class="poll-voted-chip"><i class="fas fa-check"></i>VOTED</span></span>
+          <div class="poll-card-content">
+            <div class="poll-card-info">
+              <span class="poll-card-num">CHAR.001 // VIOLET</span>
+              <h3 class="poll-card-name">SARAKO KYOGA</h3>
+              <span class="poll-card-alias">The Violet Blade</span>
+            </div>
+            <div class="poll-bar-wrap">
+              <div class="poll-bar" style="width:0%"></div>
+            </div>
+            <span class="poll-percent">0%</span>
+            <span class="poll-vote-label">VOTE SARAKO</span>
+          </div>
         </div>
-        <div class="poll-card-info">
-          <span class="poll-card-num">CHAR.001 // VIOLET</span>
-          <h3 class="poll-card-name">SARAKO KYOGA</h3>
-          <span class="poll-card-alias">The Violet Blade</span>
-        </div>
-        <div class="poll-bar-wrap">
-          <div class="poll-bar" style="width:0%"></div>
-        </div>
-        <span class="poll-percent">0%</span>
-        <span class="poll-vote-label">VOTE SARAKO</span>
       </button>
       <button class="poll-card cyan" data-character="shiro" type="button">
         <div class="poll-card-image">
           <img src="assetbio/Shiro-Baddie.png" alt="Shiro Miazaki" loading="lazy" decoding="async">
           <div class="poll-card-overlay"></div>
+          <span class="poll-voted-badge"><span class="poll-voted-chip"><i class="fas fa-check"></i>VOTED</span></span>
+          <div class="poll-card-content">
+            <div class="poll-card-info">
+              <span class="poll-card-num">CHAR.002 // CYAN</span>
+              <h3 class="poll-card-name">SHIRO MIAZAKI</h3>
+              <span class="poll-card-alias">The Ice Fang Wolf</span>
+            </div>
+            <div class="poll-bar-wrap">
+              <div class="poll-bar" style="width:0%"></div>
+            </div>
+            <span class="poll-percent">0%</span>
+            <span class="poll-vote-label">VOTE SHIRO</span>
+          </div>
         </div>
-        <div class="poll-card-info">
-          <span class="poll-card-num">CHAR.002 // CYAN</span>
-          <h3 class="poll-card-name">SHIRO MIAZAKI</h3>
-          <span class="poll-card-alias">The Ice Fang Wolf</span>
-        </div>
-        <div class="poll-bar-wrap">
-          <div class="poll-bar" style="width:0%"></div>
-        </div>
-        <span class="poll-percent">0%</span>
-        <span class="poll-vote-label">VOTE SHIRO</span>
       </button>
+    </div>
     </div>
     <p class="poll-status" id="pollStatus"></p>
     <p class="poll-total" id="pollTotal"></p>
@@ -359,6 +368,10 @@
     </a>
     <a class="footer-social-link" href="https://www.instagram.com/zairavision/" target="_blank" rel="noopener noreferrer" aria-label="Instagram zairavision">
       <i class="fab fa-instagram" aria-hidden="true"></i>
+      <span>@zairavision</span>
+    </a>
+    <a class="footer-social-link" href="https://x.com/zairavision" target="_blank" rel="noopener noreferrer" aria-label="X (Twitter) zairavision">
+      <i class="fa-brands fa-x-twitter" aria-hidden="true"></i>
       <span>@zairavision</span>
     </a>
   </div>

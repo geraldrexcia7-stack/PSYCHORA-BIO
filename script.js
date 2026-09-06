@@ -232,6 +232,30 @@ if (pollCards.length) {
   }
   fetchPollResults();
 
+  // Diagonal slider is hover-driven on desktop (pure CSS). On touch devices
+  // there's no hover, so the first tap just expands/previews a card instead
+  // of instantly casting a vote — the second tap on an already-expanded
+  // card goes through to the real vote handler below.
+  const canHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+  if (!canHover) {
+    pollCards.forEach((card) => {
+      card.addEventListener('click', (e) => {
+        if (card.disabled) return;
+        if (!card.classList.contains('is-active')) {
+          e.preventDefault();
+          e.stopImmediatePropagation();
+          pollCards.forEach((c) => c.classList.remove('is-active'));
+          card.classList.add('is-active');
+        }
+      });
+    });
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.poll-card')) {
+        pollCards.forEach((c) => c.classList.remove('is-active'));
+      }
+    });
+  }
+
   pollCards.forEach((card) => {
     card.addEventListener('click', async () => {
       if (localStorage.getItem(POLL_STORAGE_KEY)) return;
