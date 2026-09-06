@@ -2043,3 +2043,227 @@ html, body { max-width: 100%; }
   .bgm-volume-track { width: 30px; height: 80px; }
   .bgm-volume-slider { width: 80px; }
 }
+/* ==========================================================================
+   Preloader — circular glow progress loading screen
+   ========================================================================== */
+html.preloader-active,
+body.preloader-active {
+  overflow: hidden;
+  height: 100%;
+}
+
+.preloader {
+  position: fixed;
+  inset: 0;
+  z-index: 100000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(ellipse at 50% 40%, #120a1e 0%, var(--bg) 65%, #030305 100%);
+  overflow: hidden;
+  transition: opacity 0.7s ease, visibility 0.7s ease;
+}
+
+.preloader.is-hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.preloader-glow {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(90px);
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+.preloader-glow.glow-a {
+  width: 46vmax;
+  height: 46vmax;
+  top: -14vmax;
+  left: -10vmax;
+  background: radial-gradient(circle, rgba(176, 38, 255, 0.55), transparent 70%);
+  animation: preloaderDrift 9s ease-in-out infinite;
+}
+
+.preloader-glow.glow-b {
+  width: 40vmax;
+  height: 40vmax;
+  bottom: -16vmax;
+  right: -12vmax;
+  background: radial-gradient(circle, rgba(0, 217, 255, 0.45), transparent 70%);
+  animation: preloaderDrift 11s ease-in-out infinite reverse;
+}
+
+@keyframes preloaderDrift {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(3vmax, 2vmax) scale(1.08); }
+}
+
+.preloader-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(176, 38, 255, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(176, 38, 255, 0.06) 1px, transparent 1px);
+  background-size: 42px 42px;
+  mask-image: radial-gradient(ellipse at center, black 0%, transparent 75%);
+  -webkit-mask-image: radial-gradient(ellipse at center, black 0%, transparent 75%);
+}
+
+.preloader-content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(1.4rem, 4vw, 2.2rem);
+  padding: 1.5rem;
+}
+
+.preloader-brand {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  line-height: 1;
+}
+
+.preloader-brand-en {
+  font-family: 'Playfair Display', serif;
+  font-weight: 900;
+  font-size: clamp(1.4rem, 5vw, 2.1rem);
+  letter-spacing: 0.14em;
+  background: linear-gradient(135deg, var(--white), var(--neon-purple));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: preloaderTextGlow 2.4s ease-in-out infinite;
+}
+
+.preloader-brand-jp {
+  margin-top: 0.5rem;
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.4em;
+  color: var(--silver);
+}
+
+@keyframes preloaderTextGlow {
+  0%, 100% { filter: drop-shadow(0 0 4px rgba(176, 38, 255, 0.25)); }
+  50% { filter: drop-shadow(0 0 14px rgba(176, 38, 255, 0.55)); }
+}
+
+.preloader-ring-wrap {
+  position: relative;
+  width: clamp(120px, 34vw, 190px);
+  height: clamp(120px, 34vw, 190px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Slow rotating conic halo behind the progress ring — decorative only */
+.preloader-ring-spin {
+  position: absolute;
+  inset: -14%;
+  border-radius: 50%;
+  background: conic-gradient(from 0deg, transparent 0%, rgba(0, 217, 255, 0.5) 18%, transparent 32%, transparent 60%, rgba(176, 38, 255, 0.5) 78%, transparent 92%);
+  filter: blur(6px);
+  animation: preloaderSpin 3.4s linear infinite;
+  opacity: 0.8;
+}
+
+@keyframes preloaderSpin {
+  to { transform: rotate(360deg); }
+}
+
+.preloader-ring {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  transform: rotate(0deg);
+}
+
+.preloader-ring-track {
+  fill: none;
+  stroke: var(--border);
+  stroke-width: 5;
+}
+
+.preloader-ring-progress {
+  fill: none;
+  stroke: url(#preloaderGradient);
+  stroke-width: 5;
+  stroke-linecap: round;
+  stroke-dasharray: 326.7256;
+  stroke-dashoffset: 326.7256;
+  transform-origin: 60px 60px;
+  transform: rotate(-90deg);
+  transition: stroke-dashoffset 0.2s linear;
+  filter: drop-shadow(0 0 6px rgba(0, 217, 255, 0.7)) drop-shadow(0 0 14px rgba(176, 38, 255, 0.5));
+}
+
+.preloader-percent {
+  position: absolute;
+  z-index: 3;
+  display: flex;
+  align-items: baseline;
+  gap: 2px;
+  font-family: 'DM Mono', monospace;
+  font-weight: 500;
+  color: var(--white);
+  text-shadow: 0 0 16px rgba(0, 217, 255, 0.5);
+}
+
+.preloader-percent #preloaderPercentValue {
+  font-size: clamp(1.6rem, 6vw, 2.6rem);
+}
+
+.preloader-percent-sign {
+  font-size: clamp(0.85rem, 3vw, 1.2rem);
+  color: var(--cyan);
+  opacity: 0.85;
+}
+
+.preloader-status {
+  display: flex;
+  align-items: center;
+  font-family: 'DM Mono', monospace;
+  font-size: clamp(0.6rem, 2.4vw, 0.7rem);
+  letter-spacing: 0.28em;
+  color: var(--silver);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.preloader-dots span {
+  animation: preloaderDots 1.4s infinite;
+  opacity: 0;
+}
+
+.preloader-dots span:nth-child(1) { animation-delay: 0s; }
+.preloader-dots span:nth-child(2) { animation-delay: 0.2s; }
+.preloader-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes preloaderDots {
+  0%, 20% { opacity: 0; }
+  50% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .preloader-glow,
+  .preloader-ring-spin,
+  .preloader-brand-en,
+  .preloader-dots span {
+    animation: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .preloader-ring-wrap { width: clamp(100px, 38vw, 150px); height: clamp(100px, 38vw, 150px); }
+  .preloader-content { gap: 1.1rem; }
+}

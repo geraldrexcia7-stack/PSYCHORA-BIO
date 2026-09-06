@@ -690,3 +690,91 @@ document.addEventListener('touchend', function (event) {
     voiceAudio.addEventListener('ended', restoreFromDuck);
   }
 })();
+/* ==========================================================================
+   Preloader — circular progress + percentage
+   - Eases toward ~92% while real assets are still loading, then completes
+     to 100% on window 'load' and fades out.
+   - Has a hard safety timeout so the site is never stuck behind the
+     loader even if the 'load' event is delayed or JS partly fails.
+   ========================================================================== */
+(function initPreloader() {
+  const preloader = document.getElementById('preloader');
+  const ring = document.getElementById('preloaderRingProgress');
+  const percentEl = document.getElementById('preloaderPercentValue');
+  const statusEl = document.getElementById('preloaderStatusText');
+  if (!preloader || !ring || !percentEl) return;
+
+  const CIRCUMFERENCE = 326.7256;
+  const SAFETY_TIMEOUT_MS = 8000;
+  const statuses = ['INITIALIZING ARCHIVE', 'LOADING CHARACTER DATA', 'SYNCING VISUALS'];
+
+  let current = 0;
+  let finished = false;
+  let tickInterval = null;
+  let statusInterval = null;
+
+  function render(pct) {
+    const clamped = Math.max(0, Math.min(100, pct));
+    ring.style.strokeDashoffset = String(CIRCUMFERENCE - (clamped / 100) * CIRCUMFERENCE);
+    percentEl.textContent = String(Math.round(clamped));
+  }
+
+  function tick() {
+    // Ease toward 92%, never quite reaching it until the real load fires.
+    current += (92 - current) * 0.045 + 0.15;
+    if (current > 92) current = 92;
+    render(current);
+  }
+
+  function finish() {
+    if (finished) return;
+    finished = true;
+    if (tickInterval) clearInterval(tickInterval);
+    if (statusInterval) clearInterval(statusInterval);
+    if (statusEl) statusEl.textContent = 'READY';
+
+    const from = current;
+    const start = performance.now();
+    const RUSH_MS = 380;
+
+    function rush(now) {
+      const t = Math.min(1, (now - start) / RUSH_MS);
+      render(from + (100 - from) * t);
+      if (t < 1) {
+        requestAnimationFrame(rush);
+      } else {
+        setTimeout(hidePreloader, 320);
+      }
+    }
+    requestAnimationFrame(rush);
+  }
+
+  function hidePreloader() {
+    preloader.classList.add('is-hidden');
+    document.documentElement.classList.remove('preloader-active');
+    document.body.classList.remove('preloader-active');
+    preloader.addEventListener('transitionend', () => {
+      preloader.style.display = 'none';
+    }, { once: true });
+  }
+
+  render(0);
+  tickInterval = setInterval(tick, 90);
+
+  if (statusEl && statuses.length > 1) {
+    let statusIndex = 0;
+    statusInterval = setInterval(() => {
+      statusIndex = (statusIndex + 1) % statuses.length;
+      statusEl.textContent = statuses[statusIndex];
+    }, 1400);
+  }
+
+  if (document.readyState === 'complete') {
+    finish();
+  } else {
+    window.addEventListener('load', finish, { once: true });
+  }
+
+  // Never let the loader trap the visitor, even on a slow/broken load event.
+  setTimeout(finish, SAFETY_TIMEOUT_MS);
+})();

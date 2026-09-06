@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="preloader-active">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -10,8 +10,43 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Manrope:wght@200;300;400;500;600;700;800&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <link rel="stylesheet" href="style.css">
+<noscript><style>.preloader{display:none!important;}html{overflow:auto!important;}body{overflow:auto!important;}</style></noscript>
 </head>
-<body>
+<body class="preloader-active">
+
+<div class="preloader" id="preloader" role="status" aria-live="polite" aria-label="Loading Psychora archive">
+  <div class="preloader-glow glow-a" aria-hidden="true"></div>
+  <div class="preloader-glow glow-b" aria-hidden="true"></div>
+  <div class="preloader-grid" aria-hidden="true"></div>
+
+  <div class="preloader-content">
+    <div class="preloader-brand">
+      <span class="preloader-brand-en">PSYCHORA</span>
+      <span class="preloader-brand-jp">サイコラ</span>
+    </div>
+
+    <div class="preloader-ring-wrap">
+      <span class="preloader-ring-spin" aria-hidden="true"></span>
+      <svg class="preloader-ring" viewBox="0 0 120 120" aria-hidden="true">
+        <defs>
+          <linearGradient id="preloaderGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#00d9ff"/>
+            <stop offset="100%" stop-color="#b026ff"/>
+          </linearGradient>
+        </defs>
+        <circle class="preloader-ring-track" cx="60" cy="60" r="52"></circle>
+        <circle class="preloader-ring-progress" id="preloaderRingProgress" cx="60" cy="60" r="52"></circle>
+      </svg>
+      <div class="preloader-percent">
+        <span id="preloaderPercentValue">0</span><span class="preloader-percent-sign">%</span>
+      </div>
+    </div>
+
+    <div class="preloader-status">
+      <span id="preloaderStatusText">INITIALIZING ARCHIVE</span><span class="preloader-dots"><span>.</span><span>.</span><span>.</span></span>
+    </div>
+  </div>
+</div>
 
 <canvas id="particles"></canvas>
 
