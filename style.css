@@ -1564,6 +1564,27 @@ html, body { max-width: 100%; }
   z-index: 1;
 }
 .poll-card + .poll-card { margin-left: -1px; }
+
+/* Tablet / "iPad Pro"-range fix (769px–1159px): between the stacked mobile
+   layout (<=768px) and true desktop (>=1160px, where .poll-frame reaches
+   its full 1000px design width), .poll-frame is forced narrower than
+   1000px. The base rule's `width: calc(100% - 78px)` always leaves exactly
+   78px of horizontal slack no matter how narrow the frame gets — the base
+   rule spends all of that slack as a one-sided `margin-left: 78px` so the
+   parallelogram's edge sits flush against the frame's right side (by
+   design, for the full 1000px desktop frame). At narrower frame widths
+   that one-sided placement reads as badly off-center (big gap on the
+   left, none on the right). Splitting the same 78px slack evenly with
+   auto margins instead re-centers the exact same shape/skew/card row —
+   nothing about the parallelogram design itself changes, only its
+   horizontal position — and this rule never applies outside 769–1159px,
+   so the stacked mobile layout and the full desktop layout are untouched. */
+@media (min-width: 769px) and (max-width: 1159px) {
+  .poll-grid {
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
 .poll-card:hover,
 .poll-card:focus-visible,
 .poll-card.is-active {
