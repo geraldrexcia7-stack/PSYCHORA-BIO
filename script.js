@@ -88,6 +88,14 @@ function openModal(charId, elOrOverrides, maybeOverrides) {
   }
   document.getElementById('modalAlias').textContent = data.alias;
   document.getElementById('modalQuote').textContent = data.quote;
+  const modalMomentWrap = document.getElementById('modalMomentWrap');
+  const modalMomentEl = document.getElementById('modalMoment');
+  if (data.description) {
+    modalMomentEl.textContent = data.description;
+    modalMomentWrap.style.display = '';
+  } else {
+    modalMomentWrap.style.display = 'none';
+  }
   document.getElementById('modalBio').textContent = data.bio;
   document.getElementById('modalPersonality').textContent = data.personality;
   document.getElementById('modalWeapon').textContent = data.weapon;
@@ -402,8 +410,8 @@ new ParticleSystem(document.getElementById('particles'));
 const galleryItems = [
   { img: 'assetbio/Shiro-Baddie-2.jpg', name: 'SHIRO MIAZAKI', tag: 'STORMDUST FORM', charId: 'shiro', pos: 'center top', accent: 'cyan' },
   { img: 'assetbio/DuoBaddie.png', name: 'SARAKO & SHIRO', nameJp: 'サラコとシロ', tag: 'DUO PSYCHORA RIVALS ', description: 'They read the threat together, then locked the field by figuring out a strategy to start fighting.', charId: 'shiro', pos: 'center', accent: 'cyan', nameJpWhite: true },
-  { img: 'assetbio/SarakoRage1.png', name: 'SARAKO KYOGA', tag: 'ENRAGED VOID', charId: 'sarako', pos: 'center', accent: 'purple' },
-  { img: 'assetbio/Sarako_Mad.png', name: 'SARAKO KYOGA', tag: 'SHADOW MODE', charId: 'sarako', pos: 'right center', accent: 'purple' },
+  { img: 'assetbio/SarakoRage1.png', name: "SARAKO'S WRATH", tag: 'ENRAGED VOID', charId: 'sarako', pos: 'center', accent: 'purple' },
+  { img: 'assetbio/Sarako_Mad.png', name: 'IMMOVABLE DESPAIR', tag: 'SHADOW MODE', charId: 'sarako', pos: 'right center', accent: 'purple' },
   { 
     img: 'assetbio/SparringPSYCHORA.jpeg', 
     name: 'PSYCHORA DUEL', 
@@ -429,7 +437,6 @@ galleryItems.forEach((item, i) => {
       '<div class="gallery-name">' + item.name + '</div>' +
       (item.nameJp ? '<div class="gallery-name-jp">' + item.nameJp + '</div>' : '') +
       '<div class="gallery-view">' + item.tag + ' — VIEW →</div>' +
-      (item.description ? '<div class="gallery-info">' + item.description + '</div>' : '') +
     '</div>';
   const galleryImg = div.querySelector('img');
   galleryImg.addEventListener('error', () => handleImgError(galleryImg), { once: true });
@@ -442,6 +449,7 @@ galleryItems.forEach((item, i) => {
     nameJpWhite: !!item.nameJpWhite,
     alias: item.tag,
     pos: item.pos || 'center top',
+    description: item.description || null,
     voice: null
   }));
   galleryGrid.appendChild(div);
