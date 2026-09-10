@@ -48,6 +48,7 @@ VOTES_COUNT_FILE = os.path.join(BASE_DIR, "votes_count.json")
 CHARACTERS = {
     "sarako": "Sarako Kyoga",
     "shiro": "Shiro Miazaki",
+    "kara": "Kara Seiro",
 }
 
 # Lock supaya aman kalau ada beberapa vote masuk bersamaan (race condition
