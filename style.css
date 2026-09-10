@@ -5,6 +5,7 @@
   --neon-purple: #b026ff;
   --neon-violet: #9d4edd;
   --cyan: #00d9ff;
+  --emerald: #00e6a8;
   --white: #ffffff;
   --silver: #a0a0b0;
   --silver-dim: #6b6b7a;
@@ -1300,7 +1301,8 @@ footer {
   height: 100dvh;
   background: rgba(8, 8, 13, 0.98);
   backdrop-filter: blur(20px);
-  border-left: 1px solid var(--border-bright);
+  border-left: 1px solid rgba(176, 38, 255, 0.42);
+  box-shadow: -12px 0 34px rgba(0, 0, 0, 0.28), inset 1px 0 16px rgba(0, 217, 255, 0.04);
   z-index: 99;
   padding: calc(6rem + env(safe-area-inset-top, 0px)) 2rem calc(2rem + env(safe-area-inset-bottom, 0px));
   display: flex;
@@ -1313,7 +1315,7 @@ footer {
   font-family: 'Playfair Display', serif;
   font-size: 1.8rem;
   color: var(--white);
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid rgba(176, 38, 255, 0.18);
   padding: 1.2rem 0;
   text-decoration: none;
   transition: color 0.3s ease, padding-left 0.3s ease;
@@ -1399,7 +1401,8 @@ footer {
     background: rgba(8, 8, 13, 0.85);
     backdrop-filter: blur(15px);
     -webkit-backdrop-filter: blur(15px);
-    border-bottom: 1px solid var(--border);
+    border-bottom: 1px solid rgba(0, 217, 255, 0.35);
+    box-shadow: 0 1px 0 rgba(176, 38, 255, 0.22), 0 7px 22px rgba(0, 217, 255, 0.06);
   }
   
   .nav-bar .max-w-7xl {
@@ -1417,7 +1420,8 @@ footer {
   .mobile-menu-btn {
     display: flex !important;
     background: transparent;
-    border: none;
+    border: 1px solid rgba(0, 217, 255, 0.28);
+    box-shadow: 0 0 12px rgba(0, 217, 255, 0.08);
     padding: 0;
   }
 
@@ -1617,6 +1621,11 @@ html, body { max-width: 100%; }
 .poll-card.cyan.is-active {
   box-shadow: 0 10px 40px rgba(0, 217, 255, 0.2);
 }
+.poll-card.emerald:hover,
+.poll-card.emerald:focus-visible,
+.poll-card.emerald.is-active {
+  box-shadow: 0 10px 40px rgba(0, 230, 168, 0.2);
+}
 .poll-card:disabled {
   cursor: default;
 }
@@ -1628,6 +1637,9 @@ html, body { max-width: 100%; }
 }
 .poll-card.cyan.voted {
   box-shadow: 0 0 25px rgba(0, 217, 255, 0.25);
+}
+.poll-card.emerald.voted {
+  box-shadow: 0 0 25px rgba(0, 230, 168, 0.25);
 }
 
 /* Overflow only opens up on a transient hover/focus/tap preview — never on
@@ -1672,6 +1684,11 @@ html, body { max-width: 100%; }
     radial-gradient(ellipse 70% 55% at 50% 28%, rgba(0, 217, 255, 0.35), transparent 70%),
     linear-gradient(180deg, #061620, #030608 75%);
 }
+.poll-card.emerald .poll-card-backdrop {
+  background:
+    radial-gradient(ellipse 70% 55% at 50% 28%, rgba(0, 230, 168, 0.35), transparent 70%),
+    linear-gradient(180deg, #06201a, #030807 75%);
+}
 
 /* The source art is a wide 1980x1200 (1.65:1) canvas — the character sits
    center-frame with effects trailing out to both sides. Sized by height so
@@ -1699,6 +1716,7 @@ html, body { max-width: 100%; }
 .poll-card.is-active .poll-card-art {
   transform: translateX(-50%) scale(1.08);
   filter: brightness(1) saturate(1) drop-shadow(0 18px 30px rgba(0, 0, 0, 0.6));
+  z-index: 4;
 }
 /* Permanent voted state: stays contained (no overflow, no scale) — just
    full brightness so the pick still reads clearly at a glance. */
@@ -1719,11 +1737,38 @@ html, body { max-width: 100%; }
 .poll-card.cyan.is-active .poll-card-art {
   transform: translateX(-50%) translateY(4%) scale(1.16);
 }
+
+/* Kara's artwork rises above the hover shade and may pass beyond the frame
+   during the preview, while the resting card remains neatly contained. */
+.poll-card.emerald:hover,
+.poll-card.emerald:focus-visible,
+.poll-card.emerald.is-active {
+  overflow: visible;
+}
+.poll-card.emerald:hover .poll-card-image,
+.poll-card.emerald:focus-visible .poll-card-image,
+.poll-card.emerald.is-active .poll-card-image {
+  overflow: visible;
+}
+.poll-card.emerald .poll-card-art {
+  left: calc(50% - 48px);
+  bottom: 0;
+  height: 100%;
+  transform: translateX(-50%) translateY(6px) scale(1.06);
+  z-index: 2;
+}
+.poll-card.emerald:hover .poll-card-art,
+.poll-card.emerald:focus-visible .poll-card-art,
+.poll-card.emerald.is-active .poll-card-art {
+  transform: translateX(-50%) translateY(-1px) scale(1.14);
+  z-index: 4;
+}
+
 .poll-card-overlay {
   position: absolute;
   inset: 0;
   z-index: 3;
-  background: linear-gradient(to top, rgba(5, 5, 8, 0.95), transparent 55%);
+  background: linear-gradient(to top, rgba(5, 5, 8, 0.97) 0%, rgba(5, 5, 8, 0.78) 28%, transparent 62%);
 }
 .poll-card-content {
   position: absolute;
@@ -1746,6 +1791,7 @@ html, body { max-width: 100%; }
   color: var(--silver-dim);
 }
 .poll-card.cyan .poll-card-num { color: var(--cyan); }
+.poll-card.emerald .poll-card-num { color: var(--emerald); }
 .poll-card-name {
   font-family: 'Playfair Display', serif;
   font-size: 1.5rem;
@@ -1772,6 +1818,9 @@ html, body { max-width: 100%; }
 }
 .poll-card.cyan .poll-bar {
   background: linear-gradient(90deg, var(--cyan), #7fe9ff);
+}
+.poll-card.emerald .poll-bar {
+  background: linear-gradient(90deg, var(--emerald), #7dffce);
 }
 .poll-percent {
   display: block;
@@ -1842,6 +1891,10 @@ html, body { max-width: 100%; }
   border-color: var(--cyan);
   box-shadow: 0 0 18px rgba(0, 217, 255, 0.35);
 }
+.poll-card.emerald .poll-voted-chip {
+  border-color: var(--emerald);
+  box-shadow: 0 0 18px rgba(0, 230, 168, 0.35);
+}
 .poll-status {
   text-align: center;
   margin-top: 1.75rem;
@@ -1901,6 +1954,15 @@ html, body { max-width: 100%; }
   .poll-card.is-active .poll-card-art {
     transform: translateX(-50%) scale(1.04);
   }
+  .poll-card.emerald .poll-card-art {
+    left: 50%;
+    transform: translateX(-50%) translateY(4px) scale(1.14);
+  }
+  .poll-card.emerald:hover .poll-card-art,
+  .poll-card.emerald:focus-visible .poll-card-art,
+  .poll-card.emerald.is-active .poll-card-art {
+    transform: translateX(-50%) translateY(0) scale(1.2);
+  }
   .poll-card-content { left: 44px; right: 44px; }
   .poll-card-name { font-size: 1.25rem; }
   .poll-voted-badge { left: 44px; right: 44px; }
@@ -1924,6 +1986,15 @@ html, body { max-width: 100%; }
   .poll-card.is-active .poll-card-art {
     /* Section padding is only ~16px here, so keep the pop very subtle. */
     transform: translateX(-50%) scale(1.03);
+  }
+  .poll-card.emerald .poll-card-art {
+    left: 50%;
+    transform: translateX(-50%) translateY(4px) scale(1.1);
+  }
+  .poll-card.emerald:hover .poll-card-art,
+  .poll-card.emerald:focus-visible .poll-card-art,
+  .poll-card.emerald.is-active .poll-card-art {
+    transform: translateX(-50%) translateY(0) scale(1.14);
   }
   .poll-card-content { left: 30px; right: 30px; }
   .poll-card-info { padding: 0.8rem 0.6rem 0.4rem; }
