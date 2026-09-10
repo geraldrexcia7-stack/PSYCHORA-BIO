@@ -1760,7 +1760,7 @@ html, body { max-width: 100%; }
 .poll-card.emerald:hover .poll-card-art,
 .poll-card.emerald:focus-visible .poll-card-art,
 .poll-card.emerald.is-active .poll-card-art {
-  transform: translateX(-50%) translateY(-1px) scale(1.14);
+  transform: translateX(-50%) translateY(7.2%) scale(1.16);
   z-index: 4;
 }
 
@@ -1956,12 +1956,12 @@ html, body { max-width: 100%; }
   }
   .poll-card.emerald .poll-card-art {
     left: 50%;
-    transform: translateX(-50%) translateY(4px) scale(1.14);
+    transform: translateX(-50%) translateY(4px) scale(1.06);
   }
   .poll-card.emerald:hover .poll-card-art,
   .poll-card.emerald:focus-visible .poll-card-art,
   .poll-card.emerald.is-active .poll-card-art {
-    transform: translateX(-50%) translateY(0) scale(1.2);
+    transform: translateX(-50%) translateY(0) scale(1.14);
   }
   .poll-card-content { left: 44px; right: 44px; }
   .poll-card-name { font-size: 1.25rem; }
@@ -1989,12 +1989,12 @@ html, body { max-width: 100%; }
   }
   .poll-card.emerald .poll-card-art {
     left: 50%;
-    transform: translateX(-50%) translateY(4px) scale(1.1);
+    transform: translateX(-50%) translateY(10px) scale(1.34);
   }
   .poll-card.emerald:hover .poll-card-art,
   .poll-card.emerald:focus-visible .poll-card-art,
   .poll-card.emerald.is-active .poll-card-art {
-    transform: translateX(-50%) translateY(0) scale(1.14);
+    transform: translateX(-50%) translateY(18px) scale(1.38);
   }
   .poll-card-content { left: 30px; right: 30px; }
   .poll-card-info { padding: 0.8rem 0.6rem 0.4rem; }
