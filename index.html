@@ -107,7 +107,7 @@
         </button>
       </div>
     </div>
-    <div class="hero-image-wrap reveal reveal-delay-2 card-3d">
+    <div class="hero-image-wrap reveal reveal-delay-2 card-3d" data-tilt>
       <div class="hero-image-glow"></div>
       <span class="hero-image-deco deco-top-right">PSYCHORA // BIO-FILE</span>
       <img class="hero-image" id="heroImage" src="assetbio/Sarako-vs-ShiroWallpaper.jpg" alt="Sarako and Shiro">
@@ -129,7 +129,7 @@
       <h2 class="section-title">THE <span class="italic">BADDIES</span></h2>
     </div>
     <div class="char-grid">
-      <div class="char-card reveal reveal-delay-1 card-3d" data-voice="assetbio/Audio/Sarako_VoiceBio.MP3" onclick="openModal('sarako', this)">
+      <div class="char-card reveal reveal-delay-1 card-3d" data-tilt data-voice="assetbio/Audio/Sarako_VoiceBio.MP3" onclick="openModal('sarako', this)">
         <div class="char-card-image">
           <img src="assetbio/Sarako-Cell_Sword.png" alt="Sarako Kyoga" loading="lazy" decoding="async">
           <div class="char-aura-layer"></div>
@@ -150,7 +150,7 @@
           </div>
         </div>
       </div>
-      <div class="char-card cyan reveal reveal-delay-2 card-3d" data-voice="assetbio/Audio/Shiro_Voice-profile.MP3" onclick="openModal('shiro', this)">
+      <div class="char-card cyan reveal reveal-delay-2 card-3d" data-tilt data-voice="assetbio/Audio/Shiro_Voice-profile.MP3" onclick="openModal('shiro', this)">
         <div class="char-card-image">
           <img src="assetbio/Shiro-Baddie.png" alt="Shiro Miazaki" loading="lazy" decoding="async">
           <div class="char-aura-layer"></div>
@@ -168,6 +168,29 @@
             <span class="char-tag">CYAN</span>
             <span class="char-tag">WOLF</span>
             <span class="char-tag">CHAOS</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="char-grid-solo">
+      <div class="char-card emerald reveal reveal-delay-3 card-3d" data-tilt onclick="openModal('kara', this)">
+        <div class="char-card-image">
+          <img src="assetbio/Kara_waterspell.png" alt="Kara Seiro" loading="lazy" decoding="async">
+          <div class="char-aura-layer"></div>
+          <div class="char-card-overlay"></div>
+          <div class="char-card-glow"></div>
+        </div>
+        <button class="char-view-btn">VIEW PROFILE →</button>
+        <div class="char-card-content">
+          <div class="char-num">CHAR.003 // EMERALD/GREEN</div>
+          <h3 class="char-name">KARA SEIRO</h3>
+          <span class="char-name-jp">カラセイロ</span>
+          <div class="char-alias">Emerald Wizard of Mystiara</div>
+          <p class="char-desc">"Calm, composed, and always three steps ahead. Kara lets her enemies reveal themselves before she ever needs to raise her staff."</p>
+          <div class="char-tags">
+            <span class="char-tag">EMERALD</span>
+            <span class="char-tag">MAGIC</span>
+            <span class="char-tag">MYSTIARA</span>
           </div>
         </div>
       </div>
@@ -402,7 +425,7 @@
 </footer>
 
 <div class="modal-overlay" id="modal" role="dialog" aria-modal="true">
-  <div class="modal-content">
+  <div class="modal-content" id="modalContent">
     <div class="modal-image" id="modalImageWrap">
       <div class="modal-image-deco" id="modalImageDeco">CHAR.001 // VIOLET/PURPLE</div>
       <img id="modalImage" src="assetbio/SarakoRage1.png" alt="SarakoRage">

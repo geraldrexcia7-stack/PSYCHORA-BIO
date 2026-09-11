@@ -42,7 +42,7 @@ const characterData = {
     name: 'KARA SEIRO',
     nameJp: '',
     alias: 'The Emerald Mirage',
-    image: 'assetbio/Kara_room2.jpg',
+    image: 'assetbio/Kara_waterspell.png',
     imageClass: 'emerald',
     pos: 'center top',
     quote: '"I already know how this ends. I just like watching you get there."',
@@ -92,6 +92,7 @@ function openModal(charId, elOrOverrides, maybeOverrides) {
   modalImageDecoEl.classList.toggle('deco-white', !!data.decoWhite);
   const modalImageWrap = document.getElementById('modalImageWrap');
   modalImageWrap.className = 'modal-image ' + data.imageClass;
+  document.getElementById('modalContent').className = 'modal-content ' + data.imageClass;
   modalImageWrap.style.setProperty('--modal-bg', 'url("' + data.image + '")');
   document.getElementById('modalLabel').textContent = data.label;
   document.getElementById('modalName').textContent = data.name;
@@ -591,7 +592,7 @@ document.addEventListener('touchend', function (event) {
 (function initSmooth3DEngine() {
   if (window.matchMedia('(hover: none) and (pointer: coarse)').matches) return;
 
-  const cards = document.querySelectorAll('.card-3d');
+  const cards = document.querySelectorAll('.card-3d[data-tilt]');
 
   cards.forEach(card => {
     let currentX = 0;

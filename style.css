@@ -495,14 +495,15 @@ img.img-broken.img-broken-parent-fallback { visibility: visible; }
   height: 100%;
   object-fit: cover;
   object-position: center top;
-  transform: translateZ(10px);
-  transition: filter 0.35s ease;
+  transform: translateZ(10px) scale(1);
+  transition: filter 0.35s ease, transform 0.6s cubic-bezier(0.19, 1, 0.22, 1);
   mix-blend-mode: lighten;
 }
 .char-card.cyan .char-card-image img { mix-blend-mode: normal; }
 
 .char-card:hover .char-card-image img {
   filter: brightness(0.96) contrast(1.06) saturate(1.02);
+  transform: translateZ(10px) scale(1.06);
 }
 
 .char-aura-layer {
@@ -653,6 +654,48 @@ img.img-broken.img-broken-parent-fallback { visibility: visible; }
 .char-card:hover .char-view-btn { 
   opacity: 1; 
   transform: translateY(0) translateZ(45px); 
+}
+
+/* Emerald variant — third character card (Kara Seiro) */
+.char-card.emerald:hover {
+  border-color: rgba(0, 230, 168, 0.4);
+  box-shadow: 0 20px 45px -12px rgba(0, 230, 168, 0.3);
+}
+.char-card.emerald .char-card-image img { mix-blend-mode: normal; }
+.char-card.emerald .char-aura-layer {
+  background: radial-gradient(circle at center, transparent 55%, rgba(0, 230, 168, 0.14) 85%, rgba(5, 5, 8, 0.55) 100%);
+}
+.char-card.emerald .char-card-glow {
+  background: radial-gradient(circle at center, rgba(0, 230, 168, 0.1), transparent 70%);
+}
+.char-card.emerald .char-num { color: var(--emerald); }
+.char-card.emerald .char-name-jp {
+  color: var(--emerald);
+  text-shadow: 0 0 8px rgba(0, 230, 168, 0.75), 0 0 18px rgba(0, 230, 168, 0.35);
+}
+.char-card.emerald:hover .char-name { text-shadow: 0 0 18px rgba(0, 230, 168, 0.55); }
+.char-card.emerald .char-tag {
+  border-color: rgba(0, 230, 168, 0.4);
+  color: var(--emerald);
+  background: rgba(0, 230, 168, 0.08);
+}
+.char-card.emerald .char-view-btn {
+  border-color: rgba(0, 230, 168, 0.4);
+  color: var(--emerald);
+}
+
+/* Solo wrapper — centers a single character card below the main 2-up grid */
+.char-grid-solo {
+  display: flex;
+  justify-content: center;
+  margin-top: 2.5rem;
+  position: relative;
+  z-index: 5;
+  perspective: 1500px;
+}
+.char-grid-solo .char-card {
+  width: 100%;
+  max-width: 720px;
 }
 
 .lore-section {
@@ -930,6 +973,14 @@ img.img-broken.img-broken-parent-fallback { visibility: visible; }
   box-shadow: 0 0 80px rgba(176, 38, 255, 0.3);
 }
 .modal-overlay.active .modal-content { transform: scale(1); }
+.modal-content.cyan {
+  border-color: rgba(0, 217, 255, 0.5);
+  box-shadow: 0 0 80px rgba(0, 217, 255, 0.3), 0 0 24px rgba(0, 217, 255, 0.22);
+}
+.modal-content.emerald {
+  border-color: rgba(0, 230, 168, 0.5);
+  box-shadow: 0 0 80px rgba(0, 230, 168, 0.3), 0 0 24px rgba(0, 230, 168, 0.22);
+}
 
 .modal-image {
   position: relative;
@@ -1515,6 +1566,7 @@ footer {
   .micro-label { font-size: 0.62rem; letter-spacing: 0.22em; margin-bottom: 1.25rem; }
 
   .char-grid { gap: 1.25rem; margin-top: 2.5rem; }
+  .char-grid-solo { margin-top: 1.25rem; }
   .char-card-image { height: 380px; }
   .char-card-content {
     padding: 0.9rem 1rem calc(0.9rem + env(safe-area-inset-bottom, 0px));
