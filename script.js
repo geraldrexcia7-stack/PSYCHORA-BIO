@@ -35,6 +35,22 @@ const characterData = {
     weapon: 'Chain Lightning — An electric whip-blade pulsing with storm energy, linked to her neural signature.',
     color: 'Electric Cyan/White',
     colorHex: '#00d9ff'
+  },
+  kara: {
+    num: 'CHAR.003 // EMERALD/GREEN',
+    label: 'CHAR.003 // CHARACTER FILE',
+    name: 'KARA SEIRO',
+    nameJp: '',
+    alias: 'The Emerald Mirage',
+    image: 'assetbio/Kara_room2.jpg',
+    imageClass: 'emerald',
+    pos: 'center top',
+    quote: '"I already know how this ends. I just like watching you get there."',
+    bio: 'Placeholder bio — replace with Kara\'s full backstory. A witch of the Elexroid realm cloaked in emerald and quiet certainty, Kara rarely raises her voice or her hand — her calm is the warning.',
+    personality: 'Placeholder — e.g. Calm · Watchful · Quietly Mischievous',
+    weapon: 'Placeholder — name and describe Kara\'s signature weapon or spellwork here.',
+    color: 'Emerald Green',
+    colorHex: '#00e6a8'
   }
 };
 
@@ -71,7 +87,9 @@ function openModal(charId, elOrOverrides, maybeOverrides) {
   modalImg.src = data.image;
   modalImg.alt = data.name;
   modalImg.style.objectPosition = data.pos || 'center top';
-  document.getElementById('modalImageDeco').textContent = data.num;
+  const modalImageDecoEl = document.getElementById('modalImageDeco');
+  modalImageDecoEl.textContent = data.num;
+  modalImageDecoEl.classList.toggle('deco-white', !!data.decoWhite);
   const modalImageWrap = document.getElementById('modalImageWrap');
   modalImageWrap.className = 'modal-image ' + data.imageClass;
   modalImageWrap.style.setProperty('--modal-bg', 'url("' + data.image + '")');
@@ -409,7 +427,7 @@ new ParticleSystem(document.getElementById('particles'));
 
 const galleryItems = [
   { img: 'assetbio/Shiro-Baddie-2.jpg', name: 'SHIRO MIAZAKI', tag: 'STORMDUST FORM', charId: 'shiro', pos: 'center top', accent: 'cyan' },
-  { img: 'assetbio/DuoBaddie.png', name: 'SARAKO & SHIRO', nameJp: 'サラコとシロ', tag: 'DUO PSYCHORA RIVALS ', description: 'They read the threat together, then locked the field by figuring out a strategy to start fighting.', charId: 'shiro', pos: 'center', accent: 'cyan', nameJpWhite: true },
+  { img: 'assetbio/DuoBaddie.png', name: 'SARAKO & SHIRO', nameJp: 'サラコとシロ', tag: 'DUO PSYCHORA RIVALS ', description: 'They read the threat together, then locked the field by figuring out a strategy to start fighting.', charId: 'shiro', pos: 'center', accent: 'cyan', nameJpWhite: true, num: 'CHAR.EXEC // DUO AGENTS', decoWhite: true },
   { img: 'assetbio/SarakoRage1.png', name: "SARAKO'S WRATH", tag: 'ENRAGED VOID', charId: 'sarako', pos: 'center', accent: 'purple' },
   { img: 'assetbio/Sarako_Mad.png', name: 'IMMOVABLE DESPAIR', tag: 'SHADOW MODE', charId: 'sarako', pos: 'right center', accent: 'purple' },
   { 
@@ -423,13 +441,34 @@ const galleryItems = [
     accent: 'cyan', 
     nameJpWhite: true 
   },
-  { img: 'assetbio/Sarako-Cell-Action.png', name: 'SARAKO KYOGA', nameJp: 'サラコ・キョウガ', tag: 'VIOLET ABYSS SURGE', charId: 'sarako', pos: 'center top', accent: 'purple' }
+  { img: 'assetbio/Sarako-Cell-Action.png', name: 'SARAKO KYOGA', nameJp: 'サラコ・キョウガ', tag: 'VIOLET ABYSS SURGE', charId: 'sarako', pos: 'center top', accent: 'purple' },
+  {
+    img: 'assetbio/Kara_room2.jpg',
+    name: 'KARA SEIRO',
+    tag: 'QUIET HOURS',
+    label: 'CHAR.003 // CHARACTER FILE',
+    description: 'Off duty and unguarded — hat set aside on the pillow, coat loosened. Even at rest her smile stays sharp, like she is already three moves ahead.',
+    charId: 'kara',
+    pos: 'center top',
+    accent: 'emerald'
+  },
+  {
+    img: 'assetbio/Kara_think.jpeg',
+    name: "WITCH'S GAZE",
+    tag: 'SUNLIT REVERIE',
+    label: 'CHAR.003 // CHARACTER FILE',
+    description: 'A stolen, sunlit moment by the poolside — one eye closed, thoughts elsewhere. Playful on the surface, calculating just beneath it.',
+    charId: 'kara',
+    pos: '70% top',
+    accent: 'emerald'
+  }
 ];
 
 const galleryGrid = document.getElementById('galleryGrid');
 galleryItems.forEach((item, i) => {
+  const accentClass = item.accent === 'cyan' ? ' cyan-accent' : item.accent === 'emerald' ? ' emerald-accent' : '';
   const div = document.createElement('div');
-  div.className = 'gallery-item reveal' + (item.accent === 'cyan' ? ' cyan-accent' : '');
+  div.className = 'gallery-item reveal' + accentClass;
   div.style.transitionDelay = (i * 0.08) + 's';
   div.innerHTML =
     '<img src="' + item.img + '" alt="' + item.name + ' — ' + item.tag + '" loading="lazy" decoding="async" style="object-position: ' + item.pos + '">' +
@@ -440,18 +479,23 @@ galleryItems.forEach((item, i) => {
     '</div>';
   const galleryImg = div.querySelector('img');
   galleryImg.addEventListener('error', () => handleImgError(galleryImg), { once: true });
-  div.addEventListener('click', () => openModal(item.charId, {
-    image: item.img,
-    imageClass: item.accent === 'cyan' ? 'cyan' : '',
-    name: item.name,
-    label: item.label || characterData[item.charId].label,
-    nameJp: item.nameJp || characterData[item.charId].nameJp,
-    nameJpWhite: !!item.nameJpWhite,
-    alias: item.tag,
-    pos: item.pos || 'center top',
-    description: item.description || null,
-    voice: null
-  }));
+  div.addEventListener('click', () => {
+    const base = characterData[item.charId] || {};
+    openModal(item.charId, {
+      image: item.img,
+      imageClass: item.accent === 'cyan' ? 'cyan' : (item.accent === 'emerald' ? 'emerald' : ''),
+      name: item.name,
+      label: item.label || base.label || '',
+      nameJp: item.nameJp || base.nameJp || '',
+      nameJpWhite: !!item.nameJpWhite,
+      alias: item.tag,
+      pos: item.pos || 'center top',
+      description: item.description || null,
+      num: item.num || base.num || '',
+      decoWhite: !!item.decoWhite,
+      voice: null
+    });
+  });
   galleryGrid.appendChild(div);
   observer.observe(div);
 });
