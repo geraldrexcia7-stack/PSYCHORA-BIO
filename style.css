@@ -895,6 +895,8 @@ img.img-broken.img-broken-parent-fallback { visibility: visible; }
 .gallery-item:nth-child(6) { grid-column: span 5; grid-row: span 4; }
 .gallery-item:nth-child(7) { grid-column: span 6; grid-row: span 5; }
 .gallery-item:nth-child(8) { grid-column: span 6; grid-row: span 5; }
+.gallery-item:nth-child(9) { grid-column: span 6; grid-row: span 4; }
+.gallery-item:nth-child(10) { grid-column: span 6; grid-row: span 4; }
 
 /* Modal */
 .modal-overlay {

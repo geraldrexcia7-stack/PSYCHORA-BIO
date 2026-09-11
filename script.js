@@ -461,6 +461,26 @@ const galleryItems = [
     charId: 'kara',
     pos: '70% top',
     accent: 'emerald'
+  },
+  {
+    img: 'assetbio/Kara_cast.png',
+    name: 'KARA SEIRO',
+    tag: 'ARCANE CAST',
+    label: 'CHAR.003 // CHARACTER FILE',
+    description: 'A focused spell takes shape in Kara\'s hands, illuminating the quiet confidence behind her measured control.',
+    charId: 'kara',
+    pos: '65% center',
+    accent: 'emerald'
+  },
+  {
+    img: 'assetbio/Kara_cute.png',
+    name: 'KARA SEIRO',
+    tag: 'PLAYFUL GLANCE',
+    label: 'CHAR.003 // CHARACTER FILE',
+    description: 'A rare playful moment from the Emerald Mirage — bright, teasing, and still impossible to read completely.',
+    charId: 'kara',
+    pos: 'center center',
+    accent: 'emerald'
   }
 ];
 
