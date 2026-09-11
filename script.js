@@ -46,9 +46,9 @@ const characterData = {
     imageClass: 'emerald',
     pos: 'center top',
     quote: '"I already know how this ends. I just like watching you get there."',
-    bio: 'Placeholder bio — replace with Kara\'s full backstory. A witch of the Elexroid realm cloaked in emerald and quiet certainty, Kara rarely raises her voice or her hand — her calm is the warning.',
+    bio: 'A witch of the Mystiara realm, Kara Seiro carries herself with quiet confidence and an almost effortless sense of elegance. Cloaked in emerald, she rarely needs to raise her voice—or even her hand—to make her presence known. Kara prefers observation over confrontation, allowing others to reveal their intentions while she patiently waits for the right moment to act. Beneath her calm demeanor lies a sharp and calculating mind, capable of turning even the smallest detail into an advantage. Her true strength is not found in overwhelming force, but in restraint, precision, and the ability to remain composed when everything around her begins to unravel.',
     personality: 'Placeholder — e.g. Calm · Watchful · Quietly Mischievous',
-    weapon: 'Placeholder — name and describe Kara\'s signature weapon or spellwork here.',
+    weapon: 'Verdantia — Kara\'s signature emerald staff, channeling Mystiara\'s quiet power with precision and restraint.',
     color: 'Emerald Green',
     colorHex: '#00e6a8'
   }
@@ -457,7 +457,7 @@ const galleryItems = [
     name: "WITCH'S GAZE",
     tag: 'SUNLIT REVERIE',
     label: 'CHAR.003 // CHARACTER FILE',
-    description: 'A stolen, sunlit moment by the poolside — one eye closed, thoughts elsewhere. Playful on the surface, calculating just beneath it.',
+    description: 'A stolen, sunlit moment by the poolside — one eye closed, her thoughts seemingly elsewhere. Beneath her playful expression, Kara remains quietly observant, calculating every detail around her. She appears relaxed, but her composure never truly slips.',
     charId: 'kara',
     pos: '70% top',
     accent: 'emerald'
