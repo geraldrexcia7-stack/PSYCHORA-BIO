@@ -44,6 +44,7 @@ const characterData = {
     alias: 'The Emerald Mirage',
     image: 'assetbio/Kara_waterspell.png',
     imageClass: 'emerald',
+    voice: 'assetbio/Audio/Kara_tease2.MP3',
     decoWhite: true,
     pos: 'center top',
     quote: '"I already know how this ends. I just like watching you get there."',
@@ -78,7 +79,7 @@ function openModal(charId, elOrOverrides, maybeOverrides) {
   }
   const data = overrides ? Object.assign({}, base, overrides) : Object.assign({}, base);
   if (!overrides || !('voice' in overrides)) {
-    data.voice = el && el.dataset.voice ? el.dataset.voice : null;
+    if (el && el.dataset.voice) data.voice = el.dataset.voice;
   }
   const modalImg = document.getElementById('modalImage');
   
@@ -184,6 +185,92 @@ function toggleVoice(e) {
     btn.setAttribute('aria-pressed', 'false');
   }
 }
+
+let activeCardAudio = null;
+
+function resetCardAudio(audio) {
+  const button = audio.closest('.char-card-image')?.querySelector('.char-audio-btn');
+  if (button) {
+    button.classList.remove('playing');
+    button.setAttribute('aria-pressed', 'false');
+    button.setAttribute('aria-label', 'Play Kara Seiro audio');
+    const icon = button.querySelector('i');
+    if (icon) icon.className = 'fas fa-play';
+  }
+}
+
+function toggleCardAudio(e, button) {
+  e.stopPropagation();
+  const audio = button.closest('.char-card-image')?.querySelector('.char-card-audio');
+  if (!audio) return;
+
+  if (activeCardAudio && activeCardAudio !== audio) {
+    activeCardAudio.pause();
+    activeCardAudio.currentTime = 0;
+    resetCardAudio(activeCardAudio);
+  }
+
+  if (audio.paused) {
+    audio.play().then(() => {
+      activeCardAudio = audio;
+      button.classList.add('playing');
+      button.setAttribute('aria-pressed', 'true');
+      button.setAttribute('aria-label', 'Pause Kara Seiro audio');
+      const icon = button.querySelector('i');
+      if (icon) icon.className = 'fas fa-pause';
+    }).catch(() => {});
+  } else {
+    audio.pause();
+    resetCardAudio(audio);
+  }
+}
+
+let activeGalleryAudio = null;
+
+function resetGalleryAudio(audio) {
+  const button = audio.closest('.gallery-item')?.querySelector('.gallery-audio-btn');
+  if (button) {
+    button.classList.remove('playing');
+    button.setAttribute('aria-pressed', 'false');
+    button.setAttribute('aria-label', 'Play Kara Seiro Quiet Hours audio');
+    const icon = button.querySelector('i');
+    if (icon) icon.className = 'fas fa-play';
+  }
+  if (activeGalleryAudio === audio) activeGalleryAudio = null;
+}
+
+function toggleGalleryAudio(e, button) {
+  e.stopPropagation();
+  const audio = button.closest('.gallery-item')?.querySelector('.gallery-audio');
+  if (!audio) return;
+
+  if (activeGalleryAudio && activeGalleryAudio !== audio) {
+    activeGalleryAudio.pause();
+    activeGalleryAudio.currentTime = 0;
+    resetGalleryAudio(activeGalleryAudio);
+  }
+
+  if (audio.paused) {
+    audio.play().then(() => {
+      activeGalleryAudio = audio;
+      button.classList.add('playing');
+      button.setAttribute('aria-pressed', 'true');
+      button.setAttribute('aria-label', 'Pause Kara Seiro Quiet Hours audio');
+      const icon = button.querySelector('i');
+      if (icon) icon.className = 'fas fa-pause';
+    }).catch(() => {});
+  } else {
+    audio.pause();
+    resetGalleryAudio(audio);
+  }
+}
+
+document.querySelectorAll('.char-card-audio').forEach((audio) => {
+  audio.addEventListener('ended', () => {
+    resetCardAudio(audio);
+    if (activeCardAudio === audio) activeCardAudio = null;
+  });
+});
 
 const voiceAudioEl = document.getElementById('voiceAudio');
 if (voiceAudioEl) voiceAudioEl.addEventListener('ended', stopVoice);
@@ -492,8 +579,10 @@ galleryItems.forEach((item, i) => {
   const div = document.createElement('div');
   div.className = 'gallery-item reveal' + accentClass;
   div.style.transitionDelay = (i * 0.08) + 's';
+  const hasQuietHoursAudio = item.name === 'KARA SEIRO' && item.tag === 'QUIET HOURS';
   div.innerHTML =
     '<img src="' + item.img + '" alt="' + item.name + ' — ' + item.tag + '" loading="lazy" decoding="async" style="object-position: ' + item.pos + '">' +
+    (hasQuietHoursAudio ? '<button class="gallery-audio-btn" type="button" onclick="toggleGalleryAudio(event, this)" aria-label="Play Kara Seiro Quiet Hours audio" aria-pressed="false"><i class="fas fa-play" aria-hidden="true"></i></button><audio class="gallery-audio" src="assetbio/Audio/Kara_tease2.MP3" preload="metadata"></audio>' : '') +
     '<div class="gallery-overlay">' +
       '<div class="gallery-name">' + item.name + '</div>' +
       (item.nameJp ? '<div class="gallery-name-jp">' + item.nameJp + '</div>' : '') +
@@ -515,10 +604,14 @@ galleryItems.forEach((item, i) => {
       description: item.description || null,
       num: item.num || base.num || '',
       decoWhite: !!item.decoWhite,
-      voice: null
+      voice: hasQuietHoursAudio ? 'assetbio/Audio/Kara_tease2.MP3' : null
     });
   });
   galleryGrid.appendChild(div);
+  if (hasQuietHoursAudio) {
+    const galleryAudio = div.querySelector('.gallery-audio');
+    galleryAudio.addEventListener('ended', () => resetGalleryAudio(galleryAudio));
+  }
   observer.observe(div);
 });
 

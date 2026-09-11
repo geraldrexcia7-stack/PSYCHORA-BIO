@@ -135,6 +135,10 @@
           <div class="char-aura-layer"></div>
           <div class="char-card-overlay"></div>
           <div class="char-card-glow"></div>
+          <button class="char-audio-btn" type="button" onclick="toggleCardAudio(event, this)" aria-label="Play Sarako audio" aria-pressed="false">
+            <i class="fas fa-play" aria-hidden="true"></i>
+          </button>
+          <audio class="char-card-audio" src="assetbio/Audio/Sarako_VoiceBio.MP3" preload="metadata"></audio>
         </div>
         <button class="char-view-btn">VIEW PROFILE →</button>
         <div class="char-card-content">
@@ -173,7 +177,7 @@
       </div>
     </div>
     <div class="char-grid-solo">
-      <div class="char-card emerald reveal reveal-delay-3 card-3d" data-tilt onclick="openModal('kara', this)">
+      <div class="char-card emerald reveal reveal-delay-3 card-3d" data-tilt data-voice="assetbio/Audio/Kara_tease.MP3" onclick="openModal('kara', this)">
         <div class="char-card-image">
           <img src="assetbio/Kara_waterspell.png" alt="Kara Seiro" loading="lazy" decoding="async">
           <div class="char-aura-layer"></div>
