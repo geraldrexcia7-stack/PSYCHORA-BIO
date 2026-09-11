@@ -44,6 +44,7 @@ const characterData = {
     alias: 'The Emerald Mirage',
     image: 'assetbio/Kara_waterspell.png',
     imageClass: 'emerald',
+    decoWhite: true,
     pos: 'center top',
     quote: '"I already know how this ends. I just like watching you get there."',
     bio: 'A witch of the Mystiara realm, Kara Seiro carries herself with quiet confidence and an almost effortless sense of elegance. Cloaked in emerald, she rarely needs to raise her voice—or even her hand—to make her presence known. Kara prefers observation over confrontation, allowing others to reveal their intentions while she patiently waits for the right moment to act. Beneath her calm demeanor lies a sharp and calculating mind, capable of turning even the smallest detail into an advantage. Her true strength is not found in overwhelming force, but in restraint, precision, and the ability to remain composed when everything around her begins to unravel.',
@@ -394,7 +395,7 @@ class ParticleSystem {
       const dx = p.x - this.mouseX;
       const dy = p.y - this.mouseY;
       const dist = Math.sqrt(dx * dx + dy * dy);
-      if (dist < 120) {
+      if (dist > 0 && dist < 120) {
         const force = (120 - dist) / 120;
         p.x += (dx / dist) * force * 1.5;
         p.y += (dy / dist) * force * 1.5;
@@ -545,6 +546,8 @@ document.addEventListener('touchend', function (event) {
   let mouseY = -100;
   let lastSpawnX = -100;
   let lastSpawnY = -100;
+  const activeTrails = new Set();
+  const maxActiveTrails = 40;
 
   window.addEventListener('mousemove', (e) => {
     mouseX = e.clientX;
@@ -567,6 +570,12 @@ document.addEventListener('touchend', function (event) {
   let colorIdx = 0;
 
   function spawnTrail(x, y) {
+    while (activeTrails.size >= maxActiveTrails) {
+      const oldestTrail = activeTrails.values().next().value;
+      activeTrails.delete(oldestTrail);
+      oldestTrail.remove();
+    }
+
     const circle = document.createElement('div');
     circle.className = 'cursor-trail';
     
@@ -582,8 +591,10 @@ document.addEventListener('touchend', function (event) {
     circle.style.top = `${y}px`;
 
     document.body.appendChild(circle);
+    activeTrails.add(circle);
 
     setTimeout(() => {
+      activeTrails.delete(circle);
       circle.remove();
     }, 650);
   }

@@ -1041,6 +1041,9 @@ img.img-broken.img-broken-parent-fallback { visibility: visible; }
   color: #ffffff;
   text-shadow: 0 0 8px rgba(255, 255, 255, 0.85), 0 0 18px rgba(255, 255, 255, 0.45);
 }
+.modal-image.emerald .modal-image-deco.deco-white {
+  text-shadow: 0 0 8px rgba(0, 230, 168, 0.95), 0 0 18px rgba(0, 230, 168, 0.7), 0 0 30px rgba(0, 230, 168, 0.4);
+}
 
 .voice-play-btn {
   position: absolute;
