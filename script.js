@@ -464,7 +464,7 @@ const galleryItems = [
   },
   {
     img: 'assetbio/Kara_cast.png',
-    name: 'KARA SEIRO',
+    name: 'SHIVERING EMERATIA',
     tag: 'ARCANE CAST',
     label: 'CHAR.003 // CHARACTER FILE',
     description: 'A focused spell takes shape in Kara\'s hands, illuminating the quiet confidence behind her measured control.',
@@ -474,7 +474,7 @@ const galleryItems = [
   },
   {
     img: 'assetbio/Kara_cute.png',
-    name: 'KARA SEIRO',
+    name: 'TEASE TIME',
     tag: 'PLAYFUL GLANCE',
     label: 'CHAR.003 // CHARACTER FILE',
     description: 'A rare playful moment from the Emerald Mirage — bright, teasing, and still impossible to read completely.',
