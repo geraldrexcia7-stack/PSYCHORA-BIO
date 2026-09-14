@@ -433,6 +433,10 @@
         <span class="voice-play-rings" aria-hidden="true"></span>
         <i class="fas fa-play" id="voicePlayIcon" aria-hidden="true"></i>
       </button>
+      <div class="scene-audio-volume" id="sceneAudioVolume" hidden>
+        <i class="fas fa-volume-low" aria-hidden="true"></i>
+        <input id="sceneAudioVolumeSlider" type="range" min="0" max="100" value="65" aria-label="Scene audio volume">
+      </div>
       <audio id="voiceAudio" preload="metadata" playsinline></audio>
     </div>
     <div class="modal-info">
@@ -447,6 +451,7 @@
       <div class="modal-section" id="modalMomentWrap" style="display:none;">
         <div class="modal-section-label">SCENE NOTE</div>
         <div class="modal-section-text" id="modalMoment"></div>
+        <div class="scene-dialogue" id="sceneDialogue" hidden></div>
       </div>
       <div class="modal-section">
         <div class="modal-section-label">BIOGRAPHY</div>

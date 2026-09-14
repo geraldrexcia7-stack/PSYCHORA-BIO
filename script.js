@@ -53,6 +53,22 @@ const characterData = {
     weapon: 'Verdantia — Kara\'s signature emerald staff, channeling Mystiara\'s quiet power with precision and restraint.',
     color: 'Emerald Green',
     colorHex: '#00e6a8'
+  },
+  zairas: {
+    num: 'CHAR.004 // YELLOW PSYCHORA',
+    label: 'CHAR.004 // CHARACTER FILE',
+    name: 'ZAIRAS TAMARO',
+    nameJp: '',
+    alias: "Zairas's Rose",
+    image: 'assetbio/Zai_scene.png',
+    imageClass: 'gold',
+    pos: 'center top',
+    quote: '"A single rose can say what words never could."',
+    bio: 'Zairas/Zai-chan offers a rose with a calm smile, turning an ordinary gesture into a scene of quiet charm. Beneath his warm golden presence is someone who understands that gentleness can be deliberate, powerful, and impossible to forget.',
+    personality: 'Radiant · Gentle · Quietly Enigmatic',
+    weapon: 'Solaric Duskbreaker — A disarming presence that authorizes flames into more influence.',
+    color: 'Golden Yellow',
+    colorHex: '#ffd447'
   }
 };
 
@@ -117,6 +133,15 @@ function openModal(charId, elOrOverrides, maybeOverrides) {
   } else {
     modalMomentWrap.style.display = 'none';
   }
+  const sceneDialogueEl = document.getElementById('sceneDialogue');
+  if (sceneDialogueEl) {
+    sceneDialogueEl.textContent = data.sceneDialogue || '';
+    sceneDialogueEl.hidden = !data.sceneDialogue;
+  }
+  const modalSections = document.querySelectorAll('.modal-info > .modal-section');
+  modalSections.forEach((section, index) => {
+    section.style.display = data.sceneOnly && index > 0 ? 'none' : '';
+  });
   document.getElementById('modalBio').textContent = data.bio;
   document.getElementById('modalPersonality').textContent = data.personality;
   document.getElementById('modalWeapon').textContent = data.weapon;
@@ -124,7 +149,25 @@ function openModal(charId, elOrOverrides, maybeOverrides) {
   document.getElementById('modal').classList.add('active');
   document.body.style.overflow = 'hidden';
 
+  setupSceneAudioControls(!!data.sceneOnly);
   setupVoicePlayer(data.voice);
+}
+
+function setupSceneAudioControls(isSceneOnly) {
+  const controls = document.getElementById('sceneAudioVolume');
+  const slider = document.getElementById('sceneAudioVolumeSlider');
+  const audio = document.getElementById('voiceAudio');
+  if (!controls || !slider || !audio) return;
+
+  controls.hidden = true;
+  controls.classList.remove('is-visible');
+  if (!isSceneOnly) return;
+
+  slider.value = '65';
+  audio.volume = 0.65;
+  slider.oninput = () => {
+    audio.volume = Number(slider.value) / 100;
+  };
 }
 
 function setupVoicePlayer(voiceSrc) {
@@ -164,6 +207,11 @@ function stopVoice() {
     btn.classList.remove('playing');
     btn.setAttribute('aria-pressed', 'false');
   }
+  const volumeControl = document.getElementById('sceneAudioVolume');
+  if (volumeControl) {
+    volumeControl.hidden = true;
+    volumeControl.classList.remove('is-visible');
+  }
 }
 
 function toggleVoice(e) {
@@ -178,11 +226,21 @@ function toggleVoice(e) {
     icon.className = 'fas fa-pause';
     btn.classList.add('playing');
     btn.setAttribute('aria-pressed', 'true');
+    const volumeControl = document.getElementById('sceneAudioVolume');
+    if (volumeControl && audio.src.includes('Kara-&-SarakoXmas.MP3')) {
+      volumeControl.hidden = false;
+      requestAnimationFrame(() => volumeControl.classList.add('is-visible'));
+    }
   } else {
     audio.pause();
     icon.className = 'fas fa-play';
     btn.classList.remove('playing');
     btn.setAttribute('aria-pressed', 'false');
+    const volumeControl = document.getElementById('sceneAudioVolume');
+    if (volumeControl) {
+      volumeControl.classList.remove('is-visible');
+      window.setTimeout(() => { volumeControl.hidden = true; }, 220);
+    }
   }
 }
 
@@ -570,12 +628,47 @@ const galleryItems = [
     charId: 'kara',
     pos: 'center center',
     accent: 'emerald'
+  },
+  {
+    img: 'assetbio/Sarako-Enraged.png',
+    name: 'SCORCHING DASH',
+    tag: 'ENRAGED DARKFLAMES',
+    label: 'CHAR.001 // CHARACTER FILE',
+    description: 'Sarako draws her blade through a storm of violet darkness, her fury burning brighter than the shadows that surround her. Every movement feels like a warning that restraint has finally been abandoned.',
+    sceneDialogue: 'SARAKO: "You mistook my silence for hesitation."\nOPPONENT: "Those flames will consume you too."\nSARAKO: "Then stay close. You will be the first to find out."',
+    charId: 'sarako',
+    pos: 'center center',
+    accent: 'purple'
+  },
+  {
+    img: 'assetbio/Zai_scene.png',
+    name: 'ZAIRAS TAMARO',
+    tag: 'SOLAR PSYCHORA',
+    label: 'CHAR.004 // CHARACTER FILE',
+    description: 'Bathed in warm light, Zairas extends a crimson rose with an easy smile. The gesture feels welcoming and intimate, as if the world has briefly paused for a quiet promise.',
+    charId: 'zairas',
+    pos: 'center top',
+    accent: 'gold'
+  },
+  {
+    img: 'assetbio/Xmas-Sarako_and_Kara.jpg',
+    name: 'KARA & SARAKO',
+    tag: 'WINTER MISCHIEF',
+    label: 'SCENE FILE // WINTER EVENING',
+    quote: '"Even Sarako cannot escape a little Christmas teasing."',
+    description: 'During a warm Christmas evening, Kara playfully reaches toward Sarako while Sarako tries to maintain her usual composure. The decorated cabin, glowing tree, and falling snow turn their teasing exchange into a rare moment of quiet friendship.',
+    sceneDialogue: 'KARA: "Hold still, Sarako. You look almost festive."\nSARAKO: "Touch me with that ornament and you will be decorating the tree alone."\nKARA: "There is the holiday spirit."',
+    charId: 'kara',
+    pos: 'center center',
+    accent: 'gold',
+    sceneOnly: true,
+    voice: 'assetbio/Audio/Kara-&-SarakoXmas.MP3'
   }
 ];
 
 const galleryGrid = document.getElementById('galleryGrid');
 galleryItems.forEach((item, i) => {
-  const accentClass = item.accent === 'cyan' ? ' cyan-accent' : item.accent === 'emerald' ? ' emerald-accent' : '';
+  const accentClass = item.accent === 'cyan' ? ' cyan-accent' : item.accent === 'emerald' ? ' emerald-accent' : item.accent === 'gold' ? ' gold-accent' : '';
   const div = document.createElement('div');
   div.className = 'gallery-item reveal' + accentClass;
   div.style.transitionDelay = (i * 0.08) + 's';
@@ -594,17 +687,20 @@ galleryItems.forEach((item, i) => {
     const base = characterData[item.charId] || {};
     openModal(item.charId, {
       image: item.img,
-      imageClass: item.accent === 'cyan' ? 'cyan' : (item.accent === 'emerald' ? 'emerald' : ''),
+      imageClass: item.accent === 'cyan' ? 'cyan' : (item.accent === 'emerald' ? 'emerald' : (item.accent === 'gold' ? 'gold' : '')),
       name: item.name,
       label: item.label || base.label || '',
       nameJp: item.nameJp || base.nameJp || '',
       nameJpWhite: !!item.nameJpWhite,
       alias: item.tag,
+      quote: item.quote || base.quote || '',
       pos: item.pos || 'center top',
       description: item.description || null,
+      sceneDialogue: item.sceneDialogue || null,
+      sceneOnly: !!item.sceneOnly,
       num: item.num || base.num || '',
       decoWhite: !!item.decoWhite,
-      voice: hasQuietHoursAudio ? 'assetbio/Audio/Kara_tease2.MP3' : null
+      voice: item.voice || (hasQuietHoursAudio ? 'assetbio/Audio/Kara_tease2.MP3' : null)
     });
   });
   galleryGrid.appendChild(div);
