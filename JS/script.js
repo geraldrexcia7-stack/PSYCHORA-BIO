@@ -666,7 +666,7 @@ const galleryItems = [
   },
   {
     img: 'assetbio/Shiro-cafe.png',
-    name: 'SHIRO AT THE BAR',
+    name: 'SHIRO - BAR ENCOUNTER',
     tag: 'MIDNIGHT REFLECTION',
     label: 'SCENE FILE // AFTER HOURS',
     description: 'A quiet night at the bar gives Shiro a rare moment to lower her guard. Beneath the warm lights and the sharp sweetness of her drink, she watches the city outside as if waiting for the next instinct to speak first.',
