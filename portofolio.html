@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="id" class="preloader-active">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>PORTFOLIO — Gerald Rexcia | PSYCHORA Archive</title>
+<link rel="icon" type="image/jpeg" href="assetbio/logo_psycho.jpg">
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Manrope:wght@200;300;400;500;600;700;800&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+<link rel="stylesheet" href="CSS/style.css">
+<link rel="stylesheet" href="CSS/porto.css">
+<noscript><style>.preloader{display:none!important;}html{overflow:auto!important;}body{overflow:auto!important;}</style></noscript>
+</head>
+<body class="preloader-active">
+
+<div class="preloader" id="preloader" role="status" aria-live="polite" aria-label="Loading portfolio">
+  <div class="preloader-glow glow-a" aria-hidden="true"></div>
+  <div class="preloader-glow glow-b" aria-hidden="true"></div>
+  <div class="preloader-grid" aria-hidden="true"></div>
+
+  <div class="preloader-content">
+    <div class="preloader-brand">
+      <span class="preloader-brand-en">PORTFOLIO</span>
+      <span class="preloader-brand-jp">サイコラ</span>
+    </div>
+
+    <div class="preloader-ring-wrap">
+      <span class="preloader-ring-spin" aria-hidden="true"></span>
+      <svg class="preloader-ring" viewBox="0 0 120 120" aria-hidden="true">
+        <defs>
+          <linearGradient id="preloaderGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#00d9ff"/>
+            <stop offset="100%" stop-color="#b026ff"/>
+          </linearGradient>
+        </defs>
+        <circle class="preloader-ring-track" cx="60" cy="60" r="52"></circle>
+        <circle class="preloader-ring-progress" id="preloaderRingProgress" cx="60" cy="60" r="52"></circle>
+      </svg>
+      <div class="preloader-percent">
+        <span id="preloaderPercentValue">0</span><span class="preloader-percent-sign">%</span>
+      </div>
+    </div>
+
+    <div class="preloader-status">
+      <span id="preloaderStatusText">LOADING PORTFOLIO</span><span class="preloader-dots"><span>.</span><span>.</span><span>.</span></span>
+    </div>
+  </div>
+</div>
+
+<canvas id="particles"></canvas>
+
+<div class="atmosphere">
+  <div class="smoke-blob purple-1"></div>
+  <div class="smoke-blob cyan-1"></div>
+  <div class="smoke-blob purple-2"></div>
+</div>
+<div class="grid-overlay"></div>
+
+<nav class="nav-bar">
+  <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center relative z-50">
+    <a href="index.html#hero" class="nav-logo">
+      <span>PSYCHORA</span>
+      <span class="nav-logo-jp">サイコラ</span>
+    </a>
+    <div class="nav-links hidden lg:flex gap-10 items-center">
+      <a href="index.html#hero" class="nav-link">HOME</a>
+      <a href="index.html#characters" class="nav-link">CHARACTERS</a>
+      <a href="index.html#lore" class="nav-link">LORE</a>
+      <a href="index.html#gallery" class="nav-link">GALLERY</a>
+      <a href="index.html#poll" class="nav-link">VOTE</a>
+      <a href="index.html#commission" class="nav-link">FAQ</a>
+      <a href="portofolio.html" class="nav-link nav-link-portfolio active">PORTFOLIO</a>
+      <a href="index.html#about" class="nav-link">ABOUT</a>
+    </div>
+    <div class="nav-meta lg:flex">
+      <div class="nav-status">SYSTEM ONLINE</div>
+      <div class="pf-language-switch" role="group" aria-label="Pilih bahasa">
+        <button class="pf-language-option is-active" type="button" data-language="id" lang="id" aria-pressed="true">ID</button>
+        <span aria-hidden="true">/</span>
+        <button class="pf-language-option" type="button" data-language="en" lang="en" aria-pressed="false">EN</button>
+      </div>
+    </div>
+    <div class="mobile-menu-btn" id="mobileMenuBtn" onclick="toggleMobileMenu()">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="index.html#hero" onclick="toggleMobileMenu()">HOME</a>
+  <a href="index.html#characters" onclick="toggleMobileMenu()">CHARACTERS</a>
+  <a href="index.html#lore" onclick="toggleMobileMenu()">LORE</a>
+  <a href="index.html#gallery" onclick="toggleMobileMenu()">GALLERY</a>
+  <a href="index.html#poll" onclick="toggleMobileMenu()">VOTE</a>
+  <a href="index.html#commission" onclick="toggleMobileMenu()">FAQ</a>
+  <a href="portofolio.html" class="mobile-link-portfolio active">PORTFOLIO</a>
+  <a href="index.html#about" onclick="toggleMobileMenu()">ABOUT</a>
+</div>
+
+<section class="hero" id="pf-hero">
+  <div class="hero-grid">
+    <div class="hero-content reveal">
+      <div class="micro-label">CREATOR ARCHIVE // PORTFOLIO FILE</div>
+      <h1 class="hero-title">PORTFOLIO</h1>
+      <h2 class="hero-title-sub">GERALD REXCIA</h2>
+      <p class="hero-desc">Mahasiswa Teknik Multimedia Digital, Politeknik Negeri Jakarta — aktif di ilustrasi karakter, desain visual, dan proyek multimedia kreatif di balik dunia PSYCHORA.</p>
+      <div class="hero-buttons">
+        <button class="btn-primary" onclick="document.getElementById('pf-experience').scrollIntoView({behavior:'smooth'})">
+          LIHAT PENGALAMAN
+        </button>
+        <a class="btn-secondary" href="portofolio/CV_Doc/CV-GERALD_REXCIA.pdf" download style="display:inline-flex;align-items:center;justify-content:center;text-decoration:none;">
+          UNDUH CV
+        </a>
+      </div>
+    </div>
+    <div class="pf-photo-area reveal reveal-delay-2">
+      <div class="hero-image-wrap pf-hero-photo-frame">
+        <div class="hero-image-glow"></div>
+        <img class="hero-image" id="pfHeroPhoto" src="portofolio/Profil-foto/profil_photo.jpg" alt="Gerald Rexcia">
+        <div class="hero-image-frame"></div>
+      </div>
+    </div>
+  </div>
+  <div class="scroll-indicator">
+    <span>SCROLL</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<section class="section" id="pf-about">
+  <div class="watermark" style="top: 5%; right: -5%;">ABOUT</div>
+  <div class="section-inner">
+    <div class="reveal">
+      <div class="micro-label">PORTFOLIO // 01 — ABOUT</div>
+      <h2 class="section-title">ABOUT <span class="italic">ME</span></h2>
+    </div>
+    <div class="pf-about-grid">
+      <p class="pf-about-text reveal reveal-delay-1">
+        Saya adalah <span class="accent">Gerald Rexcia</span>, lahir di Bogor pada 12 Maret 2007. Lulusan SMAN 1 Cileungsi dengan jurusan IPA di kelas 11 dan 12, kini melanjutkan studi di program <span class="accent">Teknik Multimedia Digital</span> dengan ketertarikan tinggi pada desain visual, pengembangan konten multimedia, dan teknologi kreatif. Selama 2 tahun aktif berorganisasi sebagai bagian dari divisi Wakil Ketua Japanese Club.
+      </p>
+      <div class="pf-fact-list reveal reveal-delay-2">
+        <div class="pf-fact-chip">
+          <span class="pf-fact-label">Program Studi</span>
+          <span class="pf-fact-value">Teknik Multimedia Digital</span>
+        </div>
+        <div class="pf-fact-chip">
+          <span class="pf-fact-label">Kampus</span>
+          <span class="pf-fact-value">Politeknik Negeri Jakarta</span>
+        </div>
+        <div class="pf-fact-chip">
+          <span class="pf-fact-label">Domisili</span>
+          <a class="pf-fact-value pf-location-link" href="https://www.google.com/maps/search/?api=1&amp;query=Pesona+Kahuripan+11%2C+Bogor%2C+Jawa+Barat+16820" target="_blank" rel="noopener noreferrer">Pesona Kahuripan 11, Bogor, Jawa Barat 16820</a>
+        </div>
+        <div class="pf-fact-chip">
+          <span class="pf-fact-label">Fokus</span>
+          <span class="pf-fact-value">Ilustrasi 2D · Desain Visual · Animasi · Digital Multimedia</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="pf-education">
+  <div class="watermark" style="top: 10%; left: -5%;">STUDY</div>
+  <div class="section-inner">
+    <div class="reveal">
+      <div class="micro-label">PORTFOLIO // 02 — EDUCATION</div>
+      <h2 class="section-title">PENDIDIKAN</h2>
+    </div>
+    <div class="pf-timeline">
+      <div class="pf-timeline-item reveal reveal-delay-1">
+        <span class="pf-timeline-dot"></span>
+        <span class="pf-timeline-date">SD</span>
+        <div class="pf-timeline-card">
+          <h3 class="pf-timeline-title">Teruna Muda Elementary School</h3>
+          <span class="pf-timeline-sub">Sekolah Dasar</span>
+          <p class="pf-timeline-desc">Pendidikan dasar sebelum melanjutkan ke jenjang sekolah menengah.</p>
+        </div>
+      </div>
+      <div class="pf-timeline-item cyan reveal reveal-delay-2">
+        <span class="pf-timeline-dot"></span>
+        <span class="pf-timeline-date">SMP</span>
+        <div class="pf-timeline-card">
+          <h3 class="pf-timeline-title">Brighton Junior High School</h3>
+          <span class="pf-timeline-sub">Sekolah Menengah Pertama</span>
+          <p class="pf-timeline-desc">Pendidikan menengah pertama sebelum melanjutkan ke jenjang SMA.</p>
+        </div>
+      </div>
+      <div class="pf-timeline-item emerald reveal reveal-delay-3">
+        <span class="pf-timeline-dot"></span>
+        <span class="pf-timeline-date">2023 — 2025</span>
+        <div class="pf-timeline-card">
+          <h3 class="pf-timeline-title">SMAN 1 Cileungsi</h3>
+          <span class="pf-timeline-sub">Sekolah Menengah Atas · Cileungsi, Kab. Bogor, Jawa Barat</span>
+          <p class="pf-timeline-desc">Jurusan A (IPA) pada kelas 11 dan 12. Aktif berorganisasi sebagai Wakil Ketua Japanese Club selama 2 tahun.</p>
+        </div>
+      </div>
+      <div class="pf-timeline-item cyan reveal reveal-delay-4">
+        <span class="pf-timeline-dot"></span>
+        <span class="pf-timeline-date">2025 — Sekarang</span>
+        <div class="pf-timeline-card">
+          <h3 class="pf-timeline-title">Teknik Multimedia Digital</h3>
+          <span class="pf-timeline-sub">Politeknik Negeri Jakarta · Depok, Jawa Barat</span>
+          <p class="pf-timeline-desc">Menempuh studi pada program yang berfokus pada desain visual, produksi konten multimedia, dan teknologi kreatif.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="pf-experience">
+  <div class="watermark" style="bottom: 5%; right: -5%;">WORK</div>
+  <div class="section-inner">
+    <div class="reveal">
+      <div class="micro-label">PORTFOLIO // 03 — EXPERIENCE</div>
+      <h2 class="section-title">PENGALAMAN</h2>
+    </div>
+    <div class="pf-timeline">
+      <div class="pf-timeline-item reveal reveal-delay-1">
+        <span class="pf-timeline-dot"></span>
+        <span class="pf-timeline-date">2021 — 2026</span>
+        <div class="pf-timeline-card">
+          <h3 class="pf-timeline-title">Art Illustrator</h3>
+          <span class="pf-timeline-sub">Proyek Kreatif Sekolah — Expo Campus (Columns NEPAL 2026)</span>
+          <p class="pf-timeline-desc">Mengembangkan ilustrasi 2D dan desain karakter untuk proyek Expo Campus, termasuk desain maskot karakter untuk kegiatan Expo. Mengilustrasikan karakter orisinal dengan fokus pada detail, ekspresi, dan daya tarik visual, serta mendukung tim kreatif dengan ide desain dan ilustrasi untuk acara budaya dan proyek multimedia.</p>
+        </div>
+      </div>
+      <div class="pf-timeline-item cyan reveal reveal-delay-2">
+        <span class="pf-timeline-dot"></span>
+        <span class="pf-timeline-date">Januari 2026</span>
+        <div class="pf-timeline-card">
+          <h3 class="pf-timeline-title">Panitia Acara (Campus EXPO)</h3>
+          <span class="pf-timeline-sub">Panitia Acara Nepal Columns 2026, SMAN 1 Cileungsi</span>
+          <p class="pf-timeline-desc">Bergabung sebagai bagian dari kepanitiaan acara Columns NEPAL 2026 Campus Expo, turut mengisi dan menyukseskan rangkaian kegiatan expo di sekolah.</p>
+        </div>
+      </div>
+      <div class="pf-timeline-item emerald reveal reveal-delay-3">
+        <span class="pf-timeline-dot"></span>
+        <span class="pf-timeline-date">2024 — 2025</span>
+        <div class="pf-timeline-card">
+          <h3 class="pf-timeline-title">Graphic Designer</h3>
+          <span class="pf-timeline-sub">Extracurricular Japanese Club</span>
+          <p class="pf-timeline-desc">Merancang poster berbasis visual grafis untuk kegiatan ekstrakurikuler guna meningkatkan minat dan partisipasi siswa SMA. Mendesain materi promosi berupa poster kreatif yang menampilkan identitas ekskul secara menarik dan komunikatif, menggunakan Ibis Paint X dan Krita.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="pf-skills">
+  <div class="watermark" style="top: 10%; left: -5%;">SKILL</div>
+  <div class="section-inner">
+    <div class="reveal">
+      <div class="micro-label">PORTFOLIO // 04 — SKILLS</div>
+      <h2 class="section-title">SKILLS <span class="italic">&amp; LANGUAGE</span></h2>
+    </div>
+    <div class="pf-skills-grid">
+      <div class="reveal reveal-delay-1">
+        <div class="pf-subheading">CORE SKILLS</div>
+        <div class="pf-skill-chips">
+          <span class="pf-skill-chip">ORGANIZED</span>
+          <span class="pf-skill-chip">CREATIVITY</span>
+          <span class="pf-skill-chip">TEAMWORK</span>
+          <span class="pf-skill-chip">VICE SUPERVISION</span>
+          <span class="pf-skill-chip">CRITICAL THINKING</span>
+        </div>
+        <div class="pf-subheading">CERTIFICATIONS</div>
+        <div class="pf-cert-list">
+          <div class="pf-cert-item"><i class="fas fa-certificate"></i><span>Certified Fan Art Illustrator</span></div>
+          <div class="pf-cert-item"><i class="fas fa-certificate"></i><span>Expo Committee Certificate</span></div>
+          <div class="pf-cert-item"><i class="fas fa-certificate"></i><span>Wakil Ketua Japanese Club</span></div>
+        </div>
+      </div>
+      <div class="reveal reveal-delay-2">
+        <div class="pf-subheading">LANGUAGE</div>
+        <div class="pf-lang-list">
+          <div>
+            <div class="pf-lang-row"><span>INDONESIA</span><span>NATIVE</span></div>
+            <div class="pf-lang-track"><div class="pf-lang-fill" style="width:100%"></div></div>
+          </div>
+          <div>
+            <div class="pf-lang-row"><span>ENGLISH</span><span>PROFICIENT</span></div>
+            <div class="pf-lang-track"><div class="pf-lang-fill" style="width:80%"></div></div>
+          </div>
+          <div>
+            <div class="pf-lang-row"><span>JAPANESE</span><span>INTERMEDIATE</span></div>
+            <div class="pf-lang-track"><div class="pf-lang-fill" style="width:60%"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="pf-gallery">
+  <div class="watermark" style="bottom: 5%; left: -5%;">AWARDS</div>
+  <div class="section-inner">
+    <div class="reveal">
+      <div class="micro-label">PORTFOLIO // 05 — ACHIEVEMENTS</div>
+      <h2 class="section-title">PRESTASI <span class="italic">&amp; SERTIFIKAT</span></h2>
+      <p class="commission-desc">Beberapa penghargaan dan sertifikat yang diraih selama masa SMA. Ketuk gambar untuk memperbesar.</p>
+    </div>
+    <div class="pf-gallery-grid">
+      <div class="pf-gallery-card reveal reveal-delay-1"
+           data-full="portofolio/cert_olo_national.jpg"
+           data-tag="CHAR.AWD // NASIONAL"
+           data-caption="Perak Medali Nasional — OLO Quarterly Language Olympiad 6.0, Bahasa Jepang">
+        <img src="portofolio/cert_olo_national.jpg" alt="Piagam Penghargaan Nasional - OLO Quarterly Language Olympiad" loading="lazy" decoding="async">
+        <div class="pf-gallery-overlay">
+          <div class="pf-gallery-caption"><span class="tag">NASIONAL // 2025</span>Perak Medali Nasional — OLO Language Olympiad</div>
+        </div>
+      </div>
+      <div class="pf-gallery-card reveal reveal-delay-2"
+           data-full="portofolio/cert_isc_english.jpg"
+           data-tag="CHAR.AWD // ISC"
+           data-caption="Gold Medalist — Indonesian Student Competition, Bidang Studi Bahasa Inggris SMA">
+        <img src="portofolio/cert_isc_english.jpg" alt="Piagam Penghargaan - Indonesian Student Competition" loading="lazy" decoding="async">
+        <div class="pf-gallery-overlay">
+          <div class="pf-gallery-caption"><span class="tag">ISC // DES 2024</span>Gold Medalist — Indonesian Student Competition</div>
+        </div>
+      </div>
+      <div class="pf-gallery-card reveal reveal-delay-3"
+           data-full="portofolio/cert_sertifikat_menggambar.jpg"
+           data-tag="CHAR.AWD // SENI"
+           data-caption="Juara Harapan 5 — Lomba Menggambar SMA/SMK Tingkat Nasional">
+        <img src="portofolio/cert_sertifikat_menggambar.jpg" alt="Sertifikat Penghargaan Lomba Menggambar Nasional" loading="lazy" decoding="async">
+        <div class="pf-gallery-overlay">
+          <div class="pf-gallery-caption"><span class="tag">NASIONAL // MAR 2025</span>Juara Harapan 5 — Lomba Menggambar Nasional</div>
+        </div>
+      </div>
+      <div class="pf-gallery-card reveal reveal-delay-4"
+           data-full="portofolio/cert_columns_expo.jpg"
+           data-tag="CHAR.AWD // EXPO"
+           data-caption="Certificate of Participation — Panitia Columns NEPAL 2026 Campus Expo">
+        <img src="portofolio/cert_columns_expo.jpg" alt="Certificate of Participation Columns NEPAL 2026 Campus Expo" loading="lazy" decoding="async">
+        <div class="pf-gallery-overlay">
+          <div class="pf-gallery-caption"><span class="tag">EXPO // 2026</span>Sertifikat Panitia — Columns NEPAL 2026</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="pf-resume">
+  <div class="section-inner">
+    <div class="reveal">
+      <div class="micro-label">PORTFOLIO // 06 — RESUME</div>
+      <h2 class="section-title">CURRICULUM <span class="italic">VITAE</span></h2>
+    </div>
+    <div class="pf-resume-card reveal reveal-delay-1">
+      <div class="pf-resume-icon"><i class="fas fa-file-pdf"></i></div>
+      <div class="pf-resume-info">
+        <div class="pf-resume-title">CV-GERALD_REXCIA.pdf</div>
+        <div class="pf-resume-sub">Riwayat pendidikan, pengalaman, sertifikasi, dan prestasi lengkap dalam satu berkas.</div>
+      </div>
+      <div class="pf-resume-actions">
+        <a class="btn-primary" href="portofolio/CV_Doc/CV-GERALD_REXCIA.pdf" download style="display:inline-flex;align-items:center;justify-content:center;text-decoration:none;">
+          <i class="fas fa-download" style="margin-right:0.5rem;"></i>UNDUH CV
+        </a>
+        <a class="btn-secondary" href="portofolio/CV_Doc/CV-GERALD_REXCIA.pdf" target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;justify-content:center;text-decoration:none;">
+          <i class="fas fa-arrow-up-right-from-square" style="margin-right:0.5rem;"></i>BUKA TAB BARU
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer id="pf-contact">
+  <div class="footer-glow"></div>
+  <div class="footer-logo">GERALD REXCIA</div>
+  <div class="footer-divider"></div>
+  <p class="footer-tagline">"Be Glad, Don't Regret"</p>
+  <div class="pf-contact-grid" aria-label="Contact information">
+    <a class="pf-contact-item" href="tel:+6285810363858">
+      <i class="fas fa-phone"></i>
+      <span>0858-1036-3858</span>
+    </a>
+    <a class="pf-contact-item" href="mailto:geraldrexcia7@gmail.com">
+      <i class="fas fa-envelope"></i>
+      <span>geraldrexcia7@gmail.com</span>
+    </a>
+    <a class="pf-contact-item" href="https://www.linkedin.com/in/gerald-rexcia-mahasiswa-pnj-852b71389/" target="_blank" rel="noopener noreferrer">
+      <i class="fab fa-linkedin"></i>
+      <span>Gerald Rexcia</span>
+    </a>
+    <a class="pf-contact-item" href="https://www.google.com/maps/search/?api=1&amp;query=Pesona+Kahuripan+11%2C+Bogor%2C+Jawa+Barat+16820" target="_blank" rel="noopener noreferrer">
+      <i class="fas fa-location-dot"></i>
+      <span>Pesona Kahuripan 11, Bogor, Jawa Barat 16820</span>
+    </a>
+  </div>
+  <p class="footer-copy">GERALD REXCIA — PORTFOLIO / 2026</p>
+</footer>
+
+<div class="pf-lightbox" id="pfLightbox" role="dialog" aria-modal="true">
+  <div class="pf-lightbox-content">
+    <button class="pf-lightbox-close" onclick="pfCloseLightbox()" aria-label="Close">
+      <i class="fas fa-times"></i>
+    </button>
+    <img id="pfLightboxImage" src="" alt="">
+    <p class="pf-lightbox-caption" id="pfLightboxCaption"></p>
+  </div>
+</div>
+
+<script src="JS/porto.js"></script>
+</body>
+</html>

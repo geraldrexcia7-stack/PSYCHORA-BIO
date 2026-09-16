@@ -663,6 +663,18 @@ const galleryItems = [
     accent: 'gold',
     sceneOnly: true,
     voice: 'assetbio/Audio/Kara-&-SarakoXmas.MP3'
+  },
+  {
+    img: 'assetbio/Shiro-cafe.png',
+    name: 'SHIRO AT THE BAR',
+    tag: 'MIDNIGHT REFLECTION',
+    label: 'SCENE FILE // AFTER HOURS',
+    description: 'A quiet night at the bar gives Shiro a rare moment to lower her guard. Beneath the warm lights and the sharp sweetness of her drink, she watches the city outside as if waiting for the next instinct to speak first.',
+    sceneDialogue: 'SHIRO: "The city looks softer from here."\nOPPONENT: "You are unusually quiet tonight."\nSHIRO: "Do not mistake quiet for harmless. I am still watching you."',
+    charId: 'shiro',
+    pos: 'center center',
+    accent: 'cyan',
+    sceneOnly: true
   }
 ];
 

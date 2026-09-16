@@ -1024,6 +1024,7 @@ img.img-broken.img-broken-parent-fallback { visibility: visible; }
 .gallery-item:nth-child(11) { grid-column: span 6; grid-row: span 4; }
 .gallery-item:nth-child(12) { grid-column: span 6; grid-row: span 4; }
 .gallery-item:nth-child(13) { grid-column: span 6; grid-row: span 5; }
+.gallery-item:nth-child(14) { grid-column: span 6; grid-row: span 5; }
 
 /* Modal */
 .modal-overlay {
@@ -1400,6 +1401,12 @@ img.img-broken.img-broken-parent-fallback { visibility: visible; }
   text-shadow: 0 0 12px rgba(176, 38, 255, 0.18);
 }
 .scene-dialogue[hidden] { display: none; }
+.modal-content.cyan .scene-dialogue {
+  border-left-color: var(--cyan);
+  background: rgba(0, 217, 255, 0.07);
+  color: #b9f5ff;
+  text-shadow: 0 0 12px rgba(0, 217, 255, 0.2);
+}
 .modal-content.gold .scene-dialogue {
   border-left-color: var(--gold);
   background: rgba(255, 212, 71, 0.06);
