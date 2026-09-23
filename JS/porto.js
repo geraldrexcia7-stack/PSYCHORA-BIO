@@ -10,6 +10,7 @@
 
 /* ---- Broken-image fallback (mirrors the main archive page's behaviour) ---- */
 document.querySelectorAll('img').forEach(img => {
+  if (img.id === 'pfLightboxImage') return;
   img.addEventListener('error', () => {
     if (img.dataset.fallbackApplied) return;
     img.dataset.fallbackApplied = 'true';
@@ -39,7 +40,7 @@ function toggleMobileMenu() {
     '.hero-buttons .btn-primary': [['LIHAT PENGALAMAN', 'VIEW EXPERIENCE']],
     '.hero-buttons .btn-secondary': [['UNDUH CV', 'DOWNLOAD CV']],
     '#pf-about .section-title': [['ABOUT <span class="italic">ME</span>', 'ABOUT <span class="italic">ME</span>']],
-    '#pf-about .pf-about-text': [['Saya adalah <span class="accent">Gerald Rexcia</span>, lahir di Bogor pada 12 Maret 2007. Lulusan SMAN 1 Cileungsi dengan jurusan IPA di kelas 11 dan 12, kini melanjutkan studi di program <span class="accent">Teknik Multimedia Digital</span> dengan ketertarikan tinggi pada desain visual, pengembangan konten multimedia, dan teknologi kreatif. Selama 2 tahun aktif berorganisasi sebagai bagian dari divisi Wakil Ketua Japanese Club.', 'I am <span class="accent">Gerald Rexcia</span>, born in Bogor on March 12, 2007. A graduate of SMAN 1 Cileungsi with a science major in grades 11 and 12, I am now studying <span class="accent">Digital Multimedia Engineering</span> with a strong interest in visual design, multimedia content development, and creative technology. I was active for two years as Vice Chair of the Japanese Club.']],
+    '#pf-about .pf-about-text': [['Saya adalah <span class="accent">Gerald Rexcia</span>, lahir di Bogor pada 12 Maret 2007. Lulusan SMAN 1 Cileungsi dengan jurusan IPA di kelas 11 dan 12, kini melanjutkan studi di program <span class="accent">Teknik Multimedia Digital</span> dengan ketertarikan tinggi pada desain visual, pengembangan konten multimedia, dan teknologi kreatif. Selama 2 tahun aktif berorganisasi sebagai bagian dari divisi Wakil Ketua Japanese Club.<br><br>Saya berpengalaman dalam <span class="accent">illustrasi 2D</span>, desain karakter, serta pengembangan konten kreatif berbasis multimedia. Selama perjalanan saya, saya telah meraih penghargaan di bidang seni dan bahasa, serta aktif memimpin proyek kreatif di komunitas. Bagi saya, setiap karya adalah kesempatan untuk menyampaikan cerita dan menghadirkan pengalaman yang bermakna.<br><br>Saya terbuka untuk kolaborasi dan selalu bersemangat mengeksplorasi ide-ide baru dalam dunia desain dan multimedia.', 'I am <span class="accent">Gerald Rexcia</span>, born in Bogor on March 12, 2007. A graduate of SMAN 1 Cileungsi with a science major in grades 11 and 12, I am now studying <span class="accent">Digital Multimedia Engineering</span> with a strong interest in visual design, multimedia content development, and creative technology. I was active for two years as Vice Chair of the Japanese Club.<br><br>I have experience in <span class="accent">2D illustration</span>, character design, and creative multimedia content development. Throughout my journey, I have earned awards in the fields of art and language and have actively led creative projects in the community. For me, every work is an opportunity to tell a story and deliver a meaningful experience.<br><br>I am open to collaboration and always excited to explore new ideas in the world of design and multimedia.']],
     '#pf-about .pf-fact-label': [['Program Studi', 'Study Program'], ['Kampus', 'University'], ['Domisili', 'Location'], ['Fokus', 'Focus']],
     '#pf-about .pf-fact-value': [['Teknik Multimedia Digital', 'Digital Multimedia Engineering'], ['Politeknik Negeri Jakarta', 'Politeknik Negeri Jakarta'], ['Pesona Kahuripan 11, Bogor, Jawa Barat 16820', 'Pesona Kahuripan 11, Bogor, West Java 16820'], ['Ilustrasi 2D · Desain Visual · Animasi · Digital Multimedia', '2D Illustration · Visual Design · Animation · Digital Multimedia']],
     '#pf-education .section-title': [['PENDIDIKAN', 'EDUCATION']],
@@ -71,10 +72,8 @@ function toggleMobileMenu() {
     '#pf-experience .pf-timeline-date': [['2021 — 2026', '2021 — 2026'], ['Januari 2026', 'January 2026'], ['2024 — 2025', '2024 — 2025']]
   };
   const galleryCaptions = [
-    ['<span class="tag">NASIONAL // 2025</span>Perak Medali Nasional — OLO Language Olympiad', '<span class="tag">NATIONAL // 2025</span>National Silver Medal — OLO Language Olympiad'],
-    ['<span class="tag">ISC // DES 2024</span>Gold Medalist — Indonesian Student Competition', '<span class="tag">ISC // DEC 2024</span>Gold Medalist — Indonesian Student Competition'],
-    ['<span class="tag">NASIONAL // MAR 2025</span>Juara Harapan 5 — Lomba Menggambar Nasional', '<span class="tag">NATIONAL // MAR 2025</span>5th Honorable Mention — National Drawing Competition'],
-    ['<span class="tag">EXPO // 2026</span>Sertifikat Panitia — Columns NEPAL 2026', '<span class="tag">EXPO // 2026</span>Committee Certificate — Columns NEPAL 2026']
+    ['<span class="tag">CERT // CCNA</span>Certificate of Course Completion — Cisco Networking Academy', '<span class="tag">CERT // CCNA</span>Certificate of Course Completion — Cisco Networking Academy'],
+    ['<span class="tag">CERT // 2026</span>Certificate of Participation — Columns NEPAL 2026 Campus Expo', '<span class="tag">CERT // 2026</span>Certificate of Participation — Columns NEPAL 2026 Campus Expo']
   ];
 
   function applyContent(language) {
@@ -95,10 +94,8 @@ function toggleMobileMenu() {
     });
     document.querySelectorAll('.pf-gallery-card').forEach((card, index) => {
       const captions = [
-        ['Perak Medali Nasional — OLO Quarterly Language Olympiad 6.0, Bahasa Jepang', 'National Silver Medal — OLO Quarterly Language Olympiad 6.0, Japanese'],
-        ['Gold Medalist — Indonesian Student Competition, Bidang Studi Bahasa Inggris SMA', 'Gold Medalist — Indonesian Student Competition, High School English'],
-        ['Juara Harapan 5 — Lomba Menggambar SMA/SMK Tingkat Nasional', '5th Honorable Mention — National High School Drawing Competition'],
-        ['Certificate of Participation — Panitia Columns NEPAL 2026 Campus Expo', 'Certificate of Participation — Columns NEPAL 2026 Campus Expo']
+        ['Certificate of Course Completion — Cisco Networking Academy', 'Certificate of Course Completion — Cisco Networking Academy'],
+        ['Certificate of Participation — Columns NEPAL 2026 Campus Expo', 'Certificate of Participation — Columns NEPAL 2026 Campus Expo']
       ];
       if (captions[index]) card.dataset.caption = captions[index][language === 'en' ? 1 : 0];
     });
@@ -319,14 +316,98 @@ if (pfParticleCanvas) new PfParticleSystem(pfParticleCanvas);
   });
 })();
 
+/* ---- Premium tilt + glare for the achievement/certificate cards ----
+   Runs entirely off requestAnimationFrame with its own interpolation, and
+   .pf-gallery-card no longer has "transform" in its CSS transition (see
+   porto.css) — that combo was what caused the laggy/delayed feel, since
+   the CSS transition was re-smoothing a value the JS loop already smoothed
+   every frame. Now JS owns the transform end-to-end, so it tracks the
+   cursor immediately with no added delay. */
+(function initGalleryTilt() {
+  if (window.matchMedia('(hover: none) and (pointer: coarse)').matches) return;
+  document.querySelectorAll('.pf-gallery-card').forEach(card => {
+    let targetX = 0, targetY = 0, currentX = 0, currentY = 0;
+    let targetLift = 0, currentLift = 0;
+    let isHovered = false, raf = null;
+
+    const glare = document.createElement('div');
+    glare.className = 'pf-gallery-glare';
+    card.appendChild(glare);
+
+    function render() {
+      currentX += (targetX - currentX) * 0.4;
+      currentY += (targetY - currentY) * 0.4;
+      currentLift += (targetLift - currentLift) * 0.4;
+      card.style.transform =
+        `perspective(1000px) rotateX(${currentX.toFixed(2)}deg) rotateY(${currentY.toFixed(2)}deg) ` +
+        `translateY(${(-currentLift).toFixed(2)}px) translateZ(${(currentLift * 2.5).toFixed(2)}px)`;
+      const settled = !isHovered &&
+        Math.abs(currentX) < 0.03 && Math.abs(currentY) < 0.03 && Math.abs(currentLift) < 0.03;
+      if (!settled) {
+        raf = requestAnimationFrame(render);
+      } else {
+        card.style.transform = '';
+        raf = null;
+      }
+    }
+    function ensureLoop() {
+      if (!raf) raf = requestAnimationFrame(render);
+    }
+
+    card.addEventListener('mouseenter', () => {
+      isHovered = true;
+      targetLift = 7;
+      ensureLoop();
+    });
+    card.addEventListener('mousemove', (e) => {
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const cx = rect.width / 2, cy = rect.height / 2;
+      targetX = ((y - cy) / cy) * -6;
+      targetY = ((x - cx) / cx) * 6;
+      // translate3d only — no lerp, no repaint, so the glow never lags
+      // behind the cursor no matter how busy the rest of the page is.
+      glare.style.setProperty('--gx', `${x}px`);
+      glare.style.setProperty('--gy', `${y}px`);
+      ensureLoop();
+    });
+    card.addEventListener('mouseleave', () => {
+      isHovered = false;
+      targetX = 0; targetY = 0; targetLift = 0;
+      ensureLoop();
+    });
+  });
+})();
+
 /* ---- Achievements lightbox ---- */
 function pfOpenLightbox(src, caption, tag) {
   const lb = document.getElementById('pfLightbox');
   const img = document.getElementById('pfLightboxImage');
   const cap = document.getElementById('pfLightboxCaption');
   if (!lb || !img) return;
-  img.src = src;
+
+  img.classList.remove('img-broken');
+  img.dataset.fallbackApplied = 'false';
+  img.style.visibility = 'visible';
+  img.style.display = 'block';
+  img.style.opacity = '0';
+  img.style.transition = 'opacity 0.2s ease';
   img.alt = caption || '';
+
+  const safeSrc = encodeURI(src);
+  img.src = safeSrc + '?t=' + Date.now();
+
+  img.onerror = () => {
+    img.style.opacity = '0.2';
+    img.alt = 'Certificate image failed to load';
+  };
+
+  img.onload = () => {
+    img.style.opacity = '1';
+    img.style.visibility = 'visible';
+  };
+
   if (cap) cap.textContent = (tag ? tag + ' — ' : '') + (caption || '');
   lb.classList.add('active');
   document.body.style.overflow = 'hidden';

@@ -62,6 +62,11 @@ button:focus-visible,
 }
 
 img.img-broken { visibility: hidden; }
+#pfLightboxImage.img-broken,
+#pfLightboxImage,
+#pfLightboxImage[src=""] {
+  visibility: visible !important;
+}
 img.img-broken.img-broken-parent-fallback { visibility: visible; }
 .char-card-image:has(img.img-broken),
 .modal-image:has(img.img-broken),
