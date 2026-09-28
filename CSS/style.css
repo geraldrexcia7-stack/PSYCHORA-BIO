@@ -10,10 +10,10 @@ body { line-height: inherit; }
 h1, h2, h3, h4, h5, h6 { font-size: inherit; font-weight: inherit; }
 a { color: inherit; text-decoration: inherit; }
 ol, ul { list-style: none; }
-img, svg, video, canvas, audio, iframe, embed, object { display: block; vertical-align: middle; }
+img, svg, video, canvas, audio, iframe, embed, object { display: block; }
 img, video { max-width: 100%; height: auto; }
 button, input, select, textarea { font-family: inherit; font-size: 100%; font-weight: inherit; line-height: inherit; color: inherit; }
-button, [type='button'], [type='reset'], [type='submit'] { -webkit-appearance: button; background-color: transparent; background-image: none; }
+button, [type='button'], [type='reset'], [type='submit'] { -webkit-appearance: button; appearance: button; background-color: transparent; background-image: none; }
 button, [role='button'] { cursor: pointer; }
 table { border-collapse: collapse; text-indent: 0; border-color: inherit; }
 [hidden] { display: none; }
@@ -495,7 +495,9 @@ img.img-broken.img-broken-parent-fallback { visibility: visible; }
 }
 
 .char-card {
+  --char-radius: 28px; /* rounded frame (bukan lingkaran) — ubah angka ini untuk lebih/kurang bulat */
   position: relative;
+  border-radius: var(--char-radius);
   border: 1px solid var(--border);
   background: linear-gradient(145deg, rgba(20, 9, 36, 0.9), rgba(5, 5, 8, 0.98));
   backdrop-filter: blur(14px);
@@ -518,6 +520,7 @@ img.img-broken.img-broken-parent-fallback { visibility: visible; }
 .char-card-image {
   position: relative;
   height: 620px;
+  border-radius: var(--char-radius);
   overflow: hidden;
   background: var(--bg-deep);
   transform: translateZ(30px);
@@ -542,6 +545,7 @@ img.img-broken.img-broken-parent-fallback { visibility: visible; }
 .char-aura-layer {
   position: absolute;
   inset: 0;
+  border-radius: inherit;
   pointer-events: none;
   z-index: 12;
   opacity: 0;
@@ -559,6 +563,7 @@ img.img-broken.img-broken-parent-fallback { visibility: visible; }
 .char-card-overlay {
   position: absolute;
   inset: 0;
+  border-radius: inherit;
   background: linear-gradient(180deg, rgba(8, 8, 13, 0.25) 0%, transparent 40%, rgba(8, 8, 13, 0.85) 75%, rgba(8, 8, 13, 0.98) 100%);
   pointer-events: none;
   z-index: 14;
@@ -566,6 +571,7 @@ img.img-broken.img-broken-parent-fallback { visibility: visible; }
 .char-card-glow {
   position: absolute;
   inset: 0;
+  border-radius: inherit;
   background: radial-gradient(circle at center, rgba(176, 38, 255, 0.1), transparent 70%);
   opacity: 0;
   transition: opacity 0.35s ease;
@@ -1794,6 +1800,7 @@ footer {
 
   .char-grid { gap: 1.25rem; margin-top: 2.5rem; }
   .char-grid-solo { margin-top: 1.25rem; }
+  .char-card { --char-radius: 20px; }
   .char-card-image { height: 380px; }
   .char-card-content {
     padding: 0.9rem 1rem calc(0.9rem + env(safe-area-inset-bottom, 0px));
