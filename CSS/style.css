@@ -1,3 +1,23 @@
+/* ==========================================================================
+   Replacement for the Tailwind CDN (cdn.tailwindcss.com) that used to be loaded
+   in <head>. The CDN compiles CSS in the browser on every visit, which is very
+   slow on phones. Only a handful of utilities were actually used, so the small
+   base reset below + the utility block at the very end of this file replace it.
+   ========================================================================== */
+html { line-height: 1.5; }
+body { line-height: inherit; }
+*, ::before, ::after { border-width: 0; border-style: solid; border-color: #e5e7eb; }
+h1, h2, h3, h4, h5, h6 { font-size: inherit; font-weight: inherit; }
+a { color: inherit; text-decoration: inherit; }
+ol, ul { list-style: none; }
+img, svg, video, canvas, audio, iframe, embed, object { display: block; vertical-align: middle; }
+img, video { max-width: 100%; height: auto; }
+button, input, select, textarea { font-family: inherit; font-size: 100%; font-weight: inherit; line-height: inherit; color: inherit; }
+button, [type='button'], [type='reset'], [type='submit'] { -webkit-appearance: button; background-color: transparent; background-image: none; }
+button, [role='button'] { cursor: pointer; }
+table { border-collapse: collapse; text-indent: 0; border-color: inherit; }
+[hidden] { display: none; }
+
 :root {
   --bg: #08080D;
   --bg-deep: #050508;
@@ -2121,10 +2141,13 @@ html, body { max-width: 100%; }
 }
 .poll-bar {
   height: 100%;
-  width: 0%;
+  width: 100%;
   border-radius: 999px;
   background: linear-gradient(90deg, var(--neon-purple), #d97cff);
-  transition: width 0.6s ease;
+  /* scaleX instead of width: animates on the GPU, no layout work per frame */
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.6s ease;
 }
 .poll-card.cyan .poll-bar {
   background: linear-gradient(90deg, var(--cyan), #7fe9ff);
@@ -2133,12 +2156,35 @@ html, body { max-width: 100%; }
   background: linear-gradient(90deg, var(--emerald), #7dffce);
 }
 .poll-percent {
-  display: block;
+  display: flex;
+  align-items: baseline;
+  /* Desktop: the cards are slanted, so text pushed to the far right edge gets
+     sliced off by the neighbouring card. Keep the vote count next to the % instead. */
+  justify-content: flex-start;
+  gap: 0.9rem;
   margin: 0 1.25rem 1.1rem;
   font-family: 'DM Mono', monospace;
-  font-size: 0.85rem;
   color: var(--silver);
 }
+.poll-percent-value {
+  font-size: 1.2rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: #ecc4ff;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.9);
+}
+.poll-card.cyan .poll-percent-value { color: #9ff2ff; }
+.poll-card.emerald .poll-percent-value { color: #97ffdc; }
+.poll-percent-count {
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  color: var(--silver);
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.9);
+  white-space: nowrap;
+}
+/* A voted card is disabled — the "VOTE ..." hint is no longer needed and
+   would only steal vertical space from the percentage on small screens. */
+.poll-card:disabled .poll-vote-label { display: none; }
 .poll-vote-label {
   display: block;
   margin: 0 1.25rem 1.25rem;
@@ -2242,9 +2288,10 @@ html, body { max-width: 100%; }
    stacked cards instead of width between side-by-side ones. */
 @media (max-width: 768px) {
   .poll-frame { margin: 4rem auto 0; }
+  .poll-percent { justify-content: space-between; }
   .poll-grid {
     flex-direction: column;
-    height: 640px;
+    height: 680px;
     width: 100%;
     margin-left: 0;
     padding: 0 60px;
@@ -2280,7 +2327,7 @@ html, body { max-width: 100%; }
 
 @media (max-width: 480px) {
   .poll-grid {
-    height: 520px;
+    height: 600px;
     padding: 0 44px;
     gap: 1.25rem;
   }
@@ -2311,7 +2358,9 @@ html, body { max-width: 100%; }
   .poll-card-name { font-size: 1.05rem; }
   .poll-card-alias { font-size: 0.7rem; }
   .poll-bar-wrap { margin: 0.7rem 0.6rem 0.3rem; }
-  .poll-percent { margin: 0 0.6rem 0.7rem; font-size: 0.72rem; }
+  .poll-percent { margin: 0 0.6rem 0.7rem; }
+  .poll-percent-value { font-size: 1.05rem; }
+  .poll-percent-count { font-size: 0.66rem; letter-spacing: 0.03em; }
   .poll-vote-label {
     /* On touch there's no hover, so keep the CTA legible without relying on it */
     opacity: 1;
@@ -2909,4 +2958,97 @@ body.preloader-active {
 @media (max-width: 480px) {
   .preloader-ring-wrap { width: clamp(100px, 38vw, 150px); height: clamp(100px, 38vw, 150px); }
   .preloader-content { gap: 1.1rem; }
+}
+
+
+/* ==========================================================================
+   MOBILE / TOUCH PERFORMANCE
+   Goal: smooth scrolling and tapping on phones. Nothing here touches the
+   desktop look — it only removes work the GPU/CPU repeats on every frame:
+   - backdrop-filter (re-blurs everything behind it on every scroll frame)
+   - huge blurred + animated blobs, animated filters, permanent will-change
+   - preserve-3d / translateZ layer explosions (the tilt effect is desktop-only)
+   ========================================================================== */
+@media (max-width: 1024px), (hover: none) and (pointer: coarse) {
+  body { text-rendering: auto; }
+
+  /* Decorative background: the gradients are already soft, so the 120px blur
+     (+ animation) only burned GPU. Static gradients look the same. */
+  .smoke-blob { filter: none; animation: none; will-change: auto; }
+  .smoke-blob.purple-1 { width: 520px; height: 520px; }
+  .smoke-blob.cyan-1 { width: 380px; height: 380px; }
+  .smoke-blob.purple-2 { width: 560px; height: 560px; }
+  .grid-overlay { display: none; }
+
+  /* backdrop-filter -> plain, slightly more opaque backgrounds */
+  .nav-bar,
+  .char-card,
+  .char-view-btn,
+  .char-audio-btn,
+  .modal-overlay,
+  .voice-play-btn,
+  .scene-audio-volume,
+  .modal-close,
+  .mobile-menu,
+  .bgm-toggle-label,
+  .bgm-toggle,
+  .bgm-volume-popover {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+  .nav-bar { background: rgba(8, 8, 13, 0.96); }
+  .mobile-menu { background: rgba(8, 8, 13, 0.98); }
+  .modal-overlay { background: rgba(5, 5, 8, 0.97); }
+
+  /* Hero: drop animated/expensive filters and 3D layers */
+  .hero-image-wrap { will-change: auto; transform-style: flat; perspective: none; }
+  .hero-image-glow { filter: none; animation: none; transform: none; }
+  .hero-image { filter: none; transform: none; }
+
+  /* Cards: no permanent compositor layers, no 3D stacking contexts */
+  .char-card,
+  .char-card-image,
+  .char-card-image img { will-change: auto; transform-style: flat; }
+  .char-card-image img { transform: none; }
+
+  /* Modal blurred background image (blur(32px) on a scaled full-screen layer) */
+  .modal-image::before { filter: blur(18px) brightness(0.35); }
+
+  /* Character poll: no filter chains / drop-shadows on the big cutout art */
+  .poll-card-art,
+  .poll-card:hover .poll-card-art,
+  .poll-card:focus-visible .poll-card-art,
+  .poll-card.is-active .poll-card-art,
+  .poll-card.voted .poll-card-art { filter: none; }
+  .poll-card { transition: flex 0.45s ease, border-color 0.3s ease; box-shadow: none !important; }
+  .poll-card-image,
+  .poll-card-art { transition-duration: 0.45s; }
+
+  /* Reveal-on-scroll: shorter, and only animate the cheap properties */
+  .reveal { transition: opacity 0.6s ease, transform 0.6s ease; transform: translateY(24px); }
+  .reveal.in-view { transform: none; }
+
+  /* Preloader: it runs while the page is still loading, so keep it light */
+  .preloader-glow { filter: none; animation: none; }
+  .preloader-text-glow, .preloader-brand-en, .preloader-brand-jp { animation: none; filter: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .smoke-blob, .hero-image-glow { animation: none; }
+}
+
+/* Tailwind utility classes still used by index.html (see note at top) */
+.relative { position: relative; }
+.z-50 { z-index: 50; }
+.mx-auto { margin-left: auto; margin-right: auto; }
+.max-w-7xl { max-width: 80rem; }
+.px-6 { padding-left: 1.5rem; padding-right: 1.5rem; }
+.py-4 { padding-top: 1rem; padding-bottom: 1rem; }
+.flex { display: flex; }
+.justify-between { justify-content: space-between; }
+.items-center { align-items: center; }
+.gap-10 { gap: 2.5rem; }
+.hidden { display: none; }
+@media (min-width: 1024px) {
+  .lg\:flex { display: flex; }
 }

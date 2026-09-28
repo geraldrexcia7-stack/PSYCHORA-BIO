@@ -363,19 +363,46 @@ function toggleMobileMenu() {
 // GANTI URL ini kalau backend-nya sudah online / dideploy (bukan lagi localhost).
 const POLL_API_BASE = 'https://psychora-bio-production.up.railway.app/api/vote';
 const POLL_STORAGE_KEY = 'psychora_voted_character';
+const POLL_CACHE_KEY = 'psychora_poll_cache';
 
 const pollCards = document.querySelectorAll('.poll-card');
 const pollStatus = document.getElementById('pollStatus');
 const pollTotal = document.getElementById('pollTotal');
 
+function safeStorage(action, key, value) {
+  try {
+    if (action === 'get') return localStorage.getItem(key);
+    if (action === 'set') localStorage.setItem(key, value);
+  } catch (e) { /* mode privat / storage penuh: abaikan */ }
+  return null;
+}
+
+function formatPercent(n) {
+  const rounded = Math.round(n * 10) / 10;
+  return (Number.isInteger(rounded) ? rounded : rounded.toFixed(1)) + '%';
+}
+
 function renderPollResults(counts, total, percentages) {
+  counts = counts || {};
+  const sum = Object.values(counts).reduce((a, b) => a + (Number(b) || 0), 0);
+  total = Number(total) || sum;
+
   pollCards.forEach((card) => {
     const character = card.dataset.character;
+    const votes = Number(counts[character]) || 0;
+    // Pakai persentase dari server; kalau tidak ada, hitung sendiri dari jumlah vote.
+    const pct = percentages && percentages[character] != null
+      ? Number(percentages[character])
+      : (total ? (votes / total) * 100 : 0);
+
     const bar = card.querySelector('.poll-bar');
-    const percentEl = card.querySelector('.poll-percent');
-    const pct = (percentages && percentages[character]) || 0;
-    bar.style.width = pct + '%';
-    percentEl.textContent = pct + '% (' + ((counts && counts[character]) || 0) + ' votes)';
+    const valueEl = card.querySelector('.poll-percent-value');
+    const countEl = card.querySelector('.poll-percent-count');
+    // scaleX (transform) jauh lebih murah daripada animasi width di HP.
+    bar.style.transform = 'scaleX(' + Math.min(1, Math.max(0, pct / 100)) + ')';
+    valueEl.textContent = formatPercent(pct);
+    countEl.textContent = votes + (votes === 1 ? ' vote' : ' votes');
+    card.classList.add('has-results');
   });
   pollTotal.textContent = total > 0 ? `${total} total votes` : 'Be the first to vote!';
 }
@@ -387,23 +414,71 @@ function lockPoll(votedCharacter) {
   });
 }
 
+function fetchWithTimeout(url, options, ms) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), ms);
+  return fetch(url, Object.assign({}, options, { signal: controller.signal }))
+    .finally(() => clearTimeout(timer));
+}
+
+let pollLoaded = false;
+let pollFetching = false;
+let pollLastFetch = 0;
+
+// Server di Railway bisa "tidur" (cold start) sehingga request pertama lambat / gagal.
+// Karena itu dicoba beberapa kali dengan jeda yang makin panjang.
 async function fetchPollResults() {
-  try {
-    const res = await fetch(`${POLL_API_BASE}/results`);
-    const data = await res.json();
-    if (data.success) renderPollResults(data.counts, data.total, data.percentages);
-  } catch (err) {
-    // Server belum online / offline: biarkan bar tetap di 0%, tidak perlu ganggu tampilan.
+  if (pollFetching) return;
+  pollFetching = true;
+  const delays = [0, 2500, 6000, 12000];
+  for (let i = 0; i < delays.length; i++) {
+    if (delays[i]) await new Promise((r) => setTimeout(r, delays[i]));
+    try {
+      const res = await fetchWithTimeout(`${POLL_API_BASE}/results?t=${Date.now()}`, { cache: 'no-store' }, 9000);
+      const data = await res.json();
+      if (res.ok && data.success) {
+        renderPollResults(data.counts, data.total, data.percentages);
+        safeStorage('set', POLL_CACHE_KEY, JSON.stringify({ counts: data.counts, total: data.total, percentages: data.percentages }));
+        pollLoaded = true;
+        pollLastFetch = Date.now();
+        pollFetching = false;
+        return;
+      }
+    } catch (err) {
+      // timeout / CORS / server offline -> coba lagi
+    }
+    if (!pollLoaded) pollTotal.textContent = 'Loading live results...';
   }
+  pollFetching = false;
+  if (!pollLoaded) pollTotal.textContent = 'Live results unavailable right now. Scroll back here to retry.';
 }
 
 if (pollCards.length) {
-  const alreadyVoted = localStorage.getItem(POLL_STORAGE_KEY);
+  const alreadyVoted = safeStorage('get', POLL_STORAGE_KEY);
   if (alreadyVoted) {
     lockPoll(alreadyVoted);
     pollStatus.textContent = 'You already voted. Thanks for participating!';
   }
-  fetchPollResults();
+
+  // Tampilkan hasil terakhir dari cache dulu supaya persentase langsung terlihat.
+  try {
+    const cached = JSON.parse(safeStorage('get', POLL_CACHE_KEY) || 'null');
+    if (cached && cached.counts) renderPollResults(cached.counts, cached.total, cached.percentages);
+  } catch (e) { /* cache rusak: abaikan */ }
+
+  // Ambil data terbaru setelah halaman idle, lalu segarkan lagi tiap section vote terlihat.
+  const startPollFetch = () => fetchPollResults();
+  if ('requestIdleCallback' in window) requestIdleCallback(startPollFetch, { timeout: 2500 });
+  else setTimeout(startPollFetch, 800);
+
+  const pollSection = document.getElementById('poll');
+  if (pollSection && 'IntersectionObserver' in window) {
+    new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting && (!pollLoaded || Date.now() - pollLastFetch > 60000)) {
+        fetchPollResults();
+      }
+    }, { threshold: 0.2 }).observe(pollSection);
+  }
 
   // Diagonal slider is hover-driven on desktop (pure CSS). On touch devices
   // there's no hover, so the first tap just expands/previews a card instead
@@ -431,23 +506,26 @@ if (pollCards.length) {
 
   pollCards.forEach((card) => {
     card.addEventListener('click', async () => {
-      if (localStorage.getItem(POLL_STORAGE_KEY)) return;
+      if (safeStorage('get', POLL_STORAGE_KEY)) return;
       const character = card.dataset.character;
 
       pollStatus.textContent = 'Submitting your vote...';
       pollCards.forEach((c) => { c.disabled = true; });
 
       try {
-        const res = await fetch(POLL_API_BASE, {
+        const res = await fetchWithTimeout(POLL_API_BASE, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ character })
-        });
+        }, 15000);
         const result = await res.json().catch(() => ({}));
 
         if (res.ok && result.success) {
-          localStorage.setItem(POLL_STORAGE_KEY, character);
+          safeStorage('set', POLL_STORAGE_KEY, character);
           renderPollResults(result.counts, result.total, result.percentages);
+          safeStorage('set', POLL_CACHE_KEY, JSON.stringify({ counts: result.counts, total: result.total, percentages: result.percentages }));
+          pollLoaded = true;
+          pollLastFetch = Date.now();
           lockPoll(character);
           pollStatus.textContent = 'Thanks for voting!';
         } else {
@@ -482,16 +560,32 @@ faqItems.forEach((item) => {
   });
 });
 
-window.addEventListener('scroll', () => {
+// Scroll handler: passive + throttled with rAF, and it only touches the DOM when
+// the state actually flips (not on every scroll event).
+(function initNavScroll() {
   const nav = document.querySelector('.nav-bar');
-  if (window.scrollY > 50) nav.classList.add('scrolled');
-  else nav.classList.remove('scrolled');
-});
+  if (!nav) return;
+  let scrolled = false;
+  let ticking = false;
+  const update = () => {
+    ticking = false;
+    const next = window.scrollY > 50;
+    if (next !== scrolled) {
+      scrolled = next;
+      nav.classList.toggle('scrolled', next);
+    }
+  };
+  window.addEventListener('scroll', () => {
+    if (!ticking) { ticking = true; requestAnimationFrame(update); }
+  }, { passive: true });
+  update();
+})();
 
 const observer = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
     if (entry.isIntersecting) {
       entry.target.classList.add('in-view');
+      observer.unobserve(entry.target);
     }
   });
 }, { threshold: 0.12 });
@@ -504,22 +598,67 @@ class ParticleSystem {
     this.particles = [];
     this.mouseX = -1000;
     this.mouseY = -1000;
+    this.isTouch = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
+    this.reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    this.lastWidth = 0;
+    this.lastFrame = 0;
+    this.running = false;
+    // Phones: ~30fps is plenty for slow drifting dots and halves the CPU/GPU work.
+    this.frameInterval = this.isTouch ? 1000 / 30 : 0;
+    this.sprites = {};
+    this.buildSprites();
     this.resize();
     this.init();
-    window.addEventListener('resize', () => { this.resize(); this.init(); });
-    window.addEventListener('mousemove', (e) => {
-      this.mouseX = e.clientX;
-      this.mouseY = e.clientY;
+
+    // Mobile browsers fire "resize" whenever the URL bar shows/hides while scrolling.
+    // Re-creating the canvas + particles each time caused visible stutter, so only
+    // react when the WIDTH really changes (rotation / window resize), debounced.
+    let resizeTimer = null;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        if (window.innerWidth !== this.lastWidth) { this.resize(); this.init(); }
+      }, 200);
     });
-    this.animate();
+
+    if (!this.isTouch) {
+      window.addEventListener('mousemove', (e) => {
+        this.mouseX = e.clientX;
+        this.mouseY = e.clientY;
+      }, { passive: true });
+    }
+
+    // Stop drawing entirely when the tab is in the background.
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) this.stop(); else this.start();
+    });
+    this.start();
+  }
+  // Pre-render each glow once; per frame we only drawImage() it instead of
+  // creating a new radial gradient for every particle (very expensive).
+  buildSprites() {
+    ['0, 217, 255', '176, 38, 255'].forEach((color) => {
+      const size = 64;
+      const c = document.createElement('canvas');
+      c.width = c.height = size;
+      const g = c.getContext('2d');
+      const grad = g.createRadialGradient(size / 2, size / 2, 0, size / 2, size / 2, size / 2);
+      grad.addColorStop(0, 'rgba(' + color + ', 1)');
+      grad.addColorStop(1, 'rgba(' + color + ', 0)');
+      g.fillStyle = grad;
+      g.fillRect(0, 0, size, size);
+      this.sprites[color] = c;
+    });
   }
   resize() {
+    this.lastWidth = window.innerWidth;
     this.canvas.width = window.innerWidth;
     this.canvas.height = window.innerHeight;
   }
   init() {
     this.particles = [];
-    const count = Math.min(70, Math.floor(window.innerWidth / 22));
+    const max = this.isTouch ? 22 : 70;
+    const count = Math.min(max, Math.floor(window.innerWidth / (this.isTouch ? 18 : 22)));
     for (let i = 0; i < count; i++) {
       this.particles.push({
         x: Math.random() * this.canvas.width,
@@ -533,41 +672,57 @@ class ParticleSystem {
         pulseSpeed: 0.008 + Math.random() * 0.02
       });
     }
+    if (this.reduceMotion) this.draw(); // one static frame, no loop
   }
-  animate() {
-    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    this.particles.forEach(p => {
-      const dx = p.x - this.mouseX;
-      const dy = p.y - this.mouseY;
-      const dist = Math.sqrt(dx * dx + dy * dy);
-      if (dist > 0 && dist < 120) {
-        const force = (120 - dist) / 120;
-        p.x += (dx / dist) * force * 1.5;
-        p.y += (dy / dist) * force * 1.5;
+  start() {
+    if (this.running || this.reduceMotion) return;
+    this.running = true;
+    requestAnimationFrame((t) => this.animate(t));
+  }
+  stop() { this.running = false; }
+  animate(now) {
+    if (!this.running) return;
+    requestAnimationFrame((t) => this.animate(t));
+    if (this.frameInterval && now - this.lastFrame < this.frameInterval) return;
+    this.lastFrame = now;
+    this.draw();
+  }
+  draw() {
+    const ctx = this.ctx;
+    const w = this.canvas.width;
+    const h = this.canvas.height;
+    ctx.clearRect(0, 0, w, h);
+    for (let i = 0; i < this.particles.length; i++) {
+      const p = this.particles[i];
+      if (!this.isTouch) {
+        const dx = p.x - this.mouseX;
+        const dy = p.y - this.mouseY;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist > 0 && dist < 120) {
+          const force = (120 - dist) / 120;
+          p.x += (dx / dist) * force * 1.5;
+          p.y += (dy / dist) * force * 1.5;
+        }
       }
       p.x += p.speedX;
       p.y += p.speedY;
       p.pulse += p.pulseSpeed;
-      if (p.x < 0) p.x = this.canvas.width;
-      if (p.x > this.canvas.width) p.x = 0;
-      if (p.y < 0) p.y = this.canvas.height;
-      if (p.y > this.canvas.height) p.y = 0;
+      if (p.x < 0) p.x = w;
+      if (p.x > w) p.x = 0;
+      if (p.y < 0) p.y = h;
+      if (p.y > h) p.y = 0;
       const opacity = Math.max(0, p.opacity * (0.5 + Math.sin(p.pulse) * 0.5));
       const size = Math.max(0.1, p.size);
       const glowRadius = Math.max(0.5, size * 4);
-      const gradient = this.ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, glowRadius);
-      gradient.addColorStop(0, 'rgba(' + p.color + ', ' + (opacity * 0.6) + ')');
-      gradient.addColorStop(1, 'rgba(' + p.color + ', 0)');
-      this.ctx.fillStyle = gradient;
-      this.ctx.beginPath();
-      this.ctx.arc(p.x, p.y, glowRadius, 0, Math.PI * 2);
-      this.ctx.fill();
-      this.ctx.fillStyle = 'rgba(' + p.color + ', ' + opacity + ')';
-      this.ctx.beginPath();
-      this.ctx.arc(p.x, p.y, size, 0, Math.PI * 2);
-      this.ctx.fill();
-    });
-    requestAnimationFrame(() => this.animate());
+      ctx.globalAlpha = opacity * 0.6;
+      ctx.drawImage(this.sprites[p.color], p.x - glowRadius, p.y - glowRadius, glowRadius * 2, glowRadius * 2);
+      ctx.globalAlpha = opacity;
+      ctx.fillStyle = 'rgb(' + p.color + ')';
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, size, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    ctx.globalAlpha = 1;
   }
 }
 new ParticleSystem(document.getElementById('particles'));

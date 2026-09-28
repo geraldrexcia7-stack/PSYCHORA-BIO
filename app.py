@@ -33,15 +33,29 @@ from flask_cors import CORS
 
 app = Flask(__name__)
 
-# Izinkan website statis (dibuka lewat Live Server / domain lain) mengakses API ini.
-# CATATAN PRODUKSI: "*" berarti semua domain boleh akses endpoint ini.
-# Kalau website sudah live di domain tetap, ganti jadi domain spesifik, contoh:
-#   CORS(app, resources={r"/api/*": {"origins": "https://namadomainmu.com"}})
-CORS(app, resources={r"/api/*": {"origins": "https://psychora-bio.vercel.app"}})
+# CORS: daftar origin yang boleh memanggil API ini.
+# Sebelumnya hanya "https://psychora-bio.vercel.app" yang diizinkan, sehingga kalau
+# website dibuka dari Live Server (localhost), URL preview Vercel, atau domain lain,
+# browser memblokir request -> hasil vote gagal dimuat dan persentase tetap 0%.
+# Tambahan domain bisa diisi lewat env var ALLOWED_ORIGINS (pisahkan dengan koma).
+_default_origins = [
+    "https://psychora-bio.vercel.app",
+    r"https://psychora-bio-.*\.vercel\.app",   # URL preview Vercel
+    "http://localhost:5500", "http://127.0.0.1:5500",  # VS Code Live Server
+    "http://localhost:3000", "http://127.0.0.1:3000",
+    "http://localhost:5000", "http://127.0.0.1:5000",
+]
+_extra_origins = [o.strip() for o in os.getenv("ALLOWED_ORIGINS", "").split(",") if o.strip()]
+CORS(app, resources={r"/api/*": {"origins": _default_origins + _extra_origins}})
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-VOTES_LOG_FILE = os.path.join(BASE_DIR, "votes_log.jsonl")
-VOTES_COUNT_FILE = os.path.join(BASE_DIR, "votes_count.json")
+# DATA_DIR: folder penyimpanan vote. Di Railway, filesystem biasa akan RESET setiap
+# redeploy/restart (itu sebabnya angka vote bisa "hilang"). Pasang Volume di Railway,
+# mount ke mis. /data, lalu set env var DATA_DIR=/data supaya vote tersimpan permanen.
+DATA_DIR = os.getenv("DATA_DIR", BASE_DIR)
+os.makedirs(DATA_DIR, exist_ok=True)
+VOTES_LOG_FILE = os.path.join(DATA_DIR, "votes_log.jsonl")
+VOTES_COUNT_FILE = os.path.join(DATA_DIR, "votes_count.json")
 
 # Daftar karakter yang bisa divote. Tambahkan character key baru di sini
 # kalau nanti ada karakter baru yang masuk ke poll.
@@ -71,8 +85,12 @@ def load_vote_counts() -> dict:
 
 
 def save_vote_counts(counts: dict) -> None:
-    with open(VOTES_COUNT_FILE, "w", encoding="utf-8") as f:
+    # Tulis ke file sementara lalu ganti (atomic) supaya file tidak korup
+    # kalau server mati tepat saat menulis.
+    tmp_path = VOTES_COUNT_FILE + ".tmp"
+    with open(tmp_path, "w", encoding="utf-8") as f:
         json.dump(counts, f, ensure_ascii=False, indent=2)
+    os.replace(tmp_path, VOTES_COUNT_FILE)
 
 
 def log_vote(character: str, request_obj) -> None:
@@ -173,7 +191,9 @@ def get_vote_results():
     with _vote_lock:
         counts = load_vote_counts()
     results = build_results(counts)
-    return jsonify(success=True, **results)
+    response = jsonify(success=True, **results)
+    response.headers["Cache-Control"] = "no-store"  # selalu ambil angka terbaru
+    return response
 
 
 @app.route("/api/health", methods=["GET"])
@@ -183,4 +203,4 @@ def health():
 
 
 if __name__ == "__main__":
-    app.run(debug=True, port=5000)
+    app.run(debug=os.getenv("FLASK_DEBUG") == "1", port=int(os.getenv("PORT", 5000)))

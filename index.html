@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>PSYCHORA GIRLS BADDIE — Character Archive</title>
 <link rel="icon" type="image/jpeg" href="assetbio/logo_psycho.jpg"> 
-<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://psychora-bio-production.up.railway.app" crossorigin>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Manrope:wght@200;300;400;500;600;700;800&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
@@ -112,7 +112,7 @@
     <div class="hero-image-wrap reveal reveal-delay-2 card-3d" data-tilt>
       <div class="hero-image-glow"></div>
       <span class="hero-image-deco deco-top-right">PSYCHORA // BIO-FILE</span>
-      <img class="hero-image" id="heroImage" src="assetbio/Sarako-vs-ShiroWallpaper.jpg" alt="Sarako and Shiro">
+      <img class="hero-image" id="heroImage" src="assetbio/Sarako-vs-ShiroWallpaper.jpg" alt="Sarako and Shiro" fetchpriority="high" decoding="async">
       <div class="hero-image-frame"></div>
       <span class="hero-image-deco deco-bottom-left">BEAUTY. POWER. INSTINCT.</span>
     </div>
@@ -283,9 +283,9 @@
               <span class="poll-card-alias">The Violet Blade</span>
             </div>
             <div class="poll-bar-wrap">
-              <div class="poll-bar" style="width:0%"></div>
+              <div class="poll-bar"></div>
             </div>
-            <span class="poll-percent">0%</span>
+            <span class="poll-percent"><strong class="poll-percent-value">--%</strong><span class="poll-percent-count">loading</span></span>
             <span class="poll-vote-label">VOTE SARAKO</span>
           </div>
         </div>
@@ -303,9 +303,9 @@
               <span class="poll-card-alias">The Ice Fang Wolf</span>
             </div>
             <div class="poll-bar-wrap">
-              <div class="poll-bar" style="width:0%"></div>
+              <div class="poll-bar"></div>
             </div>
-            <span class="poll-percent">0%</span>
+            <span class="poll-percent"><strong class="poll-percent-value">--%</strong><span class="poll-percent-count">loading</span></span>
             <span class="poll-vote-label">VOTE SHIRO</span>
           </div>
         </div>
@@ -323,9 +323,9 @@
               <span class="poll-card-alias">The Emerald Mirage</span>
             </div>
             <div class="poll-bar-wrap">
-              <div class="poll-bar" style="width:0%"></div>
+              <div class="poll-bar"></div>
             </div>
-            <span class="poll-percent">0%</span>
+            <span class="poll-percent"><strong class="poll-percent-value">--%</strong><span class="poll-percent-count">loading</span></span>
             <span class="poll-vote-label">VOTE KARA</span>
           </div>
         </div>
@@ -511,6 +511,6 @@
 </div>
 <audio id="bgmAudio" src="music-bgm/Strawberry_Venom.MP3" loop preload="none"></audio>
 
-<script src="JS/script.js"></script>
+<script src="JS/script.js" defer></script>
 </body>
 </html>

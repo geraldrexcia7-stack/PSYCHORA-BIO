@@ -130,17 +130,34 @@ function toggleMobileMenu() {
 })();
 
 /* ---- Nav bar scroll state ---- */
-window.addEventListener('scroll', () => {
+// Scroll handler: passive + throttled with rAF, and it only touches the DOM when
+// the state actually flips (not on every scroll event).
+(function initNavScroll() {
   const nav = document.querySelector('.nav-bar');
   if (!nav) return;
-  if (window.scrollY > 50) nav.classList.add('scrolled');
-  else nav.classList.remove('scrolled');
-});
+  let scrolled = false;
+  let ticking = false;
+  const update = () => {
+    ticking = false;
+    const next = window.scrollY > 50;
+    if (next !== scrolled) {
+      scrolled = next;
+      nav.classList.toggle('scrolled', next);
+    }
+  };
+  window.addEventListener('scroll', () => {
+    if (!ticking) { ticking = true; requestAnimationFrame(update); }
+  }, { passive: true });
+  update();
+})();
 
 /* ---- Reveal-on-scroll ---- */
 const pfObserver = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
-    if (entry.isIntersecting) entry.target.classList.add('in-view');
+    if (entry.isIntersecting) {
+      entry.target.classList.add('in-view');
+      pfObserver.unobserve(entry.target);
+    }
   });
 }, { threshold: 0.12 });
 document.querySelectorAll('.reveal').forEach(el => pfObserver.observe(el));
@@ -153,22 +170,67 @@ class PfParticleSystem {
     this.particles = [];
     this.mouseX = -1000;
     this.mouseY = -1000;
+    this.isTouch = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
+    this.reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    this.lastWidth = 0;
+    this.lastFrame = 0;
+    this.running = false;
+    // Phones: ~30fps is plenty for slow drifting dots and halves the CPU/GPU work.
+    this.frameInterval = this.isTouch ? 1000 / 30 : 0;
+    this.sprites = {};
+    this.buildSprites();
     this.resize();
     this.init();
-    window.addEventListener('resize', () => { this.resize(); this.init(); });
-    window.addEventListener('mousemove', (e) => {
-      this.mouseX = e.clientX;
-      this.mouseY = e.clientY;
+
+    // Mobile browsers fire "resize" whenever the URL bar shows/hides while scrolling.
+    // Re-creating the canvas + particles each time caused visible stutter, so only
+    // react when the WIDTH really changes (rotation / window resize), debounced.
+    let resizeTimer = null;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        if (window.innerWidth !== this.lastWidth) { this.resize(); this.init(); }
+      }, 200);
     });
-    this.animate();
+
+    if (!this.isTouch) {
+      window.addEventListener('mousemove', (e) => {
+        this.mouseX = e.clientX;
+        this.mouseY = e.clientY;
+      }, { passive: true });
+    }
+
+    // Stop drawing entirely when the tab is in the background.
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) this.stop(); else this.start();
+    });
+    this.start();
+  }
+  // Pre-render each glow once; per frame we only drawImage() it instead of
+  // creating a new radial gradient for every particle (very expensive).
+  buildSprites() {
+    ['0, 217, 255', '176, 38, 255'].forEach((color) => {
+      const size = 64;
+      const c = document.createElement('canvas');
+      c.width = c.height = size;
+      const g = c.getContext('2d');
+      const grad = g.createRadialGradient(size / 2, size / 2, 0, size / 2, size / 2, size / 2);
+      grad.addColorStop(0, 'rgba(' + color + ', 1)');
+      grad.addColorStop(1, 'rgba(' + color + ', 0)');
+      g.fillStyle = grad;
+      g.fillRect(0, 0, size, size);
+      this.sprites[color] = c;
+    });
   }
   resize() {
+    this.lastWidth = window.innerWidth;
     this.canvas.width = window.innerWidth;
     this.canvas.height = window.innerHeight;
   }
   init() {
     this.particles = [];
-    const count = Math.min(70, Math.floor(window.innerWidth / 22));
+    const max = this.isTouch ? 22 : 70;
+    const count = Math.min(max, Math.floor(window.innerWidth / (this.isTouch ? 18 : 22)));
     for (let i = 0; i < count; i++) {
       this.particles.push({
         x: Math.random() * this.canvas.width,
@@ -182,41 +244,57 @@ class PfParticleSystem {
         pulseSpeed: 0.008 + Math.random() * 0.02
       });
     }
+    if (this.reduceMotion) this.draw(); // one static frame, no loop
   }
-  animate() {
-    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    this.particles.forEach(p => {
-      const dx = p.x - this.mouseX;
-      const dy = p.y - this.mouseY;
-      const dist = Math.sqrt(dx * dx + dy * dy);
-      if (dist > 0 && dist < 120) {
-        const force = (120 - dist) / 120;
-        p.x += (dx / dist) * force * 1.5;
-        p.y += (dy / dist) * force * 1.5;
+  start() {
+    if (this.running || this.reduceMotion) return;
+    this.running = true;
+    requestAnimationFrame((t) => this.animate(t));
+  }
+  stop() { this.running = false; }
+  animate(now) {
+    if (!this.running) return;
+    requestAnimationFrame((t) => this.animate(t));
+    if (this.frameInterval && now - this.lastFrame < this.frameInterval) return;
+    this.lastFrame = now;
+    this.draw();
+  }
+  draw() {
+    const ctx = this.ctx;
+    const w = this.canvas.width;
+    const h = this.canvas.height;
+    ctx.clearRect(0, 0, w, h);
+    for (let i = 0; i < this.particles.length; i++) {
+      const p = this.particles[i];
+      if (!this.isTouch) {
+        const dx = p.x - this.mouseX;
+        const dy = p.y - this.mouseY;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist > 0 && dist < 120) {
+          const force = (120 - dist) / 120;
+          p.x += (dx / dist) * force * 1.5;
+          p.y += (dy / dist) * force * 1.5;
+        }
       }
       p.x += p.speedX;
       p.y += p.speedY;
       p.pulse += p.pulseSpeed;
-      if (p.x < 0) p.x = this.canvas.width;
-      if (p.x > this.canvas.width) p.x = 0;
-      if (p.y < 0) p.y = this.canvas.height;
-      if (p.y > this.canvas.height) p.y = 0;
+      if (p.x < 0) p.x = w;
+      if (p.x > w) p.x = 0;
+      if (p.y < 0) p.y = h;
+      if (p.y > h) p.y = 0;
       const opacity = Math.max(0, p.opacity * (0.5 + Math.sin(p.pulse) * 0.5));
       const size = Math.max(0.1, p.size);
       const glowRadius = Math.max(0.5, size * 4);
-      const gradient = this.ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, glowRadius);
-      gradient.addColorStop(0, 'rgba(' + p.color + ', ' + (opacity * 0.6) + ')');
-      gradient.addColorStop(1, 'rgba(' + p.color + ', 0)');
-      this.ctx.fillStyle = gradient;
-      this.ctx.beginPath();
-      this.ctx.arc(p.x, p.y, glowRadius, 0, Math.PI * 2);
-      this.ctx.fill();
-      this.ctx.fillStyle = 'rgba(' + p.color + ', ' + opacity + ')';
-      this.ctx.beginPath();
-      this.ctx.arc(p.x, p.y, size, 0, Math.PI * 2);
-      this.ctx.fill();
-    });
-    requestAnimationFrame(() => this.animate());
+      ctx.globalAlpha = opacity * 0.6;
+      ctx.drawImage(this.sprites[p.color], p.x - glowRadius, p.y - glowRadius, glowRadius * 2, glowRadius * 2);
+      ctx.globalAlpha = opacity;
+      ctx.fillStyle = 'rgb(' + p.color + ')';
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, size, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    ctx.globalAlpha = 1;
   }
 }
 const pfParticleCanvas = document.getElementById('particles');
