@@ -830,6 +830,30 @@ const galleryItems = [
     pos: 'center center',
     accent: 'cyan',
     sceneOnly: true
+  },
+  {
+    img: 'assetbio/Sarako-raged.webp',
+    name: 'SILENT FURY',
+    nameJp: 'サラコ・キョウガ',
+    tag: 'RAGED STARE',
+    label: 'CHAR.001 // CHARACTER FILE',
+    description: 'Violet darkflames coil around Sarako as she thrusts her blade forward and locks her glare onto her target. Sparks drift through the night air and her expression stays ice-cold, but the aura surging behind her says her restraint is already gone.',
+    sceneDialogue: 'OPPONENT: "Why are you not saying anything?"\nSARAKO: "Because anger does not need words."\nSARAKO: "Run. It is the last kindness I will offer you."',
+    charId: 'sarako',
+    pos: '80% center',
+    accent: 'purple'
+  },
+  {
+    img: 'assetbio/Sarako-preview.png',
+    name: 'DARKFLAME VOW',
+    nameJp: 'サラコ・キョウガ',
+    tag: 'BLADE PREVIEW',
+    label: 'CHAR.001 // CHARACTER FILE',
+    description: 'Crouched low on a moonlit rooftop under a sea of stars, Sarako raises one arm while her blade burns with black-violet flames. Her coat whips behind her in the wind, and her sharp gaze stays fixed on the fight ahead.',
+    sceneDialogue: 'SARAKO: "The night is quiet. Let us see how long it stays that way."\nOPPONENT: "That blade... it is burning with your rage."\nSARAKO: "No. It is burning with my patience running out."',
+    charId: 'sarako',
+    pos: 'center center',
+    accent: 'purple'
   }
 ];
 
