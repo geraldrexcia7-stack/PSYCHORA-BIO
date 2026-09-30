@@ -82,9 +82,20 @@ button:focus-visible,
 }
 
 img.img-broken { visibility: hidden; }
-#pfLightboxImage.img-broken,
-#pfLightboxImage,
-#pfLightboxImage[src=""] {
+/* Bug fix: this used to also list a bare "#pfLightboxImage" selector (no
+   class/attribute qualifier), which forced the lightbox's <img> to
+   visibility:visible ALL THE TIME — including while the lightbox itself is
+   closed. Its ancestor (.pf-lightbox) is visibility:hidden + opacity:0 when
+   closed, but a descendant CAN override an inherited "hidden" back to
+   "visible" for itself; opacity:0 alone doesn't stop clicks/hover. The net
+   effect: an invisible but fully interactive ~920px box sat centered over
+   the page at all times (once the lightbox markup rendered), silently
+   stealing hover/click from whatever certificate card happened to be under
+   it — which on a 3-up grid is the middle card. Scoping these rules to
+   ".pf-lightbox.active" keeps the broken-image fallback working only while
+   the lightbox is actually meant to be visible. */
+.pf-lightbox.active #pfLightboxImage.img-broken,
+.pf-lightbox.active #pfLightboxImage[src=""] {
   visibility: visible !important;
 }
 img.img-broken.img-broken-parent-fallback { visibility: visible; }
@@ -1616,7 +1627,7 @@ footer {
 }
 .mobile-menu {
   position: fixed;
-  top: 0; right: 0;
+  top: 0; right: -100%;
   width: 80%;
   max-width: 380px;
   height: 100vh;
@@ -1630,26 +1641,9 @@ footer {
   display: flex;
   flex-direction: column;
   gap: 0;
-  /* Slide with transform instead of animating "right": animating an offset
-     property forces the browser to re-run layout on every frame of the
-     transition (the whole panel + what's under it gets re-measured and
-     repainted), which is what read as "laggy" on phones. transform is
-     compositor-only, so the panel moves on the GPU with no layout/paint
-     work per frame. pointer-events/visibility keep it out of the way and
-     out of the tab order while closed. */
-  transform: translateX(100%);
-  visibility: hidden;
-  pointer-events: none;
-  contain: layout style;
-  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), visibility 0s linear 0.35s;
+  transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
-.mobile-menu.active {
-  transform: translateX(0);
-  visibility: visible;
-  pointer-events: auto;
-  will-change: transform;
-  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-}
+.mobile-menu.active { right: 0; }
 .mobile-menu a {
   font-family: 'Playfair Display', serif;
   font-size: 1.8rem;

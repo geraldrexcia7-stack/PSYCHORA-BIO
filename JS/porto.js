@@ -402,6 +402,11 @@ if (pfParticleCanvas) new PfParticleSystem(pfParticleCanvas);
    the CSS transition was re-smoothing a value the JS loop already smoothed
    every frame. Now JS owns the transform end-to-end, so it tracks the
    cursor immediately with no added delay. */
+// Populated by initGalleryTilt below, one reset function per certificate
+// card. The lightbox calls these on open AND close so a card's tilt state
+// can never get stuck mid-gesture when a full-screen overlay appears or
+// disappears on top of it without a clean mouseleave.
+const pfGalleryTiltResets = [];
 (function initGalleryTilt() {
   if (window.matchMedia('(hover: none) and (pointer: coarse)').matches) return;
   document.querySelectorAll('.pf-gallery-card').forEach(card => {
@@ -412,6 +417,14 @@ if (pfParticleCanvas) new PfParticleSystem(pfParticleCanvas);
     const glare = document.createElement('div');
     glare.className = 'pf-gallery-glare';
     card.appendChild(glare);
+
+    pfGalleryTiltResets.push(() => {
+      isHovered = false;
+      targetX = 0; targetY = 0; targetLift = 0;
+      currentX = 0; currentY = 0; currentLift = 0;
+      if (raf) { cancelAnimationFrame(raf); raf = null; }
+      card.style.transform = '';
+    });
 
     function render() {
       currentX += (targetX - currentX) * 0.4;
@@ -466,6 +479,12 @@ function pfOpenLightbox(src, caption, tag) {
   const cap = document.getElementById('pfLightboxCaption');
   if (!lb || !img) return;
 
+  // Force every certificate card's tilt back to neutral before the modal
+  // covers them — the card the user clicked never gets a real mouseleave
+  // here (the overlay appears on top of a stationary cursor), so without
+  // this its tilt state can stay latched to "hovered" underneath.
+  pfGalleryTiltResets.forEach(reset => reset());
+
   img.classList.remove('img-broken');
   img.dataset.fallbackApplied = 'false';
   img.style.visibility = 'visible';
@@ -496,6 +515,9 @@ function pfCloseLightbox() {
   if (!lb) return;
   lb.classList.remove('active');
   document.body.style.overflow = '';
+  // Same reset on the way out, so the card the user opened starts from a
+  // clean, untilted state the moment the cursor lands back on it.
+  pfGalleryTiltResets.forEach(reset => reset());
 }
 document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') pfCloseLightbox();

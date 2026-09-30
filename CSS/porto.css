@@ -378,10 +378,17 @@
   justify-content: center;
   opacity: 0;
   visibility: hidden;
+  /* pointer-events: none is the real guard here. "visibility" only flips to
+     hidden at the END of its transition, so for the ~0.3s fade-out this
+     full-viewport fixed layer is technically still "visible" and would
+     otherwise keep intercepting the mouse — right over whatever card
+     happens to sit underneath it — until the transition finishes. Blocking
+     pointer-events outright removes that window entirely. */
+  pointer-events: none;
   transition: opacity 0.3s ease, visibility 0.3s ease;
   padding: 2rem;
 }
-.pf-lightbox.active { opacity: 1; visibility: visible; }
+.pf-lightbox.active { opacity: 1; visibility: visible; pointer-events: auto; }
 .pf-lightbox-content {
   max-width: 920px;
   max-height: 86vh;
