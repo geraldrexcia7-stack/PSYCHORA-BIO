@@ -58,7 +58,7 @@ function toggleMobileMenu() {
     '#pf-skills .pf-lang-row span:first-child': [['INDONESIA', 'INDONESIAN'], ['ENGLISH', 'ENGLISH'], ['JAPANESE', 'JAPANESE']],
     '#pf-skills .pf-lang-row span:last-child': [['NATIVE', 'NATIVE'], ['PROFICIENT', 'PROFICIENT'], ['INTERMEDIATE', 'INTERMEDIATE']],
     '#pf-gallery .section-title': [['PRESTASI <span class="italic">&amp; SERTIFIKAT</span>', 'ACHIEVEMENTS <span class="italic">&amp; CERTIFICATES</span>']],
-    '#pf-gallery .commission-desc': [['Beberapa penghargaan dan sertifikat yang diraih selama masa SMA. Ketuk gambar untuk memperbesar.', 'Awards and certificates earned during high school. Tap an image to enlarge it.']],
+    '#pf-gallery .commission-desc': [['Beberapa penghargaan dan sertifikat yang diraih selama masa SMA dan kuliah. Ketuk gambar untuk memperbesar.', 'Awards and certificates earned during high school. Tap an image to enlarge it.']],
     '#pf-resume .section-title': [['CURRICULUM <span class="italic">VITAE</span>', 'CURRICULUM <span class="italic">VITAE</span>']],
     '.pf-resume-sub': [['Riwayat pendidikan, pengalaman, sertifikasi, dan prestasi lengkap dalam satu berkas.', 'A complete record of education, experience, certifications, and achievements in one document.']],
     '.pf-resume-actions .btn-primary': [['<i class="fas fa-download" style="margin-right:0.5rem;"></i>UNDUH CV', '<i class="fas fa-download" style="margin-right:0.5rem;"></i>DOWNLOAD CV']],
