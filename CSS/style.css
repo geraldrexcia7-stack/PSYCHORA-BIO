@@ -1616,7 +1616,7 @@ footer {
 }
 .mobile-menu {
   position: fixed;
-  top: 0; right: -100%;
+  top: 0; right: 0;
   width: 80%;
   max-width: 380px;
   height: 100vh;
@@ -1630,9 +1630,26 @@ footer {
   display: flex;
   flex-direction: column;
   gap: 0;
-  transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  /* Slide with transform instead of animating "right": animating an offset
+     property forces the browser to re-run layout on every frame of the
+     transition (the whole panel + what's under it gets re-measured and
+     repainted), which is what read as "laggy" on phones. transform is
+     compositor-only, so the panel moves on the GPU with no layout/paint
+     work per frame. pointer-events/visibility keep it out of the way and
+     out of the tab order while closed. */
+  transform: translateX(100%);
+  visibility: hidden;
+  pointer-events: none;
+  contain: layout style;
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), visibility 0s linear 0.35s;
 }
-.mobile-menu.active { right: 0; }
+.mobile-menu.active {
+  transform: translateX(0);
+  visibility: visible;
+  pointer-events: auto;
+  will-change: transform;
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
 .mobile-menu a {
   font-family: 'Playfair Display', serif;
   font-size: 1.8rem;

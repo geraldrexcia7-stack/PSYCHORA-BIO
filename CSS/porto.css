@@ -250,7 +250,9 @@
 /* ---- Achievements gallery + lightbox ---- */
 .pf-gallery-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(260px, 1fr));
+  /* auto-fit: with 3 certificates it settles into a clean 3-up row on wide
+     screens instead of leaving the 3rd card alone under a 2-column grid. */
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   gap: 2rem;
   margin-top: 3.5rem;
 }
@@ -352,6 +354,11 @@
   text-transform: uppercase;
 }
 
+@media (min-width: 1400px) {
+  /* Cap it at 3 columns so the certificates stay large and readable instead
+     of shrinking to fit a 4th empty slot on ultra-wide screens. */
+  .pf-gallery-grid { grid-template-columns: repeat(3, minmax(260px, 1fr)); }
+}
 @media (max-width: 768px) {
   .pf-gallery-grid {
     grid-template-columns: 1fr;
@@ -513,6 +520,8 @@
   .pf-about-grid,
   .pf-skills-grid { grid-template-columns: 1fr; gap: 2.5rem; }
   .pf-gallery-grid { grid-template-columns: repeat(2, 1fr); }
+  /* 3rd card alone in a 2-column grid: center it instead of leaving a gap beside it. */
+  .pf-gallery-card:nth-child(3):last-child { grid-column: 1 / -1; max-width: calc(50% - 1rem); margin: 0 auto; }
   .pf-contact-grid { grid-template-columns: repeat(2, auto); }
 }
 @media (max-width: 768px) {
@@ -544,6 +553,7 @@
 }
 @media (max-width: 480px) {
   .pf-gallery-grid { grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .pf-gallery-card:nth-child(3):last-child { grid-column: 1 / -1; max-width: calc(50% - 0.5rem); margin: 0 auto; }
   .pf-timeline-card { padding: 1.25rem 1.4rem; }
   .pf-contact-grid { grid-template-columns: 1fr 1fr; gap: 1.5rem; }
   .pf-lightbox-close { top: -3.2rem; right: 0.2rem; }

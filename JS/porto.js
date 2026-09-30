@@ -95,7 +95,8 @@ function toggleMobileMenu() {
     document.querySelectorAll('.pf-gallery-card').forEach((card, index) => {
       const captions = [
         ['Certificate of Course Completion — Cisco Networking Academy', 'Certificate of Course Completion — Cisco Networking Academy'],
-        ['Certificate of Participation — Columns NEPAL 2026 Campus Expo', 'Certificate of Participation — Columns NEPAL 2026 Campus Expo']
+        ['Certificate of Participation — Columns NEPAL 2026 Campus Expo', 'Certificate of Participation — Columns NEPAL 2026 Campus Expo'],
+        ['Sertifikat Medali Emas Bahasa Inggris — Olimpiade Sains Nasional EDVO', 'Gold Medal Certificate, English — EDVO National Science Olympiad']
       ];
       if (captions[index]) card.dataset.caption = captions[index][language === 'en' ? 1 : 0];
     });
