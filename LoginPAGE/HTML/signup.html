@@ -11,7 +11,6 @@
   <link rel="stylesheet" href="/LoginPAGE/CSS/login.css">
 </head>
 <body>
-
   <main class="auth auth--signup">
     <section class="auth__art" aria-label="Psychora artwork">
       <img class="art__image" src="/assetbio/Key_Visual_Poster.jpeg"
@@ -30,19 +29,63 @@
 
       <div class="auth__body">
         <h1 id="auth-title" class="auth__title">CREATE ACCOUNT</h1>
-        <p class="auth__subtitle">Create your Psychora account securely with Google.</p>
+        <p class="auth__subtitle">Create a demo account in this browser.</p>
+        <p class="form__notice" id="signup-notice" role="alert" aria-live="polite"></p>
 
-        <a class="btn btn--sso" href="/auth/google">
-          <svg width="20" height="20" viewBox="0 0 48 48" aria-hidden="true" focusable="false">
-            <path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9.1 3.6l6.8-6.8C35.8 2.4 30.3 0 24 0 14.6 0 6.5 5.4 2.6 13.2l7.9 6.1C12.4 13.6 17.7 9.5 24 9.5z"/>
-            <path fill="#4285F4" d="M46.5 24.5c0-1.6-.1-3.1-.4-4.5H24v9h12.7c-.6 3-2.3 5.5-4.8 7.2l7.5 5.8c4.4-4.1 7.1-10.1 7.1-17.5z"/>
-            <path fill="#FBBC05" d="M10.5 28.7c-.5-1.5-.8-3-.8-4.7s.3-3.2.8-4.7l-7.9-6.1C.9 16.5 0 20.1 0 24s.9 7.5 2.6 10.8l7.9-6.1z"/>
-            <path fill="#34A853" d="M24 48c6.5 0 11.9-2.1 15.9-5.8l-7.5-5.8c-2.1 1.4-4.9 2.3-8.4 2.3-6.3 0-11.6-4.1-13.5-9.8l-7.9 6.1C6.5 42.6 14.6 48 24 48z"/>
-          </svg>
-          <span>Sign up with Google</span>
-        </a>
-        <p class="form__notice" role="status">Your account is created automatically the first time you continue with Google.</p>
+        <form class="form" id="signup-form">
+          <div class="field">
+            <label for="signup-name" class="field__label">Name/Username</label>
+            <input type="text" id="signup-name" class="field__input"
+                   placeholder="Enter your name" autocomplete="username" required>
+          </div>
+          <div class="field">
+            <label for="signup-password" class="field__label">Password</label>
+            <div class="field__wrap">
+              <input type="password" id="signup-password" class="field__input"
+                     placeholder="Create a password" autocomplete="new-password" minlength="8" required>
+              <button type="button" class="field__toggle" id="toggle-signup-password"
+                      aria-label="Show password" aria-controls="signup-password" aria-pressed="false">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                     aria-hidden="true" focusable="false">
+                  <g class="eye-icon--open">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                    <circle cx="12" cy="12" r="3"/>
+                  </g>
+                  <g class="eye-icon--closed">
+                    <path d="M2 12c2.5 3.5 6 5 10 5s7.5-1.5 10-5"/>
+                    <path d="M6 8 4.5 6M12 7V4.5M18 8l1.5-2"/>
+                  </g>
+                </svg>
+              </button>
+            </div>
+          </div>
+          <div class="field">
+            <label for="signup-confirm-password" class="field__label">Confirm Password</label>
+            <div class="field__wrap">
+              <input type="password" id="signup-confirm-password" class="field__input"
+                     placeholder="Repeat your password" autocomplete="new-password" minlength="8" required>
+              <button type="button" class="field__toggle" id="toggle-signup-confirm-password"
+                      aria-label="Show password" aria-controls="signup-confirm-password" aria-pressed="false">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                     aria-hidden="true" focusable="false">
+                  <g class="eye-icon--open">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                    <circle cx="12" cy="12" r="3"/>
+                  </g>
+                  <g class="eye-icon--closed">
+                    <path d="M2 12c2.5 3.5 6 5 10 5s7.5-1.5 10-5"/>
+                    <path d="M6 8 4.5 6M12 7V4.5M18 8l1.5-2"/>
+                  </g>
+                </svg>
+              </button>
+            </div>
+          </div>
+          <button type="submit" class="btn btn--primary">Create Account</button>
+        </form>
 
+        <p class="auth__legal">Demo only: account data is stored in this browser and does not securely protect the public website.</p>
         <p class="auth__switch">
           Already have an account? <a href="/LoginPAGE/HTML/mainlogin.html" class="link">Sign in</a>
         </p>

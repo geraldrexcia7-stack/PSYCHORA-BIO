@@ -20,20 +20,22 @@ Konfigurasi notifikasi email (opsional, lewat environment variable):
     Kalau salah satu dari SMTP_USER / SMTP_PASSWORD tidak diisi, notifikasi
     email otomatis dilewati (skip) tanpa membuat vote gagal.
 
-Konfigurasi login Google (wajib untuk login ke website):
-    FLASK_SECRET_KEY      -> secret acak untuk menandatangani session Flask
-    GOOGLE_CLIENT_ID      -> OAuth Client ID dari Google Cloud Console
-    GOOGLE_CLIENT_SECRET  -> OAuth Client Secret dari Google Cloud Console
-    GOOGLE_REDIRECT_URI   -> URL publik /auth/google/callback yang didaftarkan di Google
+Demo login/signup berjalan di browser dan bukan mekanisme keamanan. Akun demo
+disimpan lokal pada browser, sehingga tidak ada konfigurasi login server yang
+diperlukan. Homepage tetap dapat dibuka langsung dan jangan gunakan mode ini
+untuk melindungi data privat atau website produksi.
 
-Login Google pertama akan membuat sesi akun dan langsung memberi akses.
+Login Google OAuth opsional (jika ingin diaktifkan lagi):
+    FLASK_SECRET_KEY      -> secret acak untuk menandatangani session Flask
+    GOOGLE_CLIENT_ID     -> OAuth Client ID dari Google Cloud Console
+    GOOGLE_CLIENT_SECRET -> OAuth Client Secret dari Google Cloud Console
+    GOOGLE_REDIRECT_URI  -> URL publik /auth/google/callback yang didaftarkan di Google
 """
 
 import os
 import json
 import smtplib
 import threading
-import hmac
 from datetime import datetime, timedelta, timezone
 from email.message import EmailMessage
 
@@ -41,7 +43,6 @@ from flask import Flask, abort, jsonify, redirect, request, send_from_directory,
 from flask_cors import CORS
 from authlib.integrations.base_client.errors import OAuthError
 from authlib.integrations.flask_client import OAuth
-from werkzeug.security import check_password_hash
 
 app = Flask(__name__)
 app.config.update(
@@ -233,10 +234,6 @@ def health():
     return jsonify(status="ok")
 
 
-def _auth_is_configured() -> bool:
-    return bool(os.getenv("FLASK_SECRET_KEY"))
-
-
 def _google_oauth_is_configured() -> bool:
     return all(
         os.getenv(name)
@@ -244,55 +241,26 @@ def _google_oauth_is_configured() -> bool:
     )
 
 
-def _send_protected_page(filename: str):
-    if not _auth_is_configured():
-        abort(503, description="Authentication is not configured on the server.")
-    if session.get("psychora_authenticated") is not True:
-        return redirect(url_for("login"))
-
+def _send_public_page(filename: str):
     response = send_from_directory(BASE_DIR, filename)
-    response.headers["Cache-Control"] = "no-store"
     return response
 
 
 @app.get("/")
 @app.get("/index.html")
 def homepage():
-    return _send_protected_page("index.html")
+    return _send_public_page("index.html")
 
 
 @app.get("/portofolio.html")
 def portfolio():
-    return _send_protected_page("portofolio.html")
+    return _send_public_page("portofolio.html")
 
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
-    if not _auth_is_configured():
-        abort(503, description="Authentication is not configured on the server.")
-
     if request.method == "POST":
-        username = request.form.get("identity", "")
-        password = request.form.get("password", "")
-        expected_username = os.getenv("ADMIN_USERNAME", "")
-        password_hash = os.getenv("ADMIN_PASSWORD_HASH", "")
-
-        if (
-            expected_username
-            and password_hash
-            and hmac.compare_digest(username, expected_username)
-            and check_password_hash(password_hash, password)
-        ):
-            session.clear()
-            session["psychora_authenticated"] = True
-            session.permanent = True
-            return redirect("/", code=303)
-
-        error = "invalid" if expected_username and password_hash else "password-disabled"
-        return redirect(url_for("login", error=error), code=303)
-
-    if session.get("psychora_authenticated") is True:
-        return redirect("/")
+        return redirect(url_for("login", error="demo-only"), code=303)
 
     response = send_from_directory(
         os.path.join(BASE_DIR, "LoginPAGE", "HTML"),
@@ -304,8 +272,6 @@ def login():
 
 @app.get("/auth/google")
 def google_login():
-    if not _auth_is_configured():
-        abort(503, description="Authentication is not configured on the server.")
     if not _google_oauth_is_configured():
         return redirect(url_for("login", error="google-not-configured"))
 
@@ -315,8 +281,6 @@ def google_login():
 
 @app.get("/auth/google/callback")
 def google_callback():
-    if not _auth_is_configured():
-        abort(503, description="Authentication is not configured on the server.")
     if not _google_oauth_is_configured():
         return redirect(url_for("login", error="google-not-configured"))
     if request.args.get("error"):
@@ -365,9 +329,6 @@ def signup():
 
 @app.get("/logout")
 def logout():
-    if not _auth_is_configured():
-        abort(503, description="Authentication is not configured on the server.")
-    session.clear()
     return redirect(url_for("login"))
 
 
