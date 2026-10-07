@@ -19,19 +19,46 @@ Konfigurasi notifikasi email (opsional, lewat environment variable):
 
     Kalau salah satu dari SMTP_USER / SMTP_PASSWORD tidak diisi, notifikasi
     email otomatis dilewati (skip) tanpa membuat vote gagal.
+
+Konfigurasi login Google (wajib untuk login ke website):
+    FLASK_SECRET_KEY      -> secret acak untuk menandatangani session Flask
+    GOOGLE_CLIENT_ID      -> OAuth Client ID dari Google Cloud Console
+    GOOGLE_CLIENT_SECRET  -> OAuth Client Secret dari Google Cloud Console
+    GOOGLE_REDIRECT_URI   -> URL publik /auth/google/callback yang didaftarkan di Google
+
+Login Google pertama akan membuat sesi akun dan langsung memberi akses.
 """
 
 import os
 import json
 import smtplib
 import threading
-from datetime import datetime, timezone
+import hmac
+from datetime import datetime, timedelta, timezone
 from email.message import EmailMessage
 
-from flask import Flask, request, jsonify
+from flask import Flask, abort, jsonify, redirect, request, send_from_directory, session, url_for
 from flask_cors import CORS
+from authlib.integrations.base_client.errors import OAuthError
+from authlib.integrations.flask_client import OAuth
+from werkzeug.security import check_password_hash
 
 app = Flask(__name__)
+app.config.update(
+    SECRET_KEY=os.getenv("FLASK_SECRET_KEY"),
+    SESSION_COOKIE_HTTPONLY=True,
+    SESSION_COOKIE_SAMESITE="Lax",
+    SESSION_COOKIE_SECURE=os.getenv("SESSION_COOKIE_SECURE", "true").lower() == "true",
+    PERMANENT_SESSION_LIFETIME=timedelta(hours=8),
+)
+oauth = OAuth(app)
+google = oauth.register(
+    name="google",
+    client_id=os.getenv("GOOGLE_CLIENT_ID"),
+    client_secret=os.getenv("GOOGLE_CLIENT_SECRET"),
+    server_metadata_url="https://accounts.google.com/.well-known/openid-configuration",
+    client_kwargs={"scope": "openid email profile"},
+)
 
 # CORS: daftar origin yang boleh memanggil API ini.
 # Sebelumnya hanya "https://psychora-bio.vercel.app" yang diizinkan, sehingga kalau
@@ -204,6 +231,161 @@ def get_vote_results():
 def health():
     """Endpoint kecil buat cek server hidup atau tidak."""
     return jsonify(status="ok")
+
+
+def _auth_is_configured() -> bool:
+    return bool(os.getenv("FLASK_SECRET_KEY"))
+
+
+def _google_oauth_is_configured() -> bool:
+    return all(
+        os.getenv(name)
+        for name in ("GOOGLE_CLIENT_ID", "GOOGLE_CLIENT_SECRET", "GOOGLE_REDIRECT_URI")
+    )
+
+
+def _send_protected_page(filename: str):
+    if not _auth_is_configured():
+        abort(503, description="Authentication is not configured on the server.")
+    if session.get("psychora_authenticated") is not True:
+        return redirect(url_for("login"))
+
+    response = send_from_directory(BASE_DIR, filename)
+    response.headers["Cache-Control"] = "no-store"
+    return response
+
+
+@app.get("/")
+@app.get("/index.html")
+def homepage():
+    return _send_protected_page("index.html")
+
+
+@app.get("/portofolio.html")
+def portfolio():
+    return _send_protected_page("portofolio.html")
+
+
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    if not _auth_is_configured():
+        abort(503, description="Authentication is not configured on the server.")
+
+    if request.method == "POST":
+        username = request.form.get("identity", "")
+        password = request.form.get("password", "")
+        expected_username = os.getenv("ADMIN_USERNAME", "")
+        password_hash = os.getenv("ADMIN_PASSWORD_HASH", "")
+
+        if (
+            expected_username
+            and password_hash
+            and hmac.compare_digest(username, expected_username)
+            and check_password_hash(password_hash, password)
+        ):
+            session.clear()
+            session["psychora_authenticated"] = True
+            session.permanent = True
+            return redirect("/", code=303)
+
+        error = "invalid" if expected_username and password_hash else "password-disabled"
+        return redirect(url_for("login", error=error), code=303)
+
+    if session.get("psychora_authenticated") is True:
+        return redirect("/")
+
+    response = send_from_directory(
+        os.path.join(BASE_DIR, "LoginPAGE", "HTML"),
+        "mainlogin.html",
+    )
+    response.headers["Cache-Control"] = "no-store"
+    return response
+
+
+@app.get("/auth/google")
+def google_login():
+    if not _auth_is_configured():
+        abort(503, description="Authentication is not configured on the server.")
+    if not _google_oauth_is_configured():
+        return redirect(url_for("login", error="google-not-configured"))
+
+    session.clear()
+    return google.authorize_redirect(os.environ["GOOGLE_REDIRECT_URI"])
+
+
+@app.get("/auth/google/callback")
+def google_callback():
+    if not _auth_is_configured():
+        abort(503, description="Authentication is not configured on the server.")
+    if not _google_oauth_is_configured():
+        return redirect(url_for("login", error="google-not-configured"))
+    if request.args.get("error"):
+        return redirect(url_for("login", error="google-cancelled"))
+
+    try:
+        token = google.authorize_access_token()
+    except OAuthError:
+        return redirect(url_for("login", error="google-failed"))
+
+    user_info = token.get("userinfo")
+    if (
+        not isinstance(user_info, dict)
+        or not user_info.get("sub")
+        or not user_info.get("email")
+        or user_info.get("email_verified") is not True
+    ):
+        return redirect(url_for("login", error="google-unverified"))
+
+    session.clear()
+    session["psychora_authenticated"] = True
+    session["psychora_user"] = {
+        "id": user_info["sub"],
+        "email": user_info["email"],
+        "name": user_info.get("name", ""),
+    }
+    session.permanent = True
+    return redirect("/")
+
+
+@app.get("/LoginPAGE/HTML/mainlogin.html")
+def legacy_login_page():
+    return redirect(url_for("login"))
+
+
+@app.get("/signup")
+@app.get("/LoginPAGE/HTML/signup.html")
+def signup():
+    response = send_from_directory(
+        os.path.join(BASE_DIR, "LoginPAGE", "HTML"),
+        "signup.html",
+    )
+    response.headers["Cache-Control"] = "no-store"
+    return response
+
+
+@app.get("/logout")
+def logout():
+    if not _auth_is_configured():
+        abort(503, description="Authentication is not configured on the server.")
+    session.clear()
+    return redirect(url_for("login"))
+
+
+@app.get("/<path:filename>")
+def public_assets(filename: str):
+    parts = filename.split("/")
+    if not parts or parts[0] not in {
+        "CSS", "JS", "assetbio", "music-bgm", "portofolio",
+        "LoginPAGE",
+    }:
+        abort(404)
+
+    if parts[0] == "LoginPAGE" and (
+        len(parts) < 3 or parts[1] not in {"CSS", "JS"}
+    ):
+        abort(404)
+
+    return send_from_directory(BASE_DIR, filename)
 
 
 if __name__ == "__main__":

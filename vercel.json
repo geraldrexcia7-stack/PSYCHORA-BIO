@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/:path*",
+      "destination": "https://psychora-bio-production.up.railway.app/:path*"
+    }
+  ]
+}

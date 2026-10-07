@@ -4,25 +4,25 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sign Up | PSYCHORA GIRLS BADDIE</title>
-  <link rel="icon" type="image/jpeg" href="../../assetbio/logo_psycho.jpg">
+  <link rel="icon" type="image/jpeg" href="/assetbio/logo_psycho.jpg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Manrope:wght@300;400;500;600;700;800&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../CSS/login.css">
+  <link rel="stylesheet" href="/LoginPAGE/CSS/login.css">
 </head>
 <body>
 
   <main class="auth auth--signup">
     <section class="auth__art" aria-label="Psychora artwork">
-      <img class="art__image" src="../../assetbio/Key_Visual_Poster.jpeg"
+      <img class="art__image" src="/assetbio/Key_Visual_Poster.jpeg"
            alt="Sarako and Shiro, two Psychora characters, ready for battle"
            fetchpriority="high" decoding="async">
     </section>
 
     <section class="auth__panel" aria-labelledby="auth-title">
       <header class="auth__header">
-        <a href="./mainlogin.html" class="logo" aria-label="Psychora sign in">
-          <img class="logo__mark" src="../../assetbio/logo_psycho.jpg" alt="" width="36" height="36">
+        <a href="/LoginPAGE/HTML/mainlogin.html" class="logo" aria-label="Psychora sign in">
+          <img class="logo__mark" src="/assetbio/logo_psycho.jpg" alt="" width="36" height="36">
           <span class="logo__text">PSYCHORA</span>
           <span class="logo__jp" lang="ja">サイコラ</span>
         </a>
@@ -30,78 +30,26 @@
 
       <div class="auth__body">
         <h1 id="auth-title" class="auth__title">CREATE ACCOUNT</h1>
-        <p class="auth__subtitle">Join the Psychora archive.</p>
+        <p class="auth__subtitle">Create your Psychora account securely with Google.</p>
 
-        <form class="form" id="signup-form" action="#" method="post">
-          <div class="field">
-            <label for="signup-username" class="field__label">Username</label>
-            <input type="text" id="signup-username" name="username" class="field__input"
-                   placeholder="Choose a username" autocomplete="username" required minlength="3">
-          </div>
-
-          <div class="field">
-            <label for="signup-email" class="field__label">Email</label>
-            <input type="email" id="signup-email" name="email" class="field__input"
-                   placeholder="Enter your email" autocomplete="email" required>
-          </div>
-
-          <div class="field">
-            <label for="signup-password" class="field__label">Password</label>
-            <div class="field__wrap">
-              <input type="password" id="signup-password" name="password" class="field__input"
-                     placeholder="Create a password" autocomplete="new-password" required minlength="8">
-              <button type="button" class="field__toggle" aria-label="Show password"
-                      aria-controls="signup-password" aria-pressed="false">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                     aria-hidden="true" focusable="false">
-                  <g class="eye-icon--open">
-                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-                    <circle cx="12" cy="12" r="3"/>
-                  </g>
-                  <g class="eye-icon--closed">
-                    <path d="M2 12c2.5 3.5 6 5 10 5s7.5-1.5 10-5"/>
-                    <path d="M6 8 4.5 6M12 7V4.5M18 8l1.5-2"/>
-                  </g>
-                </svg>
-              </button>
-            </div>
-          </div>
-
-          <div class="field">
-            <label for="signup-confirm-password" class="field__label">Confirm password</label>
-            <div class="field__wrap">
-              <input type="password" id="signup-confirm-password" name="confirm-password" class="field__input"
-                     placeholder="Enter your password again" autocomplete="new-password" required>
-              <button type="button" class="field__toggle" aria-label="Show password"
-                      aria-controls="signup-confirm-password" aria-pressed="false">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                     aria-hidden="true" focusable="false">
-                  <g class="eye-icon--open">
-                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-                    <circle cx="12" cy="12" r="3"/>
-                  </g>
-                  <g class="eye-icon--closed">
-                    <path d="M2 12c2.5 3.5 6 5 10 5s7.5-1.5 10-5"/>
-                    <path d="M6 8 4.5 6M12 7V4.5M18 8l1.5-2"/>
-                  </g>
-                </svg>
-              </button>
-            </div>
-          </div>
-
-          <p class="form__notice" id="signup-notice" role="status" aria-live="polite"></p>
-          <button type="submit" class="btn btn--primary">Create Account</button>
-        </form>
+        <a class="btn btn--sso" href="/auth/google">
+          <svg width="20" height="20" viewBox="0 0 48 48" aria-hidden="true" focusable="false">
+            <path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9.1 3.6l6.8-6.8C35.8 2.4 30.3 0 24 0 14.6 0 6.5 5.4 2.6 13.2l7.9 6.1C12.4 13.6 17.7 9.5 24 9.5z"/>
+            <path fill="#4285F4" d="M46.5 24.5c0-1.6-.1-3.1-.4-4.5H24v9h12.7c-.6 3-2.3 5.5-4.8 7.2l7.5 5.8c4.4-4.1 7.1-10.1 7.1-17.5z"/>
+            <path fill="#FBBC05" d="M10.5 28.7c-.5-1.5-.8-3-.8-4.7s.3-3.2.8-4.7l-7.9-6.1C.9 16.5 0 20.1 0 24s.9 7.5 2.6 10.8l7.9-6.1z"/>
+            <path fill="#34A853" d="M24 48c6.5 0 11.9-2.1 15.9-5.8l-7.5-5.8c-2.1 1.4-4.9 2.3-8.4 2.3-6.3 0-11.6-4.1-13.5-9.8l-7.9 6.1C6.5 42.6 14.6 48 24 48z"/>
+          </svg>
+          <span>Sign up with Google</span>
+        </a>
+        <p class="form__notice" role="status">Your account is created automatically the first time you continue with Google.</p>
 
         <p class="auth__switch">
-          Already have an account? <a href="./mainlogin.html" class="link">Sign in</a>
+          Already have an account? <a href="/LoginPAGE/HTML/mainlogin.html" class="link">Sign in</a>
         </p>
       </div>
     </section>
   </main>
 
-  <script src="../JS/login.js" defer></script>
+  <script src="/LoginPAGE/JS/login.js" defer></script>
 </body>
 </html>

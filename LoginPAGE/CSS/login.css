@@ -264,6 +264,7 @@ img {
   color: var(--ink);
   background-color: #fff;
   border-color: var(--line);
+  text-decoration: none;
 }
 
 .btn--sso:hover {

@@ -2,10 +2,9 @@
 (function () {
   'use strict';
 
-  var HOME_URL = '../../index.html';
   var STORE_KEY = 'psychora_remember';
   var loginForm = document.getElementById('login-form');
-  var signupForm = document.getElementById('signup-form');
+  var loginNotice = document.getElementById('login-notice');
 
   document.querySelectorAll('.field__toggle').forEach(function (button) {
     button.addEventListener('click', function () {
@@ -19,15 +18,6 @@
     });
   });
 
-  function enterSite() {
-    try {
-      sessionStorage.setItem('psychora_auth', '1');
-    } catch (error) {
-      // Session storage may be unavailable; navigation should still work.
-    }
-    window.location.href = HOME_URL;
-  }
-
   function setLoading(button, text) {
     button.disabled = true;
     button.setAttribute('aria-busy', 'true');
@@ -37,12 +27,11 @@
   if (loginForm) {
     var identity = document.getElementById('identity');
     var remember = document.getElementById('remember');
-    var ssoButton = document.querySelector('.btn--sso');
     var submitButton = loginForm.querySelector('.btn--primary');
 
     try {
       var savedIdentity = localStorage.getItem(STORE_KEY);
-      if (savedIdentity) {
+      if (savedIdentity && identity && remember) {
         identity.value = savedIdentity;
         remember.checked = true;
       }
@@ -50,9 +39,7 @@
       // Remember Me is optional when storage is unavailable.
     }
 
-    loginForm.addEventListener('submit', function (event) {
-      event.preventDefault();
-
+    loginForm.addEventListener('submit', function () {
       try {
         if (remember.checked) {
           localStorage.setItem(STORE_KEY, identity.value.trim());
@@ -60,43 +47,23 @@
           localStorage.removeItem(STORE_KEY);
         }
       } catch (error) {
-        // Continue sign-in when storage is unavailable.
+        // Remember Me is optional when storage is unavailable.
       }
 
       setLoading(submitButton, 'Signing in...');
-      window.setTimeout(enterSite, 500);
     });
-
-    if (ssoButton) {
-      ssoButton.addEventListener('click', function () {
-        setLoading(ssoButton, 'Connecting...');
-        window.setTimeout(enterSite, 500);
-      });
-    }
   }
 
-  if (signupForm) {
-    var password = document.getElementById('signup-password');
-    var confirmPassword = document.getElementById('signup-confirm-password');
-    var notice = document.getElementById('signup-notice');
-
-    function validatePasswordMatch() {
-      confirmPassword.setCustomValidity(
-        confirmPassword.value && confirmPassword.value !== password.value
-          ? 'Passwords do not match.'
-          : ''
-      );
-    }
-
-    password.addEventListener('input', validatePasswordMatch);
-    confirmPassword.addEventListener('input', validatePasswordMatch);
-
-    signupForm.addEventListener('submit', function (event) {
-      event.preventDefault();
-      validatePasswordMatch();
-      if (!signupForm.reportValidity()) return;
-
-      notice.textContent = 'Account creation is not connected to a server yet.';
-    });
+  var authErrors = {
+    invalid: 'Username or password is incorrect.',
+    'password-disabled': 'Password sign-in is not configured. Continue with Google instead.',
+    'google-not-configured': 'Google sign-in is not configured yet. Please try again later.',
+    'google-cancelled': 'Google sign-in was cancelled.',
+    'google-failed': 'Google sign-in could not be completed. Please try again.',
+    'google-unverified': 'Use a Google account with a verified email address.'
+  };
+  var authError = new URLSearchParams(window.location.search).get('error');
+  if (loginNotice && authError && authErrors[authError]) {
+    loginNotice.textContent = authErrors[authError];
   }
 })();
