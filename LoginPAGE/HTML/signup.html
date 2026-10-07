@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign Up | PSYCHORA GIRLS BADDIE</title>
+  <link rel="icon" type="image/jpeg" href="../../assetbio/logo_psycho.jpg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Manrope:wght@300;400;500;600;700;800&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../CSS/login.css">
+</head>
+<body>
+
+  <main class="auth auth--signup">
+    <section class="auth__art" aria-label="Psychora artwork">
+      <img class="art__image" src="../../assetbio/Key_Visual_Poster.jpeg"
+           alt="Sarako and Shiro, two Psychora characters, ready for battle"
+           fetchpriority="high" decoding="async">
+    </section>
+
+    <section class="auth__panel" aria-labelledby="auth-title">
+      <header class="auth__header">
+        <a href="./mainlogin.html" class="logo" aria-label="Psychora sign in">
+          <img class="logo__mark" src="../../assetbio/logo_psycho.jpg" alt="" width="36" height="36">
+          <span class="logo__text">PSYCHORA</span>
+          <span class="logo__jp" lang="ja">サイコラ</span>
+        </a>
+      </header>
+
+      <div class="auth__body">
+        <h1 id="auth-title" class="auth__title">CREATE ACCOUNT</h1>
+        <p class="auth__subtitle">Join the Psychora archive.</p>
+
+        <form class="form" id="signup-form" action="#" method="post">
+          <div class="field">
+            <label for="signup-username" class="field__label">Username</label>
+            <input type="text" id="signup-username" name="username" class="field__input"
+                   placeholder="Choose a username" autocomplete="username" required minlength="3">
+          </div>
+
+          <div class="field">
+            <label for="signup-email" class="field__label">Email</label>
+            <input type="email" id="signup-email" name="email" class="field__input"
+                   placeholder="Enter your email" autocomplete="email" required>
+          </div>
+
+          <div class="field">
+            <label for="signup-password" class="field__label">Password</label>
+            <div class="field__wrap">
+              <input type="password" id="signup-password" name="password" class="field__input"
+                     placeholder="Create a password" autocomplete="new-password" required minlength="8">
+              <button type="button" class="field__toggle" aria-label="Show password"
+                      aria-controls="signup-password" aria-pressed="false">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                     aria-hidden="true" focusable="false">
+                  <g class="eye-icon--open">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                    <circle cx="12" cy="12" r="3"/>
+                  </g>
+                  <g class="eye-icon--closed">
+                    <path d="M2 12c2.5 3.5 6 5 10 5s7.5-1.5 10-5"/>
+                    <path d="M6 8 4.5 6M12 7V4.5M18 8l1.5-2"/>
+                  </g>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="signup-confirm-password" class="field__label">Confirm password</label>
+            <div class="field__wrap">
+              <input type="password" id="signup-confirm-password" name="confirm-password" class="field__input"
+                     placeholder="Enter your password again" autocomplete="new-password" required>
+              <button type="button" class="field__toggle" aria-label="Show password"
+                      aria-controls="signup-confirm-password" aria-pressed="false">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                     aria-hidden="true" focusable="false">
+                  <g class="eye-icon--open">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                    <circle cx="12" cy="12" r="3"/>
+                  </g>
+                  <g class="eye-icon--closed">
+                    <path d="M2 12c2.5 3.5 6 5 10 5s7.5-1.5 10-5"/>
+                    <path d="M6 8 4.5 6M12 7V4.5M18 8l1.5-2"/>
+                  </g>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <p class="form__notice" id="signup-notice" role="status" aria-live="polite"></p>
+          <button type="submit" class="btn btn--primary">Create Account</button>
+        </form>
+
+        <p class="auth__switch">
+          Already have an account? <a href="./mainlogin.html" class="link">Sign in</a>
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <script src="../JS/login.js" defer></script>
+</body>
+</html>

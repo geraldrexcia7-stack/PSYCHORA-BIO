@@ -1,0 +1,598 @@
+/* ==========================================================
+   PSYCHORA LOGIN — CSS/login.css
+   Mobile-first, with reduced-motion support.
+   ========================================================== */
+
+/* 1. TOKENS & RESET */
+:root {
+  --bg: #08080d;
+  --neon-purple: #b026ff;
+  --neon-violet: #9d4edd;
+  --cyan: #00d9ff;
+  --lilac: #ddd6fe;
+
+  --paper: #faf8ff;
+  --ink: #14101f;
+  --ink-soft: #4b4561;
+  --line: #8b84a0;
+  --accent: #6d28d9; /* ungu gelap: kontras >= 7:1 di atas --paper */
+
+  --font-display: "Playfair Display", Georgia, "Times New Roman", serif;
+  --font-body: "Manrope", system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+  --font-mono: "DM Mono", ui-monospace, Consolas, monospace;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--ink);
+  background-color: var(--paper);
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+/* 2. LAYOUT
+   <1024px : artwork stacked above the form
+   >=1024px: split-screen two columns */
+.auth {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+.auth__panel {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: 1.25rem 1.25rem 2rem;
+  padding-bottom: max(2rem, env(safe-area-inset-bottom));
+  background-color: var(--paper);
+}
+
+.auth__header {
+  padding-bottom: 1.5rem;
+}
+
+.auth__body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  flex: 1;
+  width: 100%;
+  max-width: 24rem;
+  margin: 0 auto;
+}
+
+/* 3. ARTWORK (kolom kiri) */
+.auth__art {
+  display: block;
+  position: relative;
+  overflow: hidden;
+  flex: 0 0 auto;
+  width: 100%;
+  height: clamp(12rem, 32svh, 18rem);
+  background-color: var(--bg);
+  isolation: isolate;
+}
+
+.art__image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 35%;
+  background-color: var(--bg);
+  transform: scale(1.04);
+}
+
+.auth__art::after {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  background:
+    linear-gradient(135deg, rgba(176, 38, 255, 0.12), transparent 42%),
+    linear-gradient(0deg, rgba(8, 8, 13, 0.14), transparent 35%);
+  box-shadow: inset 0 0 2rem rgba(8, 8, 13, 0.18);
+  content: "";
+  pointer-events: none;
+}
+
+@media (max-width: 767px) {
+  .art__image {
+    object-position: center 20%;
+  }
+}
+
+/* 4. LOGO */
+.logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.625rem;
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.logo__mark {
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.logo__text {
+  font-family: var(--font-display);
+  font-size: 1.375rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.logo__jp {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--accent);
+}
+
+/* 5. TYPOGRAPHY */
+.auth__title {
+  margin: 0 0 0.5rem;
+  font-family: var(--font-display);
+  font-size: 2.25rem;
+  font-weight: 700;
+  line-height: 1.1;
+  text-align: center;
+}
+
+.auth__subtitle {
+  margin: 0 0 1.75rem;
+  color: var(--ink-soft);
+  text-align: center;
+}
+
+.link {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.link:hover {
+  color: var(--ink);
+}
+
+.link--small {
+  font-size: 0.875rem;
+}
+
+.auth__legal,
+.auth__switch {
+  margin: 1.25rem 0 0;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: var(--ink-soft);
+  text-align: center;
+}
+
+.auth__switch {
+  margin-top: 0.75rem;
+}
+
+.auth--signup .auth__header {
+  padding-bottom: 0.75rem;
+}
+
+.auth--signup .auth__title {
+  font-size: 1.9rem;
+}
+
+.auth--signup .auth__subtitle {
+  margin-bottom: 1rem;
+}
+
+.auth--signup .form {
+  gap: 0.75rem;
+}
+
+.auth--signup .field__label {
+  margin-bottom: 0.2rem;
+}
+
+.auth--signup .field__input {
+  height: 2.8rem;
+}
+
+.auth--signup .auth__switch {
+  margin-top: 0.5rem;
+}
+
+.form__notice {
+  min-height: 1.5em;
+  margin: 0;
+  color: var(--accent);
+  font-size: 0.875rem;
+  text-align: center;
+}
+
+.auth--signup .auth__title::after {
+  display: block;
+  width: 3.5rem;
+  height: 0.2rem;
+  margin: 0.75rem auto 0;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--neon-purple), var(--cyan));
+  content: "";
+}
+
+/* 6. BUTTONS */
+.btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  width: 100%;
+  min-height: 3.25rem;
+  padding: 0.75rem 1.5rem;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.2s, border-color 0.2s;
+}
+
+.btn--sso {
+  color: var(--ink);
+  background-color: #fff;
+  border-color: var(--line);
+}
+
+.btn--sso:hover {
+  background-color: #f1ecff;
+  border-color: var(--accent);
+}
+
+.btn--primary {
+  margin-top: 0.5rem;
+  color: #fff;
+  background-color: var(--ink);
+}
+
+.btn--primary:hover {
+  background-color: var(--accent);
+}
+
+.btn:disabled {
+  cursor: wait;
+  opacity: 0.75;
+}
+
+/* 7. DIVIDER */
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 1.5rem 0;
+  color: var(--ink-soft);
+}
+
+.divider::before,
+.divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background-color: var(--line);
+  opacity: 0.6;
+}
+
+.divider__text {
+  font-size: 0.9375rem;
+}
+
+/* 8. FORM */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.field__row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.field__label {
+  display: block;
+  margin-bottom: 0.375rem;
+  font-size: 0.9375rem;
+  font-weight: 700;
+}
+
+.field__input {
+  display: block;
+  width: 100%;
+  height: 3.25rem;
+  padding: 0 1rem;
+  border: 1px solid var(--line);
+  border-radius: 0.75rem;
+  font-family: inherit;
+  font-size: 1rem; /* 16px: mencegah zoom otomatis di iOS */
+  color: var(--ink);
+  background-color: #fff;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.field__input::placeholder {
+  color: #6b6480;
+}
+
+.field__wrap {
+  position: relative;
+}
+
+.field__wrap .field__input {
+  padding-right: 3.25rem;
+}
+
+.field__toggle {
+  position: absolute;
+  top: 50%;
+  right: 0.375rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  color: var(--ink-soft);
+  background: transparent;
+  cursor: pointer;
+  transform: translateY(-50%);
+}
+
+.field__toggle:hover {
+  color: var(--accent);
+}
+
+.field__toggle .eye-icon--closed,
+.field__toggle[aria-pressed="true"] .eye-icon--open {
+  display: none;
+}
+
+.field__toggle[aria-pressed="true"] .eye-icon--closed {
+  display: block;
+}
+
+.check {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+}
+
+.check__input {
+  width: 1.25rem;
+  height: 1.25rem;
+  margin: 0;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+
+.check__label {
+  font-size: 0.9375rem;
+  cursor: pointer;
+}
+
+/* 9. FOCUS (aksesibilitas keyboard) */
+.btn:focus-visible,
+.link:focus-visible,
+.logo:focus-visible,
+.field__toggle:focus-visible,
+.check__input:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.field__input:focus {
+  border-color: var(--accent);
+  outline: 3px solid rgba(109, 40, 217, 0.35);
+  outline-offset: 0;
+}
+
+/* 10. BREAKPOINTS */
+
+/* Tablet: artwork ditumpuk di atas form */
+@media (min-width: 768px) {
+  .auth__art {
+    height: clamp(18rem, 36svh, 24rem);
+  }
+
+  .auth__panel {
+    padding: 2rem 2.5rem 3rem;
+  }
+}
+
+/* Desktop: split-screen */
+@media (min-width: 1024px) {
+  .auth {
+    flex-direction: row;
+  }
+
+  .auth__art {
+    flex: 0 0 55%;
+    width: 55%;
+    height: 100vh;
+    height: 100dvh;
+    min-height: 100vh;
+    min-height: 100dvh;
+  }
+
+  .auth__panel {
+    flex: 0 0 45%;
+    min-width: 0;
+    padding: 2.5rem 3rem;
+  }
+}
+
+@media (min-width: 1024px) and (max-height: 820px) {
+  .auth__panel {
+    padding: 1rem 2.5rem;
+  }
+
+  .auth__header {
+    padding-bottom: 0.5rem;
+  }
+
+  .auth__title {
+    font-size: clamp(1.75rem, 4vh, 2rem);
+  }
+
+  .auth__subtitle {
+    margin-bottom: 0.9rem;
+  }
+
+  .btn {
+    min-height: 2.85rem;
+  }
+
+  .divider {
+    margin: 0.8rem 0;
+  }
+
+  .form {
+    gap: 0.75rem;
+  }
+
+  .field__input {
+    height: 2.85rem;
+  }
+
+  .auth__legal,
+  .auth__switch {
+    margin-top: 0.6rem;
+  }
+
+  .auth--signup .auth__header {
+    padding-bottom: 0.35rem;
+  }
+
+  .auth--signup .auth__title {
+    font-size: clamp(1.55rem, 3.5vh, 1.8rem);
+  }
+
+  .auth--signup .auth__subtitle {
+    margin-bottom: 0.6rem;
+  }
+
+  .auth--signup .form {
+    gap: 0.45rem;
+  }
+
+  .auth--signup .field__label {
+    margin-bottom: 0.1rem;
+  }
+
+  .auth--signup .field__input {
+    height: 2.4rem;
+  }
+
+  .auth--signup .btn {
+    min-height: 2.65rem;
+  }
+}
+
+/* Motion is kept subtle and does not place particles or decoration over the artwork. */
+@media (prefers-reduced-motion: no-preference) {
+  .art__image {
+    animation: artwork-zoom 24s ease-in-out infinite alternate;
+    will-change: transform;
+  }
+
+  .auth__header,
+  .auth__body > * {
+    opacity: 0;
+    animation: rise 0.65s cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
+  }
+
+  .auth__header { animation-delay: 0.05s; }
+  .auth__body > :nth-child(1) { animation-delay: 0.1s; }
+  .auth__body > :nth-child(2) { animation-delay: 0.16s; }
+  .auth__body > :nth-child(3) { animation-delay: 0.22s; }
+  .auth__body > :nth-child(4) { animation-delay: 0.28s; }
+  .auth__body > :nth-child(5) { animation-delay: 0.34s; }
+  .auth__body > :nth-child(6) { animation-delay: 0.4s; }
+
+  .auth--signup .auth__title::after {
+    animation: underline-in 0.7s 0.45s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  }
+
+  .btn--primary {
+    background-image: linear-gradient(100deg, var(--ink) 0%, var(--ink) 40%, var(--accent) 100%);
+    background-size: 220% 100%;
+    background-position: 0 0;
+    transition: background-position 0.5s ease, box-shadow 0.3s;
+  }
+
+  .btn--primary:hover {
+    background-position: 100% 0;
+    box-shadow: 0 0.5rem 1.5rem rgba(109, 40, 217, 0.35);
+  }
+
+  .field__input:focus {
+    box-shadow: 0 0 0 4px rgba(109, 40, 217, 0.12);
+  }
+
+  .auth--signup .form .field {
+    opacity: 0;
+    animation: rise 0.6s cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
+  }
+
+  .auth--signup .form .field:nth-child(1) { animation-delay: 0.3s; }
+  .auth--signup .form .field:nth-child(2) { animation-delay: 0.38s; }
+  .auth--signup .form .field:nth-child(3) { animation-delay: 0.46s; }
+  .auth--signup .form .field:nth-child(4) { animation-delay: 0.54s; }
+  .auth--signup .form .form__notice { animation-delay: 0.62s; }
+  .auth--signup .form .btn--primary { animation-delay: 0.68s; }
+}
+
+@keyframes artwork-zoom {
+  from { transform: scale(1.04); }
+  to   { transform: scale(1.1); }
+}
+
+@keyframes rise {
+  from { opacity: 0; transform: translate3d(0, 0.75rem, 0); }
+  to   { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .art__image {
+    transform: scale(1.04);
+  }
+}
+
+@keyframes underline-in {
+  from { opacity: 0; transform: scaleX(0.3); }
+  to   { opacity: 1; transform: scaleX(1); }
+}

@@ -152,7 +152,11 @@ def build_results(counts: dict) -> dict:
 @app.route("/api/vote", methods=["POST"])
 def submit_vote():
     data = request.get_json(silent=True) or {}
-    character = (data.get("character") or "").strip().lower()
+    if not isinstance(data, dict):
+        return jsonify(success=False, error="Permintaan tidak valid. Format JSON harus berupa objek."), 400
+
+    character_value = data.get("character")
+    character = character_value.strip().lower() if isinstance(character_value, str) else ""
 
     if character not in CHARACTERS:
         return (
