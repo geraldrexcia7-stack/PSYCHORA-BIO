@@ -494,8 +494,6 @@ function pfOpenLightbox(src, caption, tag) {
   img.alt = caption || '';
 
   const safeSrc = encodeURI(src);
-  img.src = safeSrc + '?t=' + Date.now();
-
   img.onerror = () => {
     img.style.opacity = '0.2';
     img.alt = 'Certificate image failed to load';
@@ -505,6 +503,8 @@ function pfOpenLightbox(src, caption, tag) {
     img.style.opacity = '1';
     img.style.visibility = 'visible';
   };
+
+  img.src = safeSrc;
 
   if (cap) cap.textContent = (tag ? tag + ' — ' : '') + (caption || '');
   lb.classList.add('active');
