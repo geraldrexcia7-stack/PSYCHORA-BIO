@@ -728,12 +728,12 @@ class ParticleSystem {
 new ParticleSystem(document.getElementById('particles'));
 
 const galleryItems = [
-  { img: 'assetbio/Shiro-Baddie-2.jpg', name: 'SHIRO MIAZAKI', tag: 'STORMDUST FORM', charId: 'shiro', pos: 'center top', accent: 'cyan' },
+  { img: 'assetbio/Shiro-Fight-Alt.jpg', name: 'SHIRO MIAZAKI', tag: 'STORMDUST FORM', charId: 'shiro', pos: 'center top', accent: 'cyan' },
   { img: 'assetbio/DuoBaddie.png', name: 'SARAKO & SHIRO', nameJp: 'サラコとシロ', tag: 'DUO PSYCHORA RIVALS ', description: 'They read the threat together, then locked the field by figuring out a strategy to start fighting.', charId: 'shiro', pos: 'center', accent: 'cyan', nameJpWhite: true, num: 'CHAR.EXEC // DUO AGENTS', decoWhite: true },
   { img: 'assetbio/SarakoRage1.png', name: "SARAKO'S WRATH", tag: 'ENRAGED VOID', charId: 'sarako', pos: 'center', accent: 'purple' },
   { img: 'assetbio/Sarako_Mad.png', name: 'IMMOVABLE DESPAIR', tag: 'SHADOW MODE', charId: 'sarako', pos: 'right center', accent: 'purple' },
   { 
-    img: 'assetbio/SparringPSYCHORA.jpeg', 
+    img: 'assetbio/Psychora-Duel-Sword-Clash.jpg', 
     name: 'PSYCHORA DUEL', 
     nameJp: 'サイコラ決闘', 
     tag: 'SPARRING TIME', 
