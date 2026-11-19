@@ -116,9 +116,9 @@ function openModal(charId, elOrOverrides, maybeOverrides) {
   modalImageDecoEl.textContent = data.num;
   modalImageDecoEl.classList.toggle('deco-white', !!data.decoWhite);
   const modalImageWrap = document.getElementById('modalImageWrap');
-  modalImageWrap.className = 'modal-image ' + data.imageClass;
-  document.getElementById('modalContent').className = 'modal-content ' + data.imageClass;
-  modalImageWrap.style.setProperty('--modal-bg', 'url("' + data.image + '")');
+  modalImageWrap.className = 'modal-image ' + data.imageClass + (data.fullImage ? ' full-image' : '');
+  document.getElementById('modalContent').className = 'modal-content ' + data.imageClass + (data.fullImage ? ' full-image-layout' : '');
+  modalImageWrap.style.setProperty('--modal-bg', 'url("' + new URL(data.image, document.baseURI).href + '")');
   document.getElementById('modalLabel').textContent = data.label;
   document.getElementById('modalName').textContent = data.name;
   document.getElementById('modalNameJp').textContent = data.nameJp;
@@ -846,7 +846,7 @@ const galleryItems = [
     accent: 'gold'
   },
   {
-    img: 'assetbio/Xmas-Sarako_and_Kara.jpg',
+    img: 'assetbio/Sarako-and-Kara-PreWinter.jpg',
     name: 'KARA & SARAKO',
     tag: 'WINTER MISCHIEF',
     label: 'SCENE FILE // WINTER EVENING',
@@ -854,7 +854,8 @@ const galleryItems = [
     description: 'During a warm Christmas evening, Kara playfully reaches toward Sarako while Sarako tries to maintain her usual composure. The decorated cabin, glowing tree, and falling snow turn their teasing exchange into a rare moment of quiet friendship.',
     sceneDialogue: 'KARA: "Hold still, Sarako. You look almost festive."\nSARAKO: "Touch me with that ornament and you will be decorating the tree alone."\nKARA: "There is the holiday spirit."',
     charId: 'kara',
-    pos: 'center center',
+    pos: '60% center',
+    fullImage: true,
     accent: 'gold',
     sceneOnly: true,
     voice: 'assetbio/Audio/Kara-&-SarakoXmas.MP3'
@@ -929,6 +930,7 @@ galleryItems.forEach((item, i) => {
       description: item.description || null,
       sceneDialogue: item.sceneDialogue || null,
       sceneOnly: !!item.sceneOnly,
+      fullImage: !!item.fullImage,
       num: item.num || base.num || '',
       decoWhite: !!item.decoWhite,
       voice: item.voice || (hasQuietHoursAudio ? 'assetbio/Audio/Kara_tease2.MP3' : null)
@@ -1025,6 +1027,7 @@ document.addEventListener('touchend', function (event) {
   if (window.matchMedia('(hover: none) and (pointer: coarse)').matches) return;
 
   const cards = document.querySelectorAll('.card-3d[data-tilt]');
+  const maxTilt = 16;
 
   cards.forEach(card => {
     let currentX = 0;
@@ -1033,43 +1036,60 @@ document.addEventListener('touchend', function (event) {
     let targetY = 0;
     let isHovered = false;
     let animationFrameId = null;
+    let pointerBounds = null;
 
     function render() {
-      currentX += (targetX - currentX) * 0.65;
-      currentY += (targetY - currentY) * 0.65;
+      animationFrameId = null;
+      currentX += (targetX - currentX) * 0.9;
+      currentY += (targetY - currentY) * 0.9;
+
+      if (Math.abs(targetX - currentX) < 0.05) currentX = targetX;
+      if (Math.abs(targetY - currentY) < 0.05) currentY = targetY;
 
       const zDepth = isHovered ? 40 : 0;
-      card.style.transform = `perspective(1200px) rotateX(${currentX.toFixed(2)}deg) rotateY(${currentY.toFixed(2)}deg) translateZ(${zDepth}px)`;
+      card.style.transform = `perspective(950px) rotateX(${currentX.toFixed(2)}deg) rotateY(${currentY.toFixed(2)}deg) translateZ(${zDepth}px)`;
 
-      if (isHovered || Math.abs(currentX) > 0.05 || Math.abs(currentY) > 0.05) {
+      if (Math.abs(targetX - currentX) > 0.05 || Math.abs(targetY - currentY) > 0.05) {
         animationFrameId = requestAnimationFrame(render);
-      } else {
-        card.style.transform = 'perspective(1200px) rotateX(0deg) rotateY(0deg) translateZ(0px)';
       }
     }
 
-    card.addEventListener('mouseenter', () => {
-      isHovered = true;
-      cancelAnimationFrame(animationFrameId);
-      animationFrameId = requestAnimationFrame(render);
-    });
+    function scheduleRender() {
+      if (animationFrameId === null) {
+        animationFrameId = requestAnimationFrame(render);
+      }
+    }
 
-    card.addEventListener('mousemove', (e) => {
-      const rect = card.getBoundingClientRect();
+    function updateTilt(e) {
+      const rect = pointerBounds || card.getBoundingClientRect();
       const x = e.clientX - rect.left;
       const y = e.clientY - rect.top;
-      
       const centerX = rect.width / 2;
       const centerY = rect.height / 2;
-      
-      targetX = ((y - centerY) / centerY) * -11;
-      targetY = ((x - centerX) / centerX) * 11;
+      const horizontalPosition = Math.max(-1, Math.min(1, (x - centerX) / centerX));
+      const verticalPosition = Math.max(-1, Math.min(1, (y - centerY) / centerY));
+
+      targetX = verticalPosition * -maxTilt;
+      targetY = horizontalPosition * maxTilt;
+      scheduleRender();
+    }
+
+    card.addEventListener('pointerenter', (e) => {
+      isHovered = true;
+      pointerBounds = card.getBoundingClientRect();
+      updateTilt(e);
     });
 
-    card.addEventListener('mouseleave', () => {
+    card.addEventListener('pointermove', (e) => {
+      updateTilt(e);
+    });
+
+    card.addEventListener('pointerleave', () => {
       isHovered = false;
       targetX = 0;
       targetY = 0;
+      pointerBounds = null;
+      scheduleRender();
     });
   });
 })();
