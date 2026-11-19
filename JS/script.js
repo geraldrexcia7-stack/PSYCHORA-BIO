@@ -815,13 +815,13 @@ const galleryItems = [
     accent: 'emerald'
   },
   {
-    img: 'assetbio/Kara_cute.png',
+    img: 'assetbio/Kara-Tease.jpg',
     name: 'TEASE TIME',
     tag: 'PLAYFUL GLANCE',
     label: 'CHAR.003 // CHARACTER FILE',
     description: 'A rare playful moment from the Emerald Mirage — bright, teasing, and still impossible to read completely.',
     charId: 'kara',
-    pos: 'center center',
+    pos: 'center top',
     accent: 'emerald'
   },
   {
