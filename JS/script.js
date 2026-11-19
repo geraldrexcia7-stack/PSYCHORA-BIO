@@ -42,7 +42,7 @@ const characterData = {
     name: 'KARA SEIRO',
     nameJp: '',
     alias: 'The Emerald Mirage',
-    image: 'assetbio/Kara_waterspell.png',
+    image: 'assetbio/Char-Kara-ShortMovie.jpg',
     imageClass: 'emerald',
     voice: 'assetbio/Audio/Kara_tease2.MP3',
     decoWhite: true,
@@ -82,6 +82,13 @@ function handleImgError(img) {
 document.querySelectorAll('img').forEach(img => {
   img.addEventListener('error', () => handleImgError(img));
 });
+
+document.addEventListener('play', (event) => {
+  const activeAudio = event.target;
+  document.querySelectorAll('audio').forEach((audio) => {
+    if (audio !== activeAudio) audio.pause();
+  });
+}, true);
 
 function openModal(charId, elOrOverrides, maybeOverrides) {
   const base = characterData[charId];
@@ -214,6 +221,21 @@ function stopVoice() {
   }
 }
 
+function resetVoiceButton() {
+  const btn = document.getElementById('voicePlayBtn');
+  const icon = document.getElementById('voicePlayIcon');
+  if (icon) icon.className = 'fas fa-play';
+  if (btn) {
+    btn.classList.remove('playing');
+    btn.setAttribute('aria-pressed', 'false');
+  }
+  const volumeControl = document.getElementById('sceneAudioVolume');
+  if (volumeControl) {
+    volumeControl.hidden = true;
+    volumeControl.classList.remove('is-visible');
+  }
+}
+
 function toggleVoice(e) {
   if (e) e.stopPropagation();
   const audio = document.getElementById('voiceAudio');
@@ -222,15 +244,17 @@ function toggleVoice(e) {
   if (!audio || !audio.src || btn.hasAttribute('disabled')) return;
 
   if (audio.paused) {
-    audio.play().catch(() => {});
-    icon.className = 'fas fa-pause';
-    btn.classList.add('playing');
-    btn.setAttribute('aria-pressed', 'true');
-    const volumeControl = document.getElementById('sceneAudioVolume');
-    if (volumeControl && audio.src.includes('Kara-&-SarakoXmas.MP3')) {
-      volumeControl.hidden = false;
-      requestAnimationFrame(() => volumeControl.classList.add('is-visible'));
-    }
+    audio.play().then(() => {
+      if (audio.paused) return;
+      icon.className = 'fas fa-pause';
+      btn.classList.add('playing');
+      btn.setAttribute('aria-pressed', 'true');
+      const volumeControl = document.getElementById('sceneAudioVolume');
+      if (volumeControl && audio.src.includes('Kara-&-SarakoXmas.MP3')) {
+        volumeControl.hidden = false;
+        requestAnimationFrame(() => volumeControl.classList.add('is-visible'));
+      }
+    }).catch(resetVoiceButton);
   } else {
     audio.pause();
     icon.className = 'fas fa-play';
@@ -255,6 +279,7 @@ function resetCardAudio(audio) {
     const icon = button.querySelector('i');
     if (icon) icon.className = 'fas fa-play';
   }
+  if (activeCardAudio === audio) activeCardAudio = null;
 }
 
 function toggleCardAudio(e, button) {
@@ -270,13 +295,14 @@ function toggleCardAudio(e, button) {
 
   if (audio.paused) {
     audio.play().then(() => {
+      if (audio.paused) return;
       activeCardAudio = audio;
       button.classList.add('playing');
       button.setAttribute('aria-pressed', 'true');
       button.setAttribute('aria-label', 'Pause Kara Seiro audio');
       const icon = button.querySelector('i');
       if (icon) icon.className = 'fas fa-pause';
-    }).catch(() => {});
+    }).catch(() => resetCardAudio(audio));
   } else {
     audio.pause();
     resetCardAudio(audio);
@@ -310,13 +336,14 @@ function toggleGalleryAudio(e, button) {
 
   if (audio.paused) {
     audio.play().then(() => {
+      if (audio.paused) return;
       activeGalleryAudio = audio;
       button.classList.add('playing');
       button.setAttribute('aria-pressed', 'true');
       button.setAttribute('aria-label', 'Pause Kara Seiro Quiet Hours audio');
       const icon = button.querySelector('i');
       if (icon) icon.className = 'fas fa-pause';
-    }).catch(() => {});
+    }).catch(() => resetGalleryAudio(audio));
   } else {
     audio.pause();
     resetGalleryAudio(audio);
@@ -324,19 +351,32 @@ function toggleGalleryAudio(e, button) {
 }
 
 document.querySelectorAll('.char-card-audio').forEach((audio) => {
+  audio.addEventListener('pause', () => resetCardAudio(audio));
   audio.addEventListener('ended', () => {
     resetCardAudio(audio);
-    if (activeCardAudio === audio) activeCardAudio = null;
   });
 });
 
 const voiceAudioEl = document.getElementById('voiceAudio');
-if (voiceAudioEl) voiceAudioEl.addEventListener('ended', stopVoice);
+if (voiceAudioEl) {
+  voiceAudioEl.addEventListener('pause', resetVoiceButton);
+  voiceAudioEl.addEventListener('ended', stopVoice);
+}
+
+document.querySelectorAll('.char-card[data-voice]').forEach((card) => {
+  card.addEventListener('pointerenter', () => {
+    const cardVoiceSrc = new URL(card.dataset.voice, document.baseURI).href;
+    document.querySelectorAll('audio').forEach((audio) => {
+      if (audio.id !== 'bgmAudio' && !audio.paused && audio.src !== cardVoiceSrc) {
+        audio.pause();
+      }
+    });
+  });
+});
 
 function closeModal() {
   document.getElementById('modal').classList.remove('active');
   document.body.style.overflow = '';
-  stopVoice();
 }
 
 document.getElementById('modal').addEventListener('click', (e) => {
@@ -897,6 +937,7 @@ galleryItems.forEach((item, i) => {
   galleryGrid.appendChild(div);
   if (hasQuietHoursAudio) {
     const galleryAudio = div.querySelector('.gallery-audio');
+    galleryAudio.addEventListener('pause', () => resetGalleryAudio(galleryAudio));
     galleryAudio.addEventListener('ended', () => resetGalleryAudio(galleryAudio));
   }
   observer.observe(div);
@@ -1036,7 +1077,7 @@ document.addEventListener('touchend', function (event) {
    Ambient BGM Toggle
    - Pure front-end: remembers on/off via localStorage, no server involved.
    - Respects browser autoplay rules (never forces sound before a gesture).
-   - Fades volume smoothly and automatically ducks under character voice bios.
+   - Fades volume smoothly; the shared audio handler prevents overlapping audio.
    ========================================================================== */
 (function initBgmToggle() {
   const STORAGE_KEY = 'psychora-bgm-on';
@@ -1061,7 +1102,6 @@ document.addEventListener('touchend', function (event) {
 
   let fadeFrame = null;
   let isPlaying = false;
-  let duckedByVoice = false;
 
   function setVolumeUI(vol) {
     const pct = Math.round(vol * 100);
@@ -1097,17 +1137,28 @@ document.addEventListener('touchend', function (event) {
     if (label) label.textContent = playing ? 'PAUSE MUSIC' : 'PLAY MUSIC';
   }
 
+  audio.addEventListener('pause', () => {
+    if (fadeFrame) {
+      cancelAnimationFrame(fadeFrame);
+      fadeFrame = null;
+    }
+    isPlaying = false;
+    updateUI(false);
+    window.localStorage.setItem(STORAGE_KEY, 'false');
+  });
+
   function start() {
     audio.volume = 0;
     audio.play()
       .then(() => {
+        if (audio.paused) return;
         isPlaying = true;
         fadeTo(targetVolume);
         updateUI(true);
         window.localStorage.setItem(STORAGE_KEY, 'true');
       })
       .catch(() => {
-        // Blocked by autoplay policy — will retry on next user gesture.
+        updateUI(false);
       });
   }
 
@@ -1141,11 +1192,7 @@ document.addEventListener('touchend', function (event) {
         cancelAnimationFrame(fadeFrame);
         fadeFrame = null;
       }
-      // While ducked for a voice bio, leave the audible level alone —
-      // the new target is remembered and applied once the duck ends.
-      if (!duckedByVoice) {
-        audio.volume = vol;
-      }
+      audio.volume = vol;
     });
   }
 
@@ -1161,22 +1208,6 @@ document.addEventListener('touchend', function (event) {
     window.addEventListener('keydown', resumeOnGesture, { once: true });
   }
 
-  // Duck the ambient track under character voice bios instead of overlapping them.
-  const voiceAudio = document.getElementById('voiceAudio');
-  if (voiceAudio) {
-    voiceAudio.addEventListener('play', () => {
-      if (!isPlaying) return;
-      duckedByVoice = true;
-      fadeTo(Math.min(0.08, targetVolume));
-    });
-    const restoreFromDuck = () => {
-      if (!duckedByVoice || !isPlaying) return;
-      duckedByVoice = false;
-      fadeTo(targetVolume);
-    };
-    voiceAudio.addEventListener('pause', restoreFromDuck);
-    voiceAudio.addEventListener('ended', restoreFromDuck);
-  }
 })();
 /* ==========================================================================
    Preloader — circular progress + percentage
